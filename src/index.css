@@ -1,324 +1,109 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Typewriter Theme Variables */
-:root {
-  --paper-white: #FAFAF8;
-  --ink-black: #1A1A1A;
-  --typewriter-red: #E53E3E;
-  --typewriter-blue: #2B6CB0;
-  --light-gray: #E5E5E5;
-  --medium-gray: #D4D4D4;
-  --dark-gray: #666666;
-}
-
-/* Global Font Override */
-* {
-  font-family: 'JetBrains Mono', 'Courier New', monospace !important;
-  letter-spacing: 0.025em;
-}
-
-/* Remove all rounded corners globally */
-* {
-  border-radius: 0 !important;
-}
-
-/* Global Background */
-body {
-  background: var(--paper-white) !important;
-  color: var(--ink-black) !important;
-  min-height: 100vh;
-  background-image: 
-    linear-gradient(var(--light-gray) 1px, transparent 1px),
-    linear-gradient(90deg, var(--light-gray) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-/* Typewriter Cursor Animation */
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
-.typewriter-cursor::after {
-  content: '|';
-  animation: blink 1s infinite;
-  color: var(--ink-black);
-  font-weight: 300;
-}
-
-/* Typing Animation */
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-.typing-animation {
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid var(--ink-black);
-  animation: typing 2s steps(40, end), blink 1s infinite step-end;
-}
-
-/* Button Styles - Typewriter Keys */
-.btn-typewriter {
-  background: var(--paper-white);
-  border: 2px solid var(--ink-black);
-  color: var(--ink-black);
-  padding: 8px 16px;
-  font-weight: 400;
-  transition: all 0.1s ease;
-  position: relative;
-}
-
-.btn-typewriter:hover {
-  background: var(--ink-black);
-  color: var(--paper-white);
-}
-
-.btn-typewriter:active {
-  transform: translateY(1px);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.btn-typewriter-red {
-  background: var(--typewriter-red);
-  border: 2px solid var(--typewriter-red);
-  color: var(--paper-white);
-}
-
-.btn-typewriter-red:hover {
-  background: var(--paper-white);
-  color: var(--typewriter-red);
-}
-
-.btn-typewriter-blue {
-  background: var(--typewriter-blue);
-  border: 2px solid var(--typewriter-blue);
-  color: var(--paper-white);
-}
-
-.btn-typewriter-blue:hover {
-  background: var(--paper-white);
-  color: var(--typewriter-blue);
-}
-
-/* Input Styles */
-.input-typewriter {
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid var(--ink-black);
-  color: var(--ink-black);
-  padding: 8px 0;
-  font-weight: 400;
-}
-
-.input-typewriter:focus {
-  outline: none;
-  border-bottom: 2px solid var(--typewriter-blue);
-}
-
-.input-typewriter::placeholder {
-  color: var(--dark-gray);
-  font-style: italic;
-}
-
-/* Card Styles */
-.card-typewriter {
-  background: var(--paper-white);
-  border: 2px solid var(--ink-black);
-  padding: 20px;
-  box-shadow: 4px 4px 0px var(--medium-gray);
-}
-
-.card-typewriter:hover {
-  box-shadow: 6px 6px 0px var(--medium-gray);
-  transform: translate(-2px, -2px);
-}
-
-/* ASCII Dividers */
-.divider-ascii::before {
-  content: '=====================================';
-  display: block;
-  color: var(--dark-gray);
-  text-align: center;
-  margin: 20px 0;
-  font-size: 12px;
-}
-
-.divider-dashes::before {
-  content: '-------------------------------------';
-  display: block;
-  color: var(--dark-gray);
-  text-align: center;
-  margin: 20px 0;
-  font-size: 12px;
-}
-
-/* Navigation Styles */
-.nav-typewriter {
-  background: var(--paper-white);
-  border-bottom: 2px solid var(--ink-black);
-  padding: 16px 0;
-}
-
-.nav-link {
-  color: var(--ink-black);
-  text-decoration: none;
-  padding: 8px 16px;
-  border: 1px solid transparent;
-}
-
-.nav-link:hover {
-  background: var(--ink-black);
-  color: var(--paper-white);
-  text-decoration: underline;
-}
-
-.nav-link.active {
-  border: 1px dashed var(--ink-black);
-}
-
-/* Message Bubble Styles */
-.message-user {
-  background: var(--paper-white);
-  border: 2px solid var(--ink-black);
-  border-left: 4px solid var(--typewriter-blue);
-  padding: 12px;
-  margin: 8px 0;
-  position: relative;
-}
-
-.message-character {
-  background: var(--light-gray);
-  border: 2px solid var(--ink-black);
-  border-left: 4px solid var(--typewriter-red);
-  padding: 12px;
-  margin: 8px 0;
-  position: relative;
-}
-
-.message-timestamp {
-  position: absolute;
-  top: -8px;
-  right: 8px;
-  background: var(--paper-white);
-  padding: 0 4px;
-  font-size: 10px;
-  color: var(--dark-gray);
-}
-
-/* Loading States */
-.loading-typewriter::after {
-  content: '...';
-  animation: blink 1s infinite;
-}
-
-/* Success/Error States */
-.success-typewriter {
-  color: var(--typewriter-red);
-  font-weight: 500;
-}
-
-.error-typewriter {
-  color: var(--typewriter-red);
-  text-decoration: line-through;
-}
-
-/* Table Styles - ASCII */
-.table-ascii {
-  border: 2px solid var(--ink-black);
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.table-ascii th,
-.table-ascii td {
-  border: 1px solid var(--ink-black);
-  padding: 8px 12px;
-  text-align: left;
-}
-
-.table-ascii th {
-  background: var(--light-gray);
-  font-weight: 500;
-}
-
-/* Remove all shadows and gradients */
-.no-shadow {
-  box-shadow: none !important;
-  background-image: none !important;
-}
-
-/* Focus states */
-.focus-typewriter:focus {
-  outline: 2px dashed var(--ink-black);
-  outline-offset: 2px;
-}
-
-/* Active states with brackets */
-.active-bracket::before {
-  content: '[';
-  color: var(--typewriter-blue);
-}
-
-.active-bracket::after {
-  content: ']';
-  color: var(--typewriter-blue);
-}
-
-/* Scrollbar Styling */
+/* Custom scrollbar styles */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--light-gray);
-  border: 1px solid var(--ink-black);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--ink-black);
-  border: 1px solid var(--ink-black);
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--dark-gray);
+  background: rgba(139, 92, 246, 0.7);
 }
 
-/* Selection colors */
+/* Hide scrollbars while keeping scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Custom range slider styles */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #8b5cf6, #06b6d4);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #8b5cf6, #06b6d4);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Animation classes for smooth transitions */
+.animate-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.slide-in-from-right-full {
+  transform: translateX(100%);
+}
+
+/* Hide scrollbar while keeping scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Ensure proper gradient backgrounds */
+body {
+  background: linear-gradient(135deg, #581c87 0%, #7c2d12 50%, #0f172a 100%);
+  min-height: 100vh;
+}
+
+/* Fix text selection colors */
 ::selection {
-  background: var(--typewriter-blue);
-  color: var(--paper-white);
+  background: rgba(139, 92, 246, 0.3);
+  color: white;
 }
 
 ::-moz-selection {
-  background: var(--typewriter-blue);
-  color: var(--paper-white);
-}
-
-/* Disable all transitions for typewriter feel */
-.no-transition * {
-  transition: none !important;
-}
-
-/* Paper texture overlay */
-.paper-texture {
-  position: relative;
-}
-
-.paper-texture::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 1px 1px, rgba(26,26,26,0.05) 1px, transparent 0);
-  background-size: 20px 20px;
-  pointer-events: none;
+  background: rgba(139, 92, 246, 0.3);
+  color: white;
 }

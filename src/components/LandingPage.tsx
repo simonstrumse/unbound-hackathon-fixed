@@ -82,33 +82,33 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] paper-texture">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative min-h-screen bg-[#FAFAF8] overflow-hidden">
+      <section className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 overflow-hidden">
         {/* Header for logged-in users */}
         {user && !authLoading && (
-          <header className="absolute top-0 left-0 right-0 z-20 bg-[#FAFAF8] border-b-2 border-[#1A1A1A]">
+          <header className="absolute top-0 left-0 right-0 z-20 bg-black/20 backdrop-blur-sm border-b border-white/10">
             <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Book className="w-8 h-8 text-[#1A1A1A]" />
-                  <span className="text-xl sm:text-2xl font-mono font-medium text-[#1A1A1A] typewriter-cursor">Unbound</span>
+                  <Book className="w-8 h-8 text-white" />
+                  <span className="text-xl sm:text-2xl font-serif font-bold text-white">Unbound</span>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-4">
                   {profile && (
-                    <div className="flex items-center gap-2 sm:gap-3 text-[#1A1A1A]">
-                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-[#2B6CB0] border-2 border-[#1A1A1A] flex items-center justify-center">
-                        <span className="text-sm font-mono text-[#FAFAF8]">
+                    <div className="flex items-center gap-2 sm:gap-3 text-white">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                        <span className="text-sm font-bold">
                           {profile.username.charAt(0).toUpperCase()}
                         </span>
                       </div>
-                      <span className="text-xs sm:text-sm hidden sm:inline font-mono">Welcome back, {profile.username}!</span>
-                      <span className="text-xs sm:hidden font-mono">Welcome back!</span>
+                      <span className="text-xs sm:text-sm hidden sm:inline">Welcome back, {profile.username}!</span>
+                      <span className="text-xs sm:hidden">Welcome back!</span>
                     </div>
                   )}
                   <button
                     onClick={handleSignOut}
-                    className="btn-typewriter flex items-center gap-1 sm:gap-2 text-sm sm:text-base"
+                    className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm sm:text-base"
                   >
                     <LogOut className="w-4 h-4" />
                     <span className="hidden sm:inline">Sign Out</span>
@@ -119,30 +119,45 @@ const LandingPage: React.FC = () => {
           </header>
         )}
 
+        {/* Floating Book Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 opacity-20 animate-pulse">
+            <Book className="w-8 h-8 text-white transform rotate-12" />
+          </div>
+          <div className="absolute top-40 right-20 opacity-30 animate-bounce">
+            <BookOpen className="w-6 h-6 text-purple-200 transform -rotate-12" />
+          </div>
+          <div className="absolute bottom-40 left-20 opacity-25 animate-pulse delay-300">
+            <Feather className="w-10 h-10 text-purple-300 transform rotate-45" />
+          </div>
+          <div className="absolute top-60 right-40 opacity-20 animate-bounce delay-500">
+            <Star className="w-5 h-5 text-white transform rotate-12" />
+          </div>
+        </div>
 
         <div className={`relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 ${user ? 'pt-20' : ''}`}>
           <div className="text-center">
             <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-[#FAFAF8] border-4 border-[#1A1A1A] mb-6">
-                <Book className="w-10 h-10 text-[#1A1A1A]" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full backdrop-blur-sm mb-6">
+                <Book className="w-10 h-10 text-white" />
               </div>
             </div>
             
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-mono font-medium text-[#1A1A1A] mb-6 leading-tight typewriter-cursor">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-bold text-white mb-6 leading-tight">
               Step Into Your
-              <span className="block text-[#2B6CB0] underline decoration-4">
+              <span className="block bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
                 Favorite Stories
               </span>
             </h1>
             
-            <p className="text-xl sm:text-2xl text-[#1A1A1A] mb-8 max-w-3xl mx-auto leading-relaxed font-mono">
+            <p className="text-xl sm:text-2xl text-purple-100 mb-8 max-w-3xl mx-auto leading-relaxed">
               Create your own character and experience classic literature through 
               interactive conversations with beloved characters from famous books.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {authLoading ? (
-                <div className="btn-typewriter px-8 py-4 font-mono text-lg flex items-center gap-2">
+                <div className="bg-white/10 text-white px-8 py-4 rounded-full font-semibold text-lg backdrop-blur-sm flex items-center gap-2">
                   <Loader2 className="w-5 h-5 animate-spin" />
                   Loading...
                 </div>
@@ -150,12 +165,12 @@ const LandingPage: React.FC = () => {
                 <>
                   <button
                     onClick={handleContinueAdventure}
-                    className="btn-typewriter-blue px-8 py-4 font-mono text-lg"
+                    className="bg-white text-purple-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 shadow-xl"
                   >
                     Continue Your Adventure
                   </button>
                   {profile && !profile.beta_approved && (
-                    <div className="bg-[#E53E3E] text-[#FAFAF8] px-6 py-3 text-sm border-2 border-[#1A1A1A] font-mono">
+                    <div className="bg-orange-500/20 text-orange-200 px-6 py-3 rounded-full text-sm backdrop-blur-sm border border-orange-500/30">
                       Beta access pending approval
                     </div>
                   )}
@@ -163,13 +178,13 @@ const LandingPage: React.FC = () => {
               ) : (
                 <Link
                   to="/signin"
-                  className="btn-typewriter-blue px-8 py-4 font-mono text-lg"
+                  className="bg-white text-purple-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 shadow-xl"
                 >
                   Start Your Adventure
                 </Link>
               )}
               {!user && !authLoading && (
-                <button className="btn-typewriter px-8 py-4 font-mono text-lg">
+                <button className="border-2 border-white/30 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-sm">
                   Learn More
                 </button>
               )}
@@ -179,50 +194,49 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#FAFAF8]">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="divider-ascii"></div>
-            <h2 className="text-4xl sm:text-5xl font-mono font-medium text-[#1A1A1A] mb-4 typewriter-cursor">
+            <h2 className="text-4xl sm:text-5xl font-serif font-bold text-gray-900 mb-4">
               Your Literary Journey Awaits
             </h2>
-            <p className="text-xl text-[#666666] max-w-3xl mx-auto font-mono">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Experience stories like never before with our AI-powered platform that adapts to your choices and creativity.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Feature 1 */}
-            <div className="card-typewriter">
-              <div className="w-16 h-16 bg-[#2B6CB0] border-2 border-[#1A1A1A] flex items-center justify-center mb-6">
-                <Sparkles className="w-8 h-8 text-[#FAFAF8]" />
+            <div className="group bg-gradient-to-br from-purple-50 to-blue-50 p-8 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Sparkles className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-4">[Three Creativity Levels]</h3>
-              <p className="text-[#666666] leading-relaxed font-mono">
+              <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Three Creativity Levels</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Choose your adventure style: stay true to the original story, explore with balanced freedom, 
                 or unleash complete creative control over your narrative journey.
               </p>
             </div>
 
             {/* Feature 2 */}
-            <div className="card-typewriter">
-              <div className="w-16 h-16 bg-[#E53E3E] border-2 border-[#1A1A1A] flex items-center justify-center mb-6">
-                <MessageCircle className="w-8 h-8 text-[#FAFAF8]" />
+            <div className="group bg-gradient-to-br from-green-50 to-teal-50 p-8 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <MessageCircle className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-4">[AI-Powered Conversations]</h3>
-              <p className="text-[#666666] leading-relaxed font-mono">
+              <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">AI-Powered Conversations</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Engage in natural dialogues with literary characters who respond authentically while 
                 maintaining their unique personalities and staying true to their stories.
               </p>
             </div>
 
             {/* Feature 3 */}
-            <div className="card-typewriter">
-              <div className="w-16 h-16 bg-[#1A1A1A] border-2 border-[#1A1A1A] flex items-center justify-center mb-6">
-                <User className="w-8 h-8 text-[#FAFAF8]" />
+            <div className="group bg-gradient-to-br from-rose-50 to-pink-50 p-8 rounded-2xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="w-16 h-16 bg-gradient-to-br from-rose-500 to-pink-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <User className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-4">[Your Story, Your Way]</h3>
-              <p className="text-[#666666] leading-relaxed font-mono">
+              <h3 className="text-2xl font-serif font-bold text-gray-900 mb-4">Your Story, Your Way</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Create unique characters with distinct personality traits and watch as your choices 
                 shape the narrative, creating a truly personalized literary experience.
               </p>
@@ -232,59 +246,58 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#E5E5E5]">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="divider-dashes"></div>
-            <h2 className="text-4xl sm:text-5xl font-mono font-medium text-[#1A1A1A] mb-4 typewriter-cursor">
+            <h2 className="text-4xl sm:text-5xl font-serif font-bold text-gray-900 mb-4">
               How It Works
             </h2>
-            <p className="text-xl text-[#666666] font-mono">
+            <p className="text-xl text-gray-600">
               Four simple steps to begin your literary adventure
             </p>
           </div>
 
           <div className="grid md:grid-cols-4 gap-8">
             {/* Step 1 */}
-            <div className="text-center">
-              <div className="w-20 h-20 bg-[#2B6CB0] border-4 border-[#1A1A1A] flex items-center justify-center mx-auto mb-6">
-                <BookOpen className="w-10 h-10 text-[#FAFAF8]" />
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <BookOpen className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">&gt; Choose Your Story</h3>
-              <p className="text-[#666666] font-mono">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Choose Your Story</h3>
+              <p className="text-gray-600">
                 Select from our curated library of classic literature and timeless tales.
               </p>
             </div>
 
             {/* Step 2 */}
-            <div className="text-center">
-              <div className="w-20 h-20 bg-[#E53E3E] border-4 border-[#1A1A1A] flex items-center justify-center mx-auto mb-6">
-                <User className="w-10 h-10 text-[#FAFAF8]" />
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <User className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">&gt; Create Your Character</h3>
-              <p className="text-[#666666] font-mono">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Create Your Character</h3>
+              <p className="text-gray-600">
                 Design a unique character with personality traits that will shape your journey.
               </p>
             </div>
 
             {/* Step 3 */}
-            <div className="text-center">
-              <div className="w-20 h-20 bg-[#1A1A1A] border-4 border-[#1A1A1A] flex items-center justify-center mx-auto mb-6">
-                <MessageCircle className="w-10 h-10 text-[#FAFAF8]" />
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <MessageCircle className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">&gt; Start Conversations</h3>
-              <p className="text-[#666666] font-mono">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Start Conversations</h3>
+              <p className="text-gray-600">
                 Engage with beloved characters in natural, flowing conversations.
               </p>
             </div>
 
             {/* Step 4 */}
-            <div className="text-center">
-              <div className="w-20 h-20 bg-[#666666] border-4 border-[#1A1A1A] flex items-center justify-center mx-auto mb-6">
-                <Sparkles className="w-10 h-10 text-[#FAFAF8]" />
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Sparkles className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">&gt; Shape the Narrative</h3>
-              <p className="text-[#666666] font-mono">
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Shape the Narrative</h3>
+              <p className="text-gray-600">
                 Watch as your choices and decisions influence the story's direction.
               </p>
             </div>
@@ -293,75 +306,74 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Preview Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#FAFAF8]">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="divider-ascii"></div>
-            <h2 className="text-4xl sm:text-5xl font-mono font-medium text-[#1A1A1A] mb-4 typewriter-cursor">
+            <h2 className="text-4xl sm:text-5xl font-serif font-bold text-gray-900 mb-4">
               Explore Classic Tales
             </h2>
-            <p className="text-xl text-[#666666] font-mono">
+            <p className="text-xl text-gray-600">
               Step into these beloved stories and create your own adventure
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Pride and Prejudice */}
-            <div className="card-typewriter">
-              <div className="h-48 bg-[#E5E5E5] border-b-2 border-[#1A1A1A] flex items-center justify-center">
-                <div className="text-center text-[#1A1A1A]">
+            <div className="group bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="h-48 bg-gradient-to-br from-purple-300 to-pink-300 flex items-center justify-center">
+                <div className="text-center text-white">
                   <Book className="w-16 h-16 mx-auto mb-4" />
-                  <p className="font-mono text-sm">Jane Austen</p>
+                  <p className="font-serif text-sm">Jane Austen</p>
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-3">[Pride and Prejudice]</h3>
-                <p className="text-[#666666] mb-4 font-mono">
+                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3">Pride and Prejudice</h3>
+                <p className="text-gray-600 mb-4">
                   Navigate the complex social world of Regency England, where wit and romance 
                   intertwine in the drawing rooms of the English countryside.
                 </p>
-                <button className="flex items-center gap-2 text-[#2B6CB0] font-mono hover:underline">
-                  <span>&gt; Begin Adventure</span> <ArrowRight className="w-4 h-4" />
+                <button className="flex items-center gap-2 text-purple-600 font-semibold hover:text-purple-800 transition-colors">
+                  Begin Adventure <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
             {/* The Great Gatsby */}
-            <div className="card-typewriter">
-              <div className="h-48 bg-[#E5E5E5] border-b-2 border-[#1A1A1A] flex items-center justify-center">
-                <div className="text-center text-[#1A1A1A]">
+            <div className="group bg-gradient-to-br from-green-100 to-teal-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="h-48 bg-gradient-to-br from-green-300 to-teal-300 flex items-center justify-center">
+                <div className="text-center text-white">
                   <Sparkles className="w-16 h-16 mx-auto mb-4" />
-                  <p className="font-mono text-sm">F. Scott Fitzgerald</p>
+                  <p className="font-serif text-sm">F. Scott Fitzgerald</p>
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-3">[The Great Gatsby]</h3>
-                <p className="text-[#666666] mb-4 font-mono">
+                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3">The Great Gatsby</h3>
+                <p className="text-gray-600 mb-4">
                   Experience the glittering world of the Jazz Age, where dreams and reality 
                   collide in the lavish parties of West Egg.
                 </p>
-                <button className="flex items-center gap-2 text-[#2B6CB0] font-mono hover:underline">
-                  <span>&gt; Begin Adventure</span> <ArrowRight className="w-4 h-4" />
+                <button className="flex items-center gap-2 text-teal-600 font-semibold hover:text-teal-800 transition-colors">
+                  Begin Adventure <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
 
             {/* Alice in Wonderland */}
-            <div className="card-typewriter">
-              <div className="h-48 bg-[#E5E5E5] border-b-2 border-[#1A1A1A] flex items-center justify-center">
-                <div className="text-center text-[#1A1A1A]">
+            <div className="group bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+              <div className="h-48 bg-gradient-to-br from-blue-300 to-indigo-300 flex items-center justify-center">
+                <div className="text-center text-white">
                   <Heart className="w-16 h-16 mx-auto mb-4" />
-                  <p className="font-mono text-sm">Lewis Carroll</p>
+                  <p className="font-serif text-sm">Lewis Carroll</p>
                 </div>
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-3">[Alice in Wonderland]</h3>
-                <p className="text-[#666666] mb-4 font-mono">
+                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3">Alice in Wonderland</h3>
+                <p className="text-gray-600 mb-4">
                   Tumble down the rabbit hole into a whimsical world where logic bends 
                   and imagination reigns supreme in curious adventures.
                 </p>
-                <button className="flex items-center gap-2 text-[#2B6CB0] font-mono hover:underline">
-                  <span>&gt; Begin Adventure</span> <ArrowRight className="w-4 h-4" />
+                <button className="flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800 transition-colors">
+                  Begin Adventure <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -371,34 +383,36 @@ const LandingPage: React.FC = () => {
 
       {/* Beta Access Section - Only show if not logged in */}
       {!user && !authLoading && (
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#1A1A1A]">
+        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#FAFAF8] border-4 border-[#FAFAF8] mb-6">
-                <Mail className="w-8 h-8 text-[#1A1A1A]" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full backdrop-blur-sm mb-6">
+                <Mail className="w-8 h-8 text-white" />
               </div>
             </div>
             
-            <h2 className="text-4xl sm:text-5xl font-mono font-medium text-[#FAFAF8] mb-6 typewriter-cursor">
+            <h2 className="text-4xl sm:text-5xl font-serif font-bold text-white mb-6">
               Request Beta Access
             </h2>
-            <p className="text-xl text-[#E5E5E5] mb-8 font-mono">
+            <p className="text-xl text-purple-100 mb-8">
               Be among the first to step into your favorite stories. Beta spaces are limited.
             </p>
             
             <div className="max-w-md mx-auto">
               {betaMessage && (
-                <div className={`mb-6 p-4 border-2 border-[#FAFAF8] flex items-center gap-3 ${
+                <div className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${
                   betaMessage.type === 'success' 
-                    ? 'bg-[#2B6CB0] text-[#FAFAF8]' 
-                    : 'bg-[#E53E3E] text-[#FAFAF8]'
+                    ? 'bg-green-500/10 border border-green-500/20' 
+                    : 'bg-red-500/10 border border-red-500/20'
                 }`}>
                   {betaMessage.type === 'success' ? (
-                    <CheckCircle className="w-5 h-5 text-[#FAFAF8] flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
                   ) : (
-                    <AlertCircle className="w-5 h-5 text-[#FAFAF8] flex-shrink-0" />
+                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
                   )}
-                  <p className="text-sm font-mono">
+                  <p className={`text-sm ${
+                    betaMessage.type === 'success' ? 'text-green-100' : 'text-red-100'
+                  }`}>
                     {betaMessage.text}
                   </p>
                 </div>
@@ -410,12 +424,12 @@ const LandingPage: React.FC = () => {
                   placeholder="Enter your email"
                   value={betaEmail}
                   onChange={(e) => setBetaEmail(e.target.value)}
-                  className="input-typewriter flex-1 px-6 py-4 bg-[#FAFAF8] text-[#1A1A1A] placeholder-[#666666] font-mono"
+                  className="flex-1 px-6 py-4 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-purple-300/50"
                 />
                 <button
                   type="submit"
                   disabled={betaLoading}
-                  className="btn-typewriter-blue px-8 py-4 font-mono disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="bg-white text-purple-900 px-8 py-4 rounded-full font-semibold hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {betaLoading ? (
                     <>
@@ -427,7 +441,7 @@ const LandingPage: React.FC = () => {
                   )}
                 </button>
               </form>
-              <p className="text-[#E5E5E5] text-sm mt-4 font-mono">
+              <p className="text-purple-200 text-sm mt-4">
                 We'll create your account instantly so you can start exploring. No spam, promise.
               </p>
             </div>
@@ -436,20 +450,19 @@ const LandingPage: React.FC = () => {
       )}
 
       {/* Footer */}
-      <footer className="bg-[#1A1A1A] text-[#FAFAF8] py-12 px-4 sm:px-6 lg:px-8 border-t-2 border-[#FAFAF8]">
+      <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-2 mb-4 md:mb-0">
               <Book className="w-6 h-6" />
-              <span className="text-xl font-mono font-medium">Unbound</span>
+              <span className="text-xl font-serif font-bold">Unbound</span>
             </div>
             
-            <div className="flex flex-col md:flex-row items-center gap-6 text-[#E5E5E5] font-mono">
-              <p>(c) 2025 Unbound. All rights reserved.</p>
+            <div className="flex flex-col md:flex-row items-center gap-6 text-gray-400">
+              <p>&copy; 2025 Unbound. All rights reserved.</p>
               <div className="flex gap-6">
-                <a href="#" className="hover:underline">Terms</a>
-                <span>|</span>
-                <a href="#" className="hover:underline">Privacy</a>
+                <a href="#" className="hover:text-white transition-colors">Terms</a>
+                <a href="#" className="hover:text-white transition-colors">Privacy</a>
               </div>
             </div>
           </div>

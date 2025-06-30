@@ -46,31 +46,31 @@ const SignInPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] paper-texture flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <Link to="/" className="inline-flex items-center justify-center w-16 h-16 bg-[#FAFAF8] border-4 border-[#1A1A1A] mb-6 hover:bg-[#1A1A1A] hover:text-[#FAFAF8] transition-colors">
-            <Book className="w-8 h-8" />
+          <Link to="/" className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full backdrop-blur-sm mb-6 hover:bg-white/20 transition-colors">
+            <Book className="w-8 h-8 text-white" />
           </Link>
-          <h2 className="text-3xl font-mono font-medium text-[#1A1A1A] mb-2 typewriter-cursor">Welcome Back</h2>
-          <p className="text-[#666666] font-mono">Sign in to continue your literary journey</p>
+          <h2 className="text-3xl font-serif font-bold text-white mb-2">Welcome Back</h2>
+          <p className="text-purple-100">Sign in to continue your literary journey</p>
         </div>
 
-        <div className="card-typewriter">
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
           {error && (
-            <div className="mb-6 p-4 bg-[#E53E3E] border-2 border-[#1A1A1A] text-[#FAFAF8] flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 flex-shrink-0" />
-              <p className="text-sm font-mono">{error}</p>
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+              <p className="text-red-100 text-sm">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-mono text-[#1A1A1A] mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-purple-100 mb-2">
                 Email Address
               </label>
-              <div className="relative flex items-center">
-                <Mail className="w-5 h-5 text-[#666666] mr-3" />
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
                 <input
                   id="email"
                   name="email"
@@ -78,18 +78,18 @@ const SignInPage: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="input-typewriter flex-1 font-mono"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Enter your email"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-mono text-[#1A1A1A] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-purple-100 mb-2">
                 Password
               </label>
-              <div className="relative flex items-center">
-                <Lock className="w-5 h-5 text-[#666666] mr-3" />
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
                 <input
                   id="password"
                   name="password"
@@ -97,7 +97,7 @@ const SignInPage: React.FC = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="input-typewriter flex-1 font-mono"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Enter your password"
                 />
               </div>
@@ -106,23 +106,23 @@ const SignInPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="btn-typewriter-blue w-full py-3 px-4 font-mono disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-white text-purple-900 py-3 px-4 rounded-lg font-semibold hover:bg-purple-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  <span className="loading-typewriter">Signing In</span>
+                  Signing In...
                 </>
               ) : (
-                '> Sign In'
+                'Sign In'
               )}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-[#666666] font-mono">
+            <p className="text-purple-100">
               Don't have an account?{' '}
-              <Link to="/signup" className="text-[#2B6CB0] hover:underline font-mono">
+              <Link to="/signup" className="text-purple-300 hover:text-white font-medium transition-colors">
                 Sign up
               </Link>
             </p>
@@ -130,7 +130,7 @@ const SignInPage: React.FC = () => {
         </div>
 
         <div className="text-center">
-          <Link to="/" className="text-[#2B6CB0] hover:underline font-mono">
+          <Link to="/" className="text-purple-300 hover:text-white transition-colors">
             ← Back to home
           </Link>
         </div>

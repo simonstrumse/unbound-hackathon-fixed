@@ -430,23 +430,23 @@ const CharacterCreation: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] paper-texture">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
       {/* Header */}
-      <header className="nav-typewriter">
+      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
                 to="/stories"
-                className="nav-link flex items-center gap-2 font-mono"
+                className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Stories
               </Link>
             </div>
             <div className="flex items-center gap-3">
-              <Book className="w-8 h-8 text-[#1A1A1A]" />
-              <span className="text-2xl font-mono font-medium text-[#1A1A1A] typewriter-cursor">Unbound</span>
+              <Book className="w-8 h-8 text-white" />
+              <span className="text-2xl font-serif font-bold text-white">Unbound</span>
             </div>
           </div>
         </div>
@@ -456,49 +456,49 @@ const CharacterCreation: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Story Info */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-mono font-medium text-[#1A1A1A] mb-4 typewriter-cursor">
+          <h1 className="text-4xl sm:text-5xl font-serif font-bold text-white mb-4">
             Create Your Character
           </h1>
           <div className="max-w-2xl mx-auto mb-6">
-            <h2 className="text-2xl font-mono font-medium text-[#2B6CB0] mb-2">
+            <h2 className="text-2xl font-serif font-bold text-purple-200 mb-2">
               {story.title}
             </h2>
-            <p className="text-[#666666] text-lg font-mono">
+            <p className="text-purple-100 text-lg">
               by {story.author}
             </p>
           </div>
-          <p className="text-[#666666] max-w-3xl mx-auto leading-relaxed font-mono">
+          <p className="text-purple-100 max-w-3xl mx-auto leading-relaxed">
             {story.description}
           </p>
         </div>
 
         {error && (
-          <div className="max-w-2xl mx-auto mb-8 p-4 bg-[#E53E3E] border-2 border-[#1A1A1A] text-[#FAFAF8] flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
-            <p className="font-mono">{error}</p>
+          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+            <p className="text-red-100">{error}</p>
           </div>
         )}
 
         {/* Character Creation Form */}
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Form */}
-          <div className="card-typewriter">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-mono font-medium text-[#1A1A1A]">[Character Details]</h3>
+              <h3 className="text-xl font-serif font-bold text-white">Character Details</h3>
               <button
                 type="button"
                 onClick={randomizeCharacter}
-                className="btn-typewriter flex items-center gap-2 font-mono"
+                className="flex items-center gap-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 px-4 py-2 rounded-lg transition-colors"
               >
                 <Shuffle className="w-4 h-4" />
-                <span>&gt; Randomize All</span>
+                Randomize All
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Character Name */}
               <div>
-                <label className="block text-lg font-mono text-[#1A1A1A] mb-3">
+                <label className="block text-lg font-semibold text-white mb-3">
                   Character Name *
                 </label>
                 <div className="flex gap-2">
@@ -506,7 +506,7 @@ const CharacterCreation: React.FC = () => {
                     type="text"
                     value={character.name}
                     onChange={(e) => setCharacter(prev => ({ ...prev, name: e.target.value }))}
-                    className="input-typewriter flex-1 font-mono"
+                    className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="Enter your character's name"
                     maxLength={50}
                     required
@@ -514,7 +514,7 @@ const CharacterCreation: React.FC = () => {
                   <button
                     type="button"
                     onClick={randomizeName}
-                    className="btn-typewriter px-4 py-3"
+                    className="px-4 py-3 bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 rounded-lg transition-colors"
                     title="Generate random name"
                   >
                     <RefreshCw className="w-5 h-5" />
@@ -524,8 +524,8 @@ const CharacterCreation: React.FC = () => {
 
               {/* Background */}
               <div>
-                <label className="block text-lg font-mono text-[#1A1A1A] mb-3">
-                  Background <span className="text-[#666666] font-normal text-sm">(Optional)</span>
+                <label className="block text-lg font-semibold text-white mb-3">
+                  Background <span className="text-purple-300 font-normal text-sm">(Optional)</span>
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                   {PRESET_BACKGROUNDS.map((background) => (
@@ -533,10 +533,10 @@ const CharacterCreation: React.FC = () => {
                       key={background.title}
                       type="button"
                       onClick={() => handleBackgroundSelect(background)}
-                      className={`p-3 border-2 text-left transition-all font-mono ${
+                      className={`p-3 rounded-lg border text-left transition-all ${
                         character.backstory === background.description
-                          ? 'bg-[#2B6CB0] border-[#1A1A1A] text-[#FAFAF8]'
-                          : 'bg-[#FAFAF8] border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#E5E5E5]'
+                          ? 'bg-purple-500/20 border-purple-500/50 text-white'
+                          : 'bg-white/5 border-white/10 text-purple-200 hover:bg-white/10'
                       }`}
                     >
                       <div className="font-medium">{background.title}</div>
@@ -547,7 +547,7 @@ const CharacterCreation: React.FC = () => {
                 <textarea
                   value={character.backstory}
                   onChange={(e) => setCharacter(prev => ({ ...prev, backstory: e.target.value }))}
-                  className="input-typewriter w-full font-mono resize-none"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
                   placeholder="Customize your character's background..."
                   rows={3}
                   maxLength={500}
@@ -556,8 +556,8 @@ const CharacterCreation: React.FC = () => {
 
               {/* Personality Traits */}
               <div>
-                <label className="block text-lg font-mono text-[#1A1A1A] mb-3">
-                  Personality Traits <span className="text-[#666666] font-normal text-sm">(Choose up to 3)</span>
+                <label className="block text-lg font-semibold text-white mb-3">
+                  Personality Traits <span className="text-purple-300 font-normal text-sm">(Choose up to 3)</span>
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {personalityTraits.map((trait) => (
@@ -565,10 +565,10 @@ const CharacterCreation: React.FC = () => {
                       key={trait}
                       type="button"
                       onClick={() => handleTraitToggle(trait)}
-                      className={`px-3 py-2 text-sm font-mono transition-all duration-200 border-2 ${
+                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                         character.personalityTraits.includes(trait)
-                          ? 'bg-[#2B6CB0] text-[#FAFAF8] border-[#1A1A1A]'
-                          : 'bg-[#FAFAF8] text-[#1A1A1A] hover:bg-[#E5E5E5] border-[#1A1A1A]'
+                          ? 'bg-purple-500 text-white shadow-lg'
+                          : 'bg-white/5 text-purple-200 hover:bg-white/10 border border-white/10'
                       }`}
                     >
                       {trait}
@@ -579,7 +579,7 @@ const CharacterCreation: React.FC = () => {
 
               {/* Creativity Level */}
               <div>
-                <label className="block text-lg font-mono text-[#1A1A1A] mb-3">
+                <label className="block text-lg font-semibold text-white mb-3">
                   Adventure Style
                 </label>
                 <div className="space-y-3">
@@ -588,10 +588,10 @@ const CharacterCreation: React.FC = () => {
                       key={level.level}
                       type="button"
                       onClick={() => setCharacter(prev => ({ ...prev, creativityLevel: level.level }))}
-                      className={`w-full p-4 border-2 text-left transition-all font-mono ${
+                      className={`w-full p-4 rounded-lg border text-left transition-all ${
                         character.creativityLevel === level.level
-                          ? 'bg-[#2B6CB0] border-[#1A1A1A] text-[#FAFAF8]'
-                          : 'bg-[#FAFAF8] border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#E5E5E5]'
+                          ? 'bg-purple-500/20 border-purple-500/50 text-white'
+                          : 'bg-white/5 border-white/10 text-purple-200 hover:bg-white/10'
                       }`}
                     >
                       <div className="font-medium text-lg">{level.title}</div>
@@ -603,7 +603,7 @@ const CharacterCreation: React.FC = () => {
 
               {/* Avatar Color */}
               <div>
-                <label className="block text-lg font-mono text-[#1A1A1A] mb-3">
+                <label className="block text-lg font-semibold text-white mb-3">
                   Avatar Color
                 </label>
                 <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
@@ -612,9 +612,9 @@ const CharacterCreation: React.FC = () => {
                       key={index}
                       type="button"
                       onClick={() => setCharacter(prev => ({ ...prev, avatarColor: index }))}
-                      className={`w-12 h-12 ${color} border-2 border-[#1A1A1A] transition-all duration-200 ${
+                      className={`w-12 h-12 rounded-full ${color} transition-all duration-200 ${
                         character.avatarColor === index
-                          ? 'scale-110 border-4'
+                          ? 'ring-4 ring-white/50 scale-110'
                           : 'hover:scale-105'
                       }`}
                     />
@@ -626,17 +626,17 @@ const CharacterCreation: React.FC = () => {
               <button
                 type="submit"
                 disabled={saving || !character.name.trim()}
-                className="btn-typewriter-blue w-full py-4 px-6 font-mono text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {saving ? (
                   <>
                     <Loader2 className="w-6 h-6 animate-spin" />
-                    <span className="loading-typewriter">Creating Character</span>
+                    Creating Character...
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-6 h-6" />
-                    <span>&gt; Begin Adventure</span>
+                    Begin Adventure
                   </>
                 )}
               </button>
@@ -644,15 +644,15 @@ const CharacterCreation: React.FC = () => {
           </div>
 
           {/* Character Preview */}
-          <div className="card-typewriter">
-            <h3 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-6 text-center">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+            <h3 className="text-2xl font-serif font-bold text-white mb-6 text-center">
               Character Preview
             </h3>
 
             <div className="text-center">
               {/* Avatar */}
-              <div className={`w-32 h-32 ${avatarColors[character.avatarColor]} border-4 border-[#1A1A1A] flex items-center justify-center mx-auto mb-6`}>
-                <span className="text-4xl font-mono text-[#FAFAF8]">
+              <div className={`w-32 h-32 rounded-full ${avatarColors[character.avatarColor]} flex items-center justify-center mx-auto mb-6 shadow-xl`}>
+                <span className="text-4xl font-bold text-white">
                   {character.name.charAt(0).toUpperCase() || '?'}
                 </span>
               </div>
@@ -660,37 +660,37 @@ const CharacterCreation: React.FC = () => {
               {/* Character Info */}
               <div className="space-y-4">
                 <div>
-                  <h4 className="text-xl font-mono font-medium text-[#1A1A1A] mb-1">
+                  <h4 className="text-xl font-bold text-white mb-1">
                     {character.name || 'Character Name'}
                   </h4>
-                  <p className="text-[#666666] font-mono">
+                  <p className="text-purple-200">
                     Adventurer in {story.title}
                   </p>
                 </div>
 
                 {character.backstory && (
-                  <div className="bg-[#E5E5E5] border border-[#1A1A1A] p-4">
-                    <h5 className="text-sm font-mono text-[#1A1A1A] mb-2 flex items-center gap-2">
+                  <div className="bg-white/5 rounded-lg p-4">
+                    <h5 className="text-sm font-semibold text-purple-200 mb-2 flex items-center gap-2">
                       <User className="w-4 h-4" />
-                      <span>&gt; Background</span>
+                      Background
                     </h5>
-                    <p className="text-[#1A1A1A] text-sm leading-relaxed font-mono">
+                    <p className="text-white text-sm leading-relaxed">
                       {character.backstory}
                     </p>
                   </div>
                 )}
 
                 {character.personalityTraits.length > 0 && (
-                  <div className="bg-[#E5E5E5] border border-[#1A1A1A] p-4">
-                    <h5 className="text-sm font-mono text-[#1A1A1A] mb-3 flex items-center gap-2">
+                  <div className="bg-white/5 rounded-lg p-4">
+                    <h5 className="text-sm font-semibold text-purple-200 mb-3 flex items-center gap-2">
                       <Heart className="w-4 h-4" />
-                      <span>&gt; Personality Traits</span>
+                      Personality Traits
                     </h5>
                     <div className="flex flex-wrap gap-2 justify-center">
                       {character.personalityTraits.map((trait) => (
                         <span
                           key={trait}
-                          className="px-3 py-1 bg-[#2B6CB0] text-[#FAFAF8] text-xs border border-[#1A1A1A] font-mono"
+                          className="px-3 py-1 bg-purple-500 text-white text-xs rounded-full"
                         >
                           {trait}
                         </span>
@@ -699,12 +699,12 @@ const CharacterCreation: React.FC = () => {
                   </div>
                 )}
 
-                <div className="bg-[#E5E5E5] border border-[#1A1A1A] p-4">
-                  <h5 className="text-sm font-mono text-[#1A1A1A] mb-2 flex items-center gap-2">
+                <div className="bg-white/5 rounded-lg p-4">
+                  <h5 className="text-sm font-semibold text-purple-200 mb-2 flex items-center gap-2">
                     <Sparkles className="w-4 h-4" />
-                    <span>&gt; Adventure Style</span>
+                    Adventure Style
                   </h5>
-                  <p className="text-[#1A1A1A] text-sm font-mono">
+                  <p className="text-white text-sm">
                     {creativityLevels.find(l => l.level === character.creativityLevel)?.title}
                   </p>
                 </div>
