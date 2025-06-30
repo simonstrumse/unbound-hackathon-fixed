@@ -678,62 +678,75 @@ const Game: React.FC = () => {
         currentSceneBefore: worldState
       });
 
-      // Handle world state updates with proper merging
-      if (aiResponseData.world_state_updates) {
-        const updates = aiResponseData.world_state_updates;
-        
-        // Create the updated world state once
-        const updatedWorldState = { ...worldState, ...updates };
-        
-        console.log('🌍 UPDATING WORLD STATE:', {
-          updates,
-          updatedWorldState
-        });
+      // Calculate ALL updated values ONCE and use them for both display and database
+      
+      // 1. Calculate updated world state
+      const updatedWorldState = {
+        ...worldState,
+        ...aiResponseData.world_state_updates
+      };
+      
+      // 2. Calculate updated memory events
+      const newMemoryEvents = aiResponseData.memory_updates || [];
+      const updatedMemoryEvents = [...memoryEvents, ...newMemoryEvents];
+      
+      // 3. Calculate updated relationships
+      const newRelationshipUpdates = aiResponseData.relationship_updates || [];
+      const updatedRelationships = [...relationships];
+      
+      // Apply relationship updates
+      newRelationshipUpdates.forEach(update => {
+        const existingIndex = updatedRelationships.findIndex(r => r.character_name === update.character_name);
+        if (existingIndex >= 0) {
+          updatedRelationships[existingIndex] = { ...updatedRelationships[existingIndex], ...update };
+        } else {
+          updatedRelationships.push(update);
+        }
+      });
 
-        // Update React state
-        setWorldState(updatedWorldState);
-        
-        // Save the updated state to database immediately
-        await saveSessionStateToDb({
-          world_state: {
-            current_location: updatedWorldState.current_location || 'Unknown location',
-            present_npcs: updatedWorldState.present_npcs || [],
-            mood_atmosphere: updatedWorldState.mood_atmosphere || 'A story unfolds',
-            time_of_day: updatedWorldState.time_of_day || 'day'
-          }
-        });
-        
-        console.log('✅ WORLD STATE UPDATED AND SAVED');
-      }
+      console.log('🔄 Updating React state with new values...');
+      
+      // Update React state with the calculated values
+      setWorldState(updatedWorldState);
+      setMemoryEvents(updatedMemoryEvents);
+      setRelationships(updatedRelationships);
 
-      // Update memory events
-      if (aiResponseData.memory_updates && aiResponseData.memory_updates.length > 0) {
-        const newMemoryEvents = [...memoryEvents, ...aiResponseData.memory_updates];
-        setMemoryEvents(newMemoryEvents);
-        
-        // Save to database
-        saveSessionStateToDb({ memoryEvents: newMemoryEvents });
-      }
+      // Save session with updated state - USE THE CALCULATED VALUES, NOT OLD STATE
+      console.log('💾 Saving session with updated values to database...');
+      console.log('📍 World state being saved:', updatedWorldState);
+      console.log('🧠 Memory events being saved:', updatedMemoryEvents.length, 'events');
+      console.log('❤️ Relationships being saved:', updatedRelationships.length, 'relationships');
+      
+      const updatedSessionState = {
+        ...session.session_state,
+        context_tokens_used: aiResponse.tokensUsed || 0,
+        world_state: updatedWorldState,
+        memory_events: updatedMemoryEvents, // Use calculated value
+        relationships: updatedRelationships // Use calculated value
+      };
+      
+      console.log('📦 Complete session_state being saved:', updatedSessionState);
 
-      // Update relationships
-      if (aiResponseData.relationship_updates && aiResponseData.relationship_updates.length > 0) {
-        const updatedRelationships = (() => {
-          const updated = [...relationships];
-          aiResponseData.relationship_updates.forEach(update => {
-            const existingIndex = updated.findIndex(r => r.character_name === update.character_name);
-            if (existingIndex >= 0) {
-              updated[existingIndex] = { ...updated[existingIndex], ...update };
-            } else {
-              updated.push(update);
-            }
-          });
-          return updated;
-        })();
-        
-        setRelationships(updatedRelationships);
-        
-        // Save to database
-        saveSessionStateToDb({ relationships: updatedRelationships });
+      try {
+        const { error: saveError } = await supabase
+          .from('story_sessions')
+          .update({
+            session_state: updatedSessionState,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', session.id);
+
+        if (saveError) {
+          console.error('❌ Database save error:', saveError);
+          throw saveError;
+        }
+
+        // Update local session state
+        setSession(prev => prev ? { ...prev, session_state: updatedSessionState } : null);
+        console.log('✅ Session saved successfully');
+      } catch (saveError) {
+        console.error('❌ Failed to save session:', saveError);
+        showNotification('Failed to save progress', 'error');
       }
 
       // Update context usage
