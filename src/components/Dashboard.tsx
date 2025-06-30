@@ -283,19 +283,19 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
+    <div className="min-h-screen bg-literary-gradient paper-texture">
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
+      <header className="bg-charcoal/80 backdrop-blur-sm border-b border-antique-gold/20">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Book className="w-8 h-8 text-white" />
-              <span className="text-xl sm:text-2xl font-serif font-bold text-white">Unbound</span>
+              <Book className="w-8 h-8 text-antique-gold" />
+              <span className="text-xl sm:text-2xl font-display font-bold text-warm-white">Unbound</span>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
               <Link
                 to="/analytics"
-                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 rounded-lg transition-colors text-sm sm:text-base"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-forest/20 hover:bg-forest/30 text-forest-light border border-antique-gold/30 transition-colors text-sm sm:text-base font-ui"
               >
                 <BarChart3 className="w-4 h-4" />
                 <span className="hidden sm:inline">Analytics</span>
@@ -303,7 +303,7 @@ const Dashboard: React.FC = () => {
               {isAdmin && (
                 <Link
                   to="/admin"
-                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 rounded-lg transition-colors text-sm sm:text-base"
+                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-antique-gold/20 hover:bg-antique-gold/30 text-antique-gold border border-burgundy/30 transition-colors text-sm sm:text-base font-ui"
                 >
                   <Settings className="w-4 h-4" />
                   <span className="hidden sm:inline">{isSuperAdmin ? 'Super Admin' : 'Admin'}</span>
@@ -311,7 +311,7 @@ const Dashboard: React.FC = () => {
               )}
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm sm:text-base"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-burgundy/20 hover:bg-burgundy/30 text-warm-white border border-antique-gold/30 transition-colors text-sm sm:text-base font-ui"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Sign Out</span>
@@ -325,24 +325,25 @@ const Dashboard: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-4">
-            <h1 className="text-4xl sm:text-5xl font-serif font-bold text-white">
+            <h1 className="text-4xl sm:text-5xl font-display font-bold text-charcoal">
               Welcome back, {displayProfile.username}!
             </h1>
             {getAdminBadge()}
           </div>
-          <p className="text-xl text-purple-100">
+          <p className="text-xl text-charcoal/70 font-reading">
             Ready to continue your literary adventure?
           </p>
+          <div className="ornamental-divider"></div>
         </div>
 
         {/* Show any errors */}
         {error && (
-          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+          <div className="max-w-2xl mx-auto mb-8 p-4 bg-burgundy/10 border border-burgundy/20 literary-card">
             <div className="flex items-center justify-between">
-              <p className="text-red-100">{error}</p>
+              <p className="text-burgundy font-reading">{error}</p>
               <button
                 onClick={handleRetry}
-                className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                className="flex items-center gap-2 btn-literary px-4 py-2 transition-colors font-ui"
               >
                 <RefreshCw className="w-4 h-4" />
                 Retry
@@ -353,18 +354,18 @@ const Dashboard: React.FC = () => {
 
         {/* Beta Status Card */}
         <div className="max-w-2xl mx-auto mb-12">
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+          <div className="literary-card p-6">
             <div className="flex items-center gap-4">
               {displayProfile.beta_approved ? (
-                <CheckCircle className="w-8 h-8 text-green-400" />
+                <CheckCircle className="w-8 h-8 text-forest-light" />
               ) : (
-                <XCircle className="w-8 h-8 text-red-400" />
+                <XCircle className="w-8 h-8 text-burgundy" />
               )}
               <div>
-                <h3 className="text-xl font-semibold text-white mb-1">
+                <h3 className="text-xl font-semibold text-charcoal mb-1 font-display">
                   Beta Access Status
                 </h3>
-                <p className="text-purple-100">
+                <p className="text-charcoal/70 font-reading">
                   {displayProfile.beta_approved 
                     ? "You have full access to all platform features!" 
                     : "Your beta access is pending approval."
@@ -378,14 +379,14 @@ const Dashboard: React.FC = () => {
         {/* Active Sessions */}
         {loadingSessions ? (
           <div className="max-w-4xl mx-auto mb-12">
-            <div className="text-center py-8">
-              <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-              <p className="text-purple-100">Loading your adventures...</p>
+            <div className="text-center py-8 literary-card">
+              <Loader2 className="w-8 h-8 text-burgundy animate-spin mx-auto mb-4" />
+              <p className="text-charcoal/70 font-reading">Loading your adventures...</p>
             </div>
           </div>
         ) : activeSessions.length > 0 ? (
           <div className="max-w-4xl mx-auto mb-12">
-            <h2 className="text-2xl font-serif font-bold text-white mb-6 text-center">
+            <h2 className="text-2xl font-display font-bold text-charcoal mb-6 text-center">
               Your Active Adventures
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
@@ -394,22 +395,22 @@ const Dashboard: React.FC = () => {
                 return (
                   <div
                     key={session.id}
-                    className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/40 transition-all duration-300"
+                    className="literary-card p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                   >
                     <div className="flex items-start gap-4 mb-4">
-                      <div className={`w-12 h-12 rounded-full ${avatarColors[avatarColorIndex]} flex items-center justify-center flex-shrink-0`}>
-                        <span className="text-lg font-bold text-white">
+                      <div className={`w-12 h-12 ${avatarColors[avatarColorIndex]} flex items-center justify-center flex-shrink-0 border border-antique-gold/30`}>
+                        <span className="text-lg font-bold text-warm-white font-display">
                           {session.character.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-serif font-bold text-white mb-1">
+                        <h3 className="text-lg font-display font-bold text-charcoal mb-1">
                           {session.story.title}
                         </h3>
-                        <p className="text-purple-200 text-sm mb-2">
+                        <p className="text-charcoal/60 text-sm mb-2 font-reading">
                           by {session.story.author}
                         </p>
-                        <div className="flex items-center gap-2 text-purple-100 text-sm">
+                        <div className="flex items-center gap-2 text-charcoal/70 text-sm font-ui">
                           <User className="w-4 h-4" />
                           Playing as {session.character.name}
                         </div>
@@ -417,21 +418,21 @@ const Dashboard: React.FC = () => {
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-purple-200 text-sm">
+                      <div className="flex items-center gap-2 text-charcoal/60 text-sm font-ui">
                         <Calendar className="w-4 h-4" />
                         {new Date(session.updated_at).toLocaleDateString()}
                       </div>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleContinueSession(session.id)}
-                          className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition-all duration-300"
+                          className="flex items-center gap-2 btn-literary px-4 py-2 font-semibold transition-all duration-300 font-ui"
                         >
                           <Play className="w-4 h-4" />
                           Continue
                         </button>
                         <button
                           onClick={() => handleDeleteSession(session.id)}
-                          className="p-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors"
+                          className="p-2 bg-burgundy/20 hover:bg-burgundy/30 text-burgundy border border-burgundy/30 transition-colors"
                           title="Delete Adventure"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -447,32 +448,32 @@ const Dashboard: React.FC = () => {
 
         {/* Action Cards */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div className="group bg-gradient-to-br from-purple-600/20 to-blue-600/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 transform hover:-translate-y-2">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <BookOpen className="w-8 h-8 text-white" />
+          <div className="group literary-card p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="w-16 h-16 bg-gradient-to-br from-burgundy to-burgundy-light flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-antique-gold/30">
+              <BookOpen className="w-8 h-8 text-warm-white" />
             </div>
-            <h3 className="text-2xl font-serif font-bold text-white mb-4">Browse Stories</h3>
-            <p className="text-purple-100 mb-6 leading-relaxed">
+            <h3 className="text-2xl font-display font-bold text-charcoal mb-4">Browse Stories</h3>
+            <p className="text-charcoal/70 mb-6 leading-relaxed font-reading">
               Explore our curated collection of classic literature and choose your next adventure.
             </p>
             <button 
-              className="bg-white text-purple-900 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors"
+              className="btn-literary px-6 py-3 font-semibold transition-colors font-ui"
               onClick={handleBrowseStories}
             >
               Explore Stories
             </button>
           </div>
 
-          <div className="group bg-gradient-to-br from-green-600/20 to-teal-600/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 transform hover:-translate-y-2">
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <Book className="w-8 h-8 text-white" />
+          <div className="group literary-card p-8 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+            <div className="w-16 h-16 bg-gradient-to-br from-forest to-forest-light flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-antique-gold/30">
+              <Book className="w-8 h-8 text-warm-white" />
             </div>
-            <h3 className="text-2xl font-serif font-bold text-white mb-4">Create Character</h3>
-            <p className="text-purple-100 mb-6 leading-relaxed">
+            <h3 className="text-2xl font-display font-bold text-charcoal mb-4">Create Character</h3>
+            <p className="text-charcoal/70 mb-6 leading-relaxed font-reading">
               Design unique characters with distinct personalities for your literary adventures.
             </p>
             <button 
-              className="bg-white text-purple-900 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors"
+              className="btn-literary px-6 py-3 font-semibold transition-colors font-ui"
               onClick={handleBrowseStories}
             >
               Start New Adventure
@@ -482,23 +483,23 @@ const Dashboard: React.FC = () => {
 
         {/* Stats Section */}
         <div className="mt-16 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-serif font-bold text-white mb-8 text-center">
+          <h2 className="text-2xl font-display font-bold text-charcoal mb-8 text-center">
             Your Adventure Stats
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 text-center border border-white/10">
-              <div className="text-3xl font-bold text-white mb-2">{activeSessions.length}</div>
-              <div className="text-purple-200">Active Adventures</div>
+            <div className="literary-card p-6 text-center">
+              <div className="text-3xl font-bold text-charcoal mb-2 font-display">{activeSessions.length}</div>
+              <div className="text-charcoal/70 font-ui">Active Adventures</div>
             </div>
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 text-center border border-white/10">
-              <div className="text-3xl font-bold text-white mb-2">
+            <div className="literary-card p-6 text-center">
+              <div className="text-3xl font-bold text-charcoal mb-2 font-display">
                 {activeSessions.reduce((acc, session) => acc + (session.character.personality_traits?.length || 0), 0)}
               </div>
-              <div className="text-purple-200">Character Traits</div>
+              <div className="text-charcoal/70 font-ui">Character Traits</div>
             </div>
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 text-center border border-white/10">
-              <div className="text-3xl font-bold text-white mb-2">0</div>
-              <div className="text-purple-200">Conversations</div>
+            <div className="literary-card p-6 text-center">
+              <div className="text-3xl font-bold text-charcoal mb-2 font-display">0</div>
+              <div className="text-charcoal/70 font-ui">Conversations</div>
             </div>
           </div>
         </div>
