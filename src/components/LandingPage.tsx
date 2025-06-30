@@ -88,15 +88,15 @@ const LandingPage: React.FC = () => {
         {/* Header for logged-in users */}
         {user && !authLoading && (
           <header className="absolute top-0 left-0 right-0 z-20 bg-black/20 backdrop-blur-sm border-b border-white/10">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-3 sm:py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Book className="w-8 h-8 text-white" />
-                  <span className="text-2xl font-serif font-bold text-white">Unbound</span>
+                  <Book className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                  <span className="text-xl sm:text-2xl font-serif font-bold text-white">Unbound</span>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4">
                   {profile && (
-                    <div className="flex items-center gap-3 text-white">
+                    <div className="hidden sm:flex items-center gap-3 text-white">
                       <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
                         <span className="text-sm font-bold">
                           {profile.username.charAt(0).toUpperCase()}
@@ -107,15 +107,26 @@ const LandingPage: React.FC = () => {
                   )}
                   <button
                     onClick={handleSignOut}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
+                    className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm sm:text-base"
                   >
                     <LogOut className="w-4 h-4" />
-                    Sign Out
+                    <span className="hidden sm:inline">Sign Out</span>
                   </button>
                 </div>
               </div>
             </div>
           </header>
+        )}
+
+        {/* Unbound Logo in top right (only when not logged in) */}
+        {!user && !authLoading && (
+          <div className="absolute top-4 right-4 z-10 w-12 h-12">
+            <img 
+              src="https://Europe-america.b-cdn.net/black_circle_360x360.png" 
+              alt="Unbound Logo" 
+              className="w-full h-full object-contain"
+            />
+          </div>
         )}
 
         {/* Floating Book Elements */}
@@ -137,19 +148,19 @@ const LandingPage: React.FC = () => {
         <div className={`relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 ${user ? 'pt-20' : ''}`}>
           <div className="text-center">
             <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full backdrop-blur-sm mb-6">
-                <Book className="w-10 h-10 text-white" />
+              <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 bg-white/10 rounded-full backdrop-blur-sm mb-6">
+                <Book className="w-8 sm:w-10 h-8 sm:h-10 text-white" />
               </div>
             </div>
             
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-bold text-white mb-6 leading-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold text-white mb-6 leading-tight">
               Step Into Your
               <span className="block bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
                 Favorite Stories
               </span>
             </h1>
             
-            <p className="text-xl sm:text-2xl text-purple-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl lg:text-2xl text-purple-100 mb-8 max-w-3xl mx-auto leading-relaxed">
               Create your own character and experience classic literature through 
               interactive conversations with beloved characters from famous books.
             </p>
@@ -259,8 +270,8 @@ const LandingPage: React.FC = () => {
           <div className="grid md:grid-cols-4 gap-8">
             {/* Step 1 */}
             <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <BookOpen className="w-10 h-10 text-white" />
+              <div className="w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <BookOpen className="w-8 sm:w-10 h-8 sm:h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Choose Your Story</h3>
               <p className="text-gray-600">
@@ -270,8 +281,8 @@ const LandingPage: React.FC = () => {
 
             {/* Step 2 */}
             <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <User className="w-10 h-10 text-white" />
+              <div className="w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-br from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <User className="w-8 sm:w-10 h-8 sm:h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Create Your Character</h3>
               <p className="text-gray-600">
@@ -281,8 +292,8 @@ const LandingPage: React.FC = () => {
 
             {/* Step 3 */}
             <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <MessageCircle className="w-10 h-10 text-white" />
+              <div className="w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-br from-rose-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <MessageCircle className="w-8 sm:w-10 h-8 sm:h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Start Conversations</h3>
               <p className="text-gray-600">
@@ -292,8 +303,8 @@ const LandingPage: React.FC = () => {
 
             {/* Step 4 */}
             <div className="text-center group">
-              <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Sparkles className="w-10 h-10 text-white" />
+              <div className="w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Sparkles className="w-8 sm:w-10 h-8 sm:h-10 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Shape the Narrative</h3>
               <p className="text-gray-600">
@@ -428,7 +439,7 @@ const LandingPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={betaLoading}
-                  className="bg-white text-purple-900 px-8 py-4 rounded-full font-semibold hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="bg-white text-purple-900 px-6 py-4 rounded-full font-semibold hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {betaLoading ? (
                     <>
@@ -453,8 +464,16 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-2 mb-4 md:mb-0">
-              <Book className="w-6 h-6" />
-              <span className="text-xl font-serif font-bold">Unbound</span>
+              <div className="flex items-center gap-1">
+                <Book className="w-6 h-6" />
+                <span className="text-xl font-serif font-bold">Unbound</span>
+              </div>
+              {/* Black circle logo next to name */}
+              <img 
+                src="https://Europe-america.b-cdn.net/black_circle_360x360.png" 
+                alt="Unbound Logo" 
+                className="w-5 h-5 object-contain"
+              />
             </div>
             
             <div className="flex flex-col md:flex-row items-center gap-6 text-gray-400">
