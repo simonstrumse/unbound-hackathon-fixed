@@ -187,30 +187,50 @@ const Game: React.FC = () => {
     if (!session) return;
     
     try {
-      const currentState = session.session_state || {};
-      const newState = {
-        ...currentState,
-        ...updates,
-        lastUpdated: new Date().toISOString()
+      // Create the complete session state object that will be saved
+      const sessionStateToSave = {
+        context_tokens_used: contextTokens,
+        world_state: {
+          current_location: worldState.current_location || 'Unknown location',
+          present_npcs: worldState.present_npcs || [],
+          mood_atmosphere: worldState.mood_atmosphere || 'A story unfolds',
+          time_of_day: worldState.time_of_day || 'day'
+        },
+        memory_events: memoryEvents,
+        relationships: relationships,
+        last_updated: new Date().toISOString(),
+        ...updates
       };
-      
+
+      console.log('🔍 SAVING SESSION STATE TO DATABASE:');
+      console.log('Session ID:', session.id);
+      console.log('Current Scene State:', worldState);
+      console.log('Characters Present:', worldState.present_npcs);
+      console.log('Complete session_state object being saved:', JSON.stringify(sessionStateToSave, null, 2));
+
       const { error } = await supabase
         .from('story_sessions')
-        .update({ 
-          session_state: newState,
+        .update({
+          session_state: sessionStateToSave,
           updated_at: new Date().toISOString()
         })
         .eq('id', session.id);
-      
+
       if (error) {
-        console.error('Error saving session state:', error);
-      } else {
-        console.log('Session state saved successfully');
-        // Update local session object
-        setSession(prev => prev ? { ...prev, session_state: newState } : null);
+        console.error('❌ ERROR SAVING SESSION STATE:', error);
+        throw error;
       }
+
+      console.log('✅ SESSION STATE SAVED SUCCESSFULLY');
+      // Update local session object
+      setSession(prev => prev ? { ...prev, session_state: sessionStateToSave } : null);
     } catch (error) {
-      console.error('Error in saveSessionState:', error);
+      console.error('Error saving session state:', error);
+      console.log('❌ SAVE FAILED - Current state was:', {
+        worldState,
+        memoryEvents: memoryEvents.length,
+        relationships: relationships.length
+      });
     }
   };
 
@@ -221,7 +241,8 @@ const Game: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      console.log('Fetching session:', sessionId);
+      console.log('🔍 LOADING SESSION DATA FROM DATABASE:');
+      console.log('Session ID:', sessionId);
 
       // Fetch session with story and character details
       const { data: sessionData, error: sessionError } = await supabase
@@ -236,8 +257,22 @@ const Game: React.FC = () => {
         .single();
 
       if (sessionError) {
-        console.error('Error fetching session:', sessionError);
+        console.error('❌ ERROR LOADING SESSION:', sessionError);
         throw new Error('Session not found or access denied');
+      }
+
+      if (!sessionData) {
+        console.error('❌ NO SESSION DATA FOUND');
+        throw new Error('Session not found');
+      }
+
+      console.log('📦 RAW SESSION DATA FROM DATABASE:', JSON.stringify(sessionData, null, 2));
+      console.log('📦 SESSION STATE OBJECT:', JSON.stringify(sessionData.session_state, null, 2));
+      
+      if (sessionData.session_state?.world_state) {
+        console.log('🌍 WORLD STATE FOUND:', JSON.stringify(sessionData.session_state.world_state, null, 2));
+      } else {
+        console.log('❌ NO WORLD STATE FOUND IN SESSION DATA');
       }
 
       const sessionWithDetails: SessionWithDetails = {
@@ -251,31 +286,50 @@ const Game: React.FC = () => {
       // Restore session state including memories, relationships, etc.
       const sessionState = sessionData.session_state || {};
       
+      // Load world state from session_state
+      const worldStateData = sessionState.world_state;
+      console.log('🔄 LOADING WORLD STATE:', worldStateData);
+      
+      if (worldStateData) {
+        console.log('✅ SETTING WORLD STATE TO:', worldStateData);
+        setWorldState({
+          current_location: worldStateData.current_location || 'Unknown location',
+          mood_atmosphere: worldStateData.mood_atmosphere || 'A story unfolds',
+          time_of_day: worldStateData.time_of_day || 'day',
+          present_npcs: worldStateData.present_npcs || []
+        });
+        console.log('✅ CHARACTERS PRESENT SET TO:', worldStateData.present_npcs || []);
+      } else {
+        console.log('⚠️ NO WORLD STATE - USING DEFAULTS');
+        setWorldState({
+          current_location: 'Unknown location',
+          mood_atmosphere: 'A story unfolds',
+          time_of_day: 'day',
+          present_npcs: []
+        });
+      }
+      
       // Restore persistent states from session_state
-      if (sessionState.memoryEvents) {
-        setMemoryEvents(sessionState.memoryEvents);
-        console.log('Restored memory events:', sessionState.memoryEvents.length);
+      if (sessionState.memory_events) {
+        setMemoryEvents(sessionState.memory_events);
+        console.log('🧠 LOADING MEMORY EVENTS:', sessionState.memory_events.length, 'events');
       }
       
       if (sessionState.relationships) {
         setRelationships(sessionState.relationships);
-        console.log('Restored relationships:', sessionState.relationships.length);
+        console.log('❤️ LOADING RELATIONSHIPS:', sessionState.relationships.length, 'relationships');
       }
       
-      if (sessionState.contextUsage) {
-        setContextTokens(sessionState.contextUsage);
-        console.log('Restored context usage:', sessionState.contextUsage);
+      if (sessionState.context_tokens_used) {
+        setContextTokens(sessionState.context_tokens_used);
+        console.log('📊 LOADING CONTEXT USAGE:', sessionState.context_tokens_used, 'tokens');
       }
-      
-      if (sessionState.currentScene) {
-        setWorldState(prev => ({ ...prev, current_location: sessionState.currentScene }));
-        console.log('Restored current scene:', sessionState.currentScene);
-      }
-      
-      if (sessionState.charactersPresent) {
-        setWorldState(prev => ({ ...prev, present_npcs: sessionState.charactersPresent }));
-        console.log('Restored characters present:', sessionState.charactersPresent.length);
-      }
+
+      console.log('✅ SESSION DATA LOADED SUCCESSFULLY');
+      console.log('Final state after loading:');
+      console.log('- World State will be:', worldStateData || 'defaults');
+      console.log('- Memory Events:', sessionState.memory_events?.length || 0);
+      console.log('- Relationships:', sessionState.relationships?.length || 0);
 
       // Fetch messages
       const { data: messageData, error: messageError } = await supabase
@@ -308,6 +362,7 @@ const Game: React.FC = () => {
       console.log('Session loaded successfully');
     } catch (err) {
       console.error('Error loading session:', err);
+      console.log('❌ COMPLETE LOAD FAILURE');
       const errorMessage = err instanceof Error ? err.message : 'Failed to load session';
       setError(errorMessage);
       showNotification(errorMessage, 'error');
@@ -614,9 +669,46 @@ const Game: React.FC = () => {
         setSuggestedActions(aiResponse.response.suggested_actions);
       }
 
+      // Process AI response and update state
+      const aiResponseData = aiResponse.response;
+      
+      console.log('🤖 AI RESPONSE RECEIVED:', {
+        hasWorldStateUpdates: !!aiResponseData.world_state_updates,
+        worldStateUpdates: aiResponseData.world_state_updates,
+        currentSceneBefore: worldState
+      });
+
+      // Handle world state updates with proper merging
+      if (aiResponseData.world_state_updates) {
+        const updates = aiResponseData.world_state_updates;
+        
+        // Create the updated world state once
+        const updatedWorldState = { ...worldState, ...updates };
+        
+        console.log('🌍 UPDATING WORLD STATE:', {
+          updates,
+          updatedWorldState
+        });
+
+        // Update React state
+        setWorldState(updatedWorldState);
+        
+        // Save the updated state to database immediately
+        await saveSessionStateToDb({
+          world_state: {
+            current_location: updatedWorldState.current_location || 'Unknown location',
+            present_npcs: updatedWorldState.present_npcs || [],
+            mood_atmosphere: updatedWorldState.mood_atmosphere || 'A story unfolds',
+            time_of_day: updatedWorldState.time_of_day || 'day'
+          }
+        });
+        
+        console.log('✅ WORLD STATE UPDATED AND SAVED');
+      }
+
       // Update memory events
-      if (aiResponse.response.memory_updates && aiResponse.response.memory_updates.length > 0) {
-        const newMemoryEvents = [...memoryEvents, ...aiResponse.response.memory_updates];
+      if (aiResponseData.memory_updates && aiResponseData.memory_updates.length > 0) {
+        const newMemoryEvents = [...memoryEvents, ...aiResponseData.memory_updates];
         setMemoryEvents(newMemoryEvents);
         
         // Save to database
@@ -624,10 +716,10 @@ const Game: React.FC = () => {
       }
 
       // Update relationships
-      if (aiResponse.response.relationship_updates && aiResponse.response.relationship_updates.length > 0) {
+      if (aiResponseData.relationship_updates && aiResponseData.relationship_updates.length > 0) {
         const updatedRelationships = (() => {
           const updated = [...relationships];
-          aiResponse.response.relationship_updates.forEach(update => {
+          aiResponseData.relationship_updates.forEach(update => {
             const existingIndex = updated.findIndex(r => r.character_name === update.character_name);
             if (existingIndex >= 0) {
               updated[existingIndex] = { ...updated[existingIndex], ...update };
@@ -642,11 +734,6 @@ const Game: React.FC = () => {
         
         // Save to database
         saveSessionStateToDb({ relationships: updatedRelationships });
-      }
-
-      // Update world state
-      if (aiResponse.response.world_state_updates) {
-        setWorldState(prev => ({ ...prev, ...aiResponse.response.world_state_updates }));
       }
 
       // Update context usage
