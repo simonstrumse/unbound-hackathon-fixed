@@ -1,0 +1,225 @@
+# Unbound Storytelling Platform - Project Knowledge
+
+## HACKATHON GOAL
+**Create a fully functional clone of the Unbound Storytelling Platform using plain English prompts in Bolt.new, achieving complete feature parity with the minimum number of prompts.**
+
+## Project Overview
+
+Unbound is an AI-powered interactive storytelling platform that transforms classic literature into personalized adventures. Users create custom characters and engage with NPCs from famous books through dynamic dialogues that adapt to their choices and creativity preferences.
+
+## Core Architecture Decisions
+
+### Technology Stack
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript throughout
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **AI**: OpenAI API (GPT-4o-mini as default, with GPT-4o and GPT-4-turbo options)
+- **State Management**: Zustand
+- **UI Components**: shadcn/ui with Tailwind CSS
+- **Deployment**: Vercel
+
+### Key Design Principles
+
+1. **API Integration**: Use native API routes in Next.js, NOT Supabase edge functions
+2. **Real-time Features**: Leverage Supabase real-time for live updates
+3. **Type Safety**: Full TypeScript with generated database types
+4. **User Experience**: Smooth, responsive UI with proper loading states and error handling
+5. **Security**: Row Level Security (RLS) policies for all database operations
+
+## Database Schema (Already Implemented)
+
+The database includes these tables with proper relationships:
+- `profiles` - User profiles with beta approval status
+- `stories` - Available classic books
+- `characters` - Both player and NPC characters
+- `story_sessions` - Active story instances
+- `messages` - Conversation history
+- `story_arcs` - Narrative structure
+- `world_state` - Dynamic story state
+- `memory_store` - Important events
+- `choices` - User decisions
+- `api_usage` - Token tracking
+- `user_sessions` - Activity tracking
+- `feedback` - User feedback
+
+## AI Integration (Already Implemented)
+
+### Three Creativity Levels
+1. **Story-Focused (Level 1)**: Keeps close to original narrative
+2. **Flexible Exploration (Level 2)**: Balanced approach
+3. **Open World (Level 3)**: Complete creative freedom
+
+### Response Structure
+All AI responses follow this JSON format:
+```json
+{
+  "narration": "Scene description",
+  "characters": [
+    {
+      "name": "Character Name",
+      "action": "What they're doing",
+      "dialogue": "What they say"
+    }
+  ],
+  "suggestedActions": ["Action 1", "Action 2", "Action 3"],
+  "worldStateUpdates": {},
+  "memoryUpdates": []
+}
+```
+
+## Current Implementation Status
+
+### ✅ Completed
+- Database schema with all tables
+- Supabase authentication setup
+- Beta signup flow
+- Landing page
+- OpenAI integration with structured responses
+- Zustand stores for auth and story state
+- UI component library (shadcn/ui)
+
+### 🚧 In Progress (Second Prompt)
+- Sign-in page
+- Protected routes
+- Dashboard for active/completed stories
+- Story library page
+- Character creation flow
+- Main gameplay interface
+- API routes for all operations
+
+### ❌ Not Yet Started
+- Admin dashboard
+- Analytics tracking
+- Payment integration
+- Export functionality
+- Email notifications
+
+## User Journey
+
+1. **Landing** → User sees marketing page
+2. **Signup** → Beta access request
+3. **Approval** → Admin approves beta access
+4. **Login** → User signs in
+5. **Dashboard** → View active/completed stories
+6. **Library** → Browse available books
+7. **Character Creation** → Design protagonist
+8. **Gameplay** → Interactive story experience
+9. **Completion** → AI-generated summary
+
+## API Endpoints Pattern
+
+All API routes should follow RESTful conventions:
+- `POST /api/auth/*` - Authentication operations
+- `GET/POST /api/stories/*` - Story management
+- `POST /api/story-sessions/*` - Active sessions
+- `POST /api/messages` - Send/receive messages
+- `GET/POST /api/characters/*` - Character operations
+- `POST /api/ai/generate` - AI response generation
+
+## State Management Strategy
+
+Use Zustand stores for:
+- **authStore**: User session, profile, beta status
+- **storyStore**: Active session, messages, characters, world state
+- **uiStore**: Loading states, modals, sidebars
+
+## Context Management
+
+### Token Usage
+- Track tokens per message
+- Display usage visually (progress bar)
+- Compress context when approaching limits
+- Preserve recent messages and key plot points
+
+### Memory System
+- Store significant events
+- Maintain character relationships
+- Track story progress
+- Reference past decisions
+
+## UI/UX Guidelines
+
+### Layout
+- **Responsive**: Mobile-first design
+- **Three-Panel**: Character list | Chat | Story info
+- **Resizable**: Panels can be adjusted
+- **Dark Mode**: Full theme support
+
+### Components
+- **Loading States**: Skeleton screens and spinners
+- **Error Handling**: Toast notifications for errors
+- **Streaming**: Real-time text display for AI responses
+- **Animations**: Smooth transitions with Framer Motion
+
+## Performance Considerations
+
+1. **Batch Operations**: API usage tracking batched (1s delay or 10 records)
+2. **Optimistic Updates**: Update UI before server confirmation
+3. **Lazy Loading**: Load components as needed
+4. **Caching**: Cache story data and static content
+5. **SSR/SSG**: Use where appropriate for SEO
+
+## Security Requirements
+
+1. **Authentication**: All app routes require login
+2. **Beta Gate**: Check beta_approved status
+3. **RLS Policies**: Users only access own data
+4. **API Keys**: Environment variables only
+5. **Rate Limiting**: Prevent abuse
+
+## Error Handling Strategy
+
+1. **Network Errors**: Retry with exponential backoff
+2. **AI Failures**: Fallback responses
+3. **Auth Errors**: Clear redirect to login
+4. **Validation**: Frontend and backend validation
+5. **User Feedback**: Clear error messages
+
+## Development Workflow
+
+1. **Type Safety**: Always use TypeScript types
+2. **Database Types**: Use generated Supabase types
+3. **Component Reuse**: Leverage shadcn/ui components
+4. **State Updates**: Use Zustand actions
+5. **Error Boundaries**: Wrap features in error boundaries
+
+## Environment Variables Required
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+OPENAI_API_KEY=
+ADMIN_API_TOKEN=
+```
+
+## Testing Approach
+
+- Manual testing for user flows
+- Check database operations work
+- Verify AI responses are structured correctly
+- Test error scenarios
+- Validate responsive design
+
+## Feature Flags
+
+Consider implementing for:
+- Beta features
+- Model selection (GPT-4 vs GPT-4o-mini)
+- Experimental creativity modes
+- Admin features
+
+Remember: The goal is to create a magical experience where users feel they're truly part of their favorite stories, with every conversation feeling natural and every choice mattering.
+
+## CRITICAL REMINDERS FOR BOLT DEVELOPMENT
+
+1. **Always include ALL environment variables** in your first prompt
+2. **Use UPSERT for profile operations**, never INSERT
+3. **Build incrementally** - one feature flow at a time
+4. **Test with existing data**, not just new signups
+5. **Include error handling** in every prompt requirement
+6. **Be specific about file paths** and what to create
+7. **Verify each step works** before moving to the next
+
+In this project the primary model should be gpt-4o-mini always.
