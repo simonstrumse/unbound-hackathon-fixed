@@ -73,6 +73,7 @@ const Game: React.FC = () => {
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(false);
   const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [storyFreedomOpen, setStoryFreedomOpen] = useState(false);
   
   // Mobile responsive state
   const [isMobile, setIsMobile] = useState(false);
@@ -456,14 +457,34 @@ const Game: React.FC = () => {
     }
   };
 
+  const handleCreativityLevelChange = async (newLevel: 'faithful' | 'balanced' | 'creative') => {
+    if (!session) return;
+    
+    try {
+      const { error } = await supabase
+        .from('story_sessions')
+        .update({ creativity_level: newLevel })
+        .eq('id', sessionId!);
+
+      if (error) throw error;
+
+      setSession(prev => prev ? { ...prev, creativity_level: newLevel } : null);
+      setStoryFreedomOpen(false);
+      showNotification(`Story freedom updated to ${getCreativityLevelDisplay().name}`, 'success');
+    } catch (err) {
+      console.error('Error updating creativity level:', err);
+      showNotification('Failed to update story freedom level', 'error');
+    }
+  };
+
   const toggleLeftSidebar = () => setLeftSidebarCollapsed(!leftSidebarCollapsed);
   const toggleRightSidebar = () => setRightSidebarCollapsed(!rightSidebarCollapsed);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-[#1A1A1A] text-xl mb-4 loading-dots">Loading your adventure</div>
+          <div className="text-white text-xl mb-4 loading-dots">Loading your adventure</div>
         </div>
       </div>
     );
@@ -471,12 +492,12 @@ const Game: React.FC = () => {
 
   if (error || !session || !story || !character) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-[#E53E3E] mx-auto mb-4" />
-          <h2 className="text-2xl font-medium text-[#1A1A1A] mb-2">Unable to Load Adventure</h2>
-          <p className="text-[#1A1A1A] mb-4 font-light">{error || 'Session data not found'}</p>
-          <Link to="/dashboard" className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8]">
+          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <h2 className="text-2xl font-medium text-white mb-2">Unable to Load Adventure</h2>
+          <p className="text-purple-100 mb-4 font-light">{error || 'Session data not found'}</p>
+          <Link to="/dashboard" className="text-purple-300 hover:text-white">
             ← Back to Dashboard
           </Link>
         </div>
@@ -489,28 +510,28 @@ const Game: React.FC = () => {
   const creativityDisplay = getCreativityLevelDisplay();
 
   return (
-    <div className="h-screen bg-[#FAFAF8] flex flex-col overflow-hidden game-chat">
+    <div className="h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex flex-col overflow-hidden game-chat">
       {/* Header */}
-      <header className="typewriter-header flex-shrink-0">
+      <header className="bg-white/20 backdrop-blur-sm border-b border-white/20 flex-shrink-0">
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
                 to="/dashboard"
-                className="flex items-center gap-2 text-[#1A1A1A] typewriter-hover"
+                className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back
               </Link>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
-                  <span className="text-sm font-medium">
+                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-medium text-white">
                     {character.name.charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <div>
-                  <div className="text-[#1A1A1A] font-medium">{character.name}</div>
-                  <div className="text-[#1A1A1A] text-sm font-light">in {story.title}</div>
+                  <div className="text-white font-medium">{character.name}</div>
+                  <div className="text-purple-200 text-sm font-light">in {story.title}</div>
                 </div>
               </div>
             </div>
@@ -520,14 +541,14 @@ const Game: React.FC = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={toggleLeftSidebar}
-                  className="typewriter-btn"
+                  className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-lg transition-colors"
                   aria-label="Toggle character info"
                 >
                   <User className="w-4 h-4" />
                 </button>
                 <button
                   onClick={toggleRightSidebar}
-                  className="typewriter-btn"
+                  className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-lg transition-colors"
                   aria-label="Toggle game status"
                 >
                   <Info className="w-4 h-4" />
@@ -541,14 +562,14 @@ const Game: React.FC = () => {
                 <AutoSaveIndicator status={autoSaveStatus} />
                 <button
                   onClick={() => setShowStoryInfo(true)}
-                  className="typewriter-btn"
+                  className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
                 >
                   <Info className="w-4 h-4" />
                   Info
                 </button>
                 <button
                   onClick={handleExport}
-                  className="typewriter-btn"
+                  className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   Export
@@ -562,110 +583,110 @@ const Game: React.FC = () => {
       {/* Main Game Area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - Character Info */}
-        <div className={`bg-[#FAFAF8] border-r-2 border-[#1A1A1A] flex-shrink-0 transition-all duration-300 ${
+        <div className={`bg-white/30 backdrop-blur-sm border-r border-white/20 flex-shrink-0 transition-all duration-300 ${
           leftSidebarCollapsed ? (isMobile ? 'w-0' : 'w-0') : 'w-80'
         } ${leftSidebarCollapsed ? 'overflow-hidden' : 'overflow-y-auto'}`}>
           <div className="p-6 space-y-6">
             {/* Character Header */}
-            <div className="typewriter-card">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium text-[#1A1A1A]">{character.name}</h3>
+                <h3 className="text-lg font-medium text-white">{character.name}</h3>
                 {!isMobile && (
                   <button
                     onClick={toggleLeftSidebar}
-                    className="typewriter-btn"
+                    className="text-purple-200 hover:text-white transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 )}
               </div>
-              <p className="text-[#1A1A1A] text-sm font-light">Your Character</p>
+              <p className="text-purple-200 text-sm font-light">Your Character</p>
             </div>
 
             {/* Character Traits */}
-            <div className="typewriter-card">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="flex items-center gap-2 mb-4">
-                <Heart className="w-5 h-5 text-[#2B6CB0]" />
-                <h4 className="text-[#1A1A1A] font-medium">Traits</h4>
+                <Heart className="w-5 h-5 text-purple-300" />
+                <h4 className="text-white font-medium">Traits</h4>
               </div>
               {character.personality_traits && character.personality_traits.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {character.personality_traits.map((trait, index) => (
                     <span
                       key={index}
-                      className="typewriter-badge bg-[#1A1A1A] text-[#FAFAF8] text-xs"
+                      className="bg-purple-500/30 text-purple-100 px-3 py-1 rounded-full text-xs font-medium border border-purple-400/30"
                     >
                       {trait}
                     </span>
                   ))}
                 </div>
               ) : (
-                <p className="text-[#1A1A1A] text-sm font-light">No traits defined</p>
+                <p className="text-purple-200 text-sm font-light">No traits defined</p>
               )}
             </div>
 
             {/* Conversation Count */}
-            <div className="typewriter-card">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <MessageCircle className="w-5 h-5 text-[#2B6CB0]" />
-                  <span className="text-[#1A1A1A] font-medium">Conversations</span>
+                  <MessageCircle className="w-5 h-5 text-purple-300" />
+                  <span className="text-white font-medium">Conversations</span>
                 </div>
-                <span className="text-2xl font-medium text-[#1A1A1A]">
+                <span className="text-2xl font-medium text-white">
                   {messages.filter(m => m.message_type === 'user').length}
                 </span>
               </div>
             </div>
 
             {/* Key Memories */}
-            <div className="typewriter-card">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-[#2B6CB0]" />
-                  <span className="text-[#1A1A1A] font-medium">Key Memories</span>
+                  <Sparkles className="w-5 h-5 text-purple-300" />
+                  <span className="text-white font-medium">Key Memories</span>
                 </div>
-                <span className="text-[#1A1A1A] font-medium">
+                <span className="text-white font-medium">
                   {memoryEvents.filter(e => e.importance === 'high').length}
                 </span>
               </div>
               {memoryEvents.length > 0 ? (
                 <div className="space-y-2">
                   {memoryEvents.slice(-3).map((memory, index) => (
-                    <div key={index} className="p-2 bg-[#E5E5E5] border border-[#1A1A1A]">
-                      <p className="text-[#1A1A1A] text-sm font-light">{memory.description}</p>
+                    <div key={index} className="p-2 bg-white/10 rounded border border-white/10">
+                      <p className="text-purple-100 text-sm font-light">{memory.description}</p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-[#1A1A1A] text-sm font-light">No key memories yet</p>
+                <p className="text-purple-200 text-sm font-light">No key memories yet</p>
               )}
             </div>
 
             {/* Relationships */}
-            <div className="typewriter-card">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Users className="w-5 h-5 text-[#2B6CB0]" />
-                  <span className="text-[#1A1A1A] font-medium">Relationships</span>
+                  <Users className="w-5 h-5 text-purple-300" />
+                  <span className="text-white font-medium">Relationships</span>
                 </div>
-                <span className="text-[#1A1A1A] font-medium">
+                <span className="text-white font-medium">
                   {relationships.length}
                 </span>
               </div>
               {relationships.length > 0 ? (
                 <div className="space-y-2">
                   {relationships.slice(-4).map((rel, index) => (
-                    <div key={index} className="p-2 bg-[#E5E5E5] border border-[#1A1A1A]">
+                    <div key={index} className="p-2 bg-white/10 rounded border border-white/10">
                       <div className="flex items-center justify-between">
-                        <span className="text-[#1A1A1A] font-medium text-sm">{rel.character_name}</span>
-                        <span className="text-[#1A1A1A] text-xs">{rel.trust_level}%</span>
+                        <span className="text-white font-medium text-sm">{rel.character_name}</span>
+                        <span className="text-purple-200 text-xs">{rel.trust_level}%</span>
                       </div>
-                      <p className="text-[#1A1A1A] text-xs font-light">{rel.relationship_type} • Trust: {rel.trust_level}%</p>
+                      <p className="text-purple-200 text-xs font-light">{rel.relationship_type} • Trust: {rel.trust_level}%</p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-[#1A1A1A] text-sm font-light">No relationships yet</p>
+                <p className="text-purple-200 text-sm font-light">No relationships yet</p>
               )}
             </div>
           </div>
@@ -681,7 +702,7 @@ const Game: React.FC = () => {
           >
             {messages.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-[#1A1A1A] font-light">Your adventure begins...</p>
+                <p className="text-purple-100 font-light">Your adventure begins...</p>
               </div>
             ) : (
               messages.map((message) => (
@@ -690,14 +711,14 @@ const Game: React.FC = () => {
                     message.message_type === 'user' ? 'justify-end' : 'justify-start'
                   }`}>
                     {message.message_type !== 'user' && (
-                      <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center flex-shrink-0">
-                        <MessageCircle className="w-4 h-4" />
+                      <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <MessageCircle className="w-4 h-4 text-white" />
                       </div>
                     )}
-                    <div className={`max-w-md lg:max-w-2xl p-4 border-2 border-[#1A1A1A] ${
+                    <div className={`max-w-md lg:max-w-2xl p-4 rounded-lg border ${
                       message.message_type === 'user'
-                        ? 'bg-[#1A1A1A] text-[#FAFAF8] ml-12'
-                        : 'bg-[#FAFAF8] text-[#1A1A1A]'
+                        ? 'bg-purple-500 text-white border-purple-400 ml-12'
+                        : 'bg-white/10 text-purple-100 border-white/20 backdrop-blur-sm'
                     }`}>
                       <p className="whitespace-pre-wrap leading-relaxed font-light">
                         {message.content}
@@ -707,8 +728,8 @@ const Game: React.FC = () => {
                       </p>
                     </div>
                     {message.message_type === 'user' && (
-                      <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-medium">
+                      <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-sm font-medium text-white">
                           {character.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
@@ -722,7 +743,7 @@ const Game: React.FC = () => {
                         <button
                           key={index}
                           onClick={() => setInput(action.text)}
-                          className="typewriter-btn text-sm"
+                          className="bg-white/10 hover:bg-white/20 text-purple-100 px-3 py-1 rounded text-sm transition-colors border border-white/20"
                         >
                           {action.text}
                         </button>
@@ -735,13 +756,13 @@ const Game: React.FC = () => {
             
             {sending && (
               <div className="flex gap-3">
-                <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
-                  <MessageCircle className="w-4 h-4" />
+                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4 text-white" />
                 </div>
-                <div className="p-4 border-2 border-[#1A1A1A] bg-[#FAFAF8]">
+                <div className="p-4 rounded-lg bg-white/10 border border-white/20 backdrop-blur-sm">
                   <div className="flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 text-[#1A1A1A] animate-spin" />
-                    <span className="text-[#1A1A1A] font-light loading-dots">Writing</span>
+                    <Loader2 className="w-4 h-4 text-purple-200 animate-spin" />
+                    <span className="text-purple-100 font-light loading-dots">Writing</span>
                   </div>
                 </div>
               </div>
@@ -751,7 +772,7 @@ const Game: React.FC = () => {
           </div>
 
           {/* Input Area - Fixed at bottom */}
-          <div className="border-t-2 border-[#1A1A1A] p-4 bg-[#FAFAF8] flex-shrink-0">
+          <div className="border-t border-white/20 p-4 bg-white/10 backdrop-blur-sm flex-shrink-0">
             <div className="flex gap-2">
               <textarea
                 ref={inputRef}
@@ -759,19 +780,19 @@ const Game: React.FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={`What does ${character.name} do next?`}
-                className="flex-1 p-3 typewriter-input resize-none"
+                className="flex-1 p-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-300 resize-none focus:outline-none focus:ring-2 focus:ring-purple-400 backdrop-blur-sm"
                 rows={2}
                 disabled={sending}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!input.trim() || sending}
-                className="typewriter-btn-primary px-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-purple-500 hover:bg-purple-600 disabled:bg-purple-400 disabled:opacity-50 text-white px-6 py-3 rounded-lg transition-colors flex items-center justify-center disabled:cursor-not-allowed"
               >
                 <Send className="w-5 h-5" />
               </button>
             </div>
-            <div className="flex justify-between items-center mt-2 text-xs text-[#1A1A1A] font-light">
+            <div className="flex justify-between items-center mt-2 text-xs text-purple-300 font-light">
               <span>Press Ctrl+Enter to send</span>
               <span>{Math.floor(currentContextUsage / 1000)}k / 128,000 tokens</span>
             </div>
@@ -779,18 +800,18 @@ const Game: React.FC = () => {
         </div>
 
         {/* Right Sidebar - Game Status */}
-        <div className={`bg-[#FAFAF8] border-l-2 border-[#1A1A1A] flex-shrink-0 transition-all duration-300 ${
+        <div className={`bg-white/30 backdrop-blur-sm border-l border-white/20 flex-shrink-0 transition-all duration-300 ${
           rightSidebarCollapsed ? (isMobile ? 'w-0' : 'w-0') : 'w-80'
         } ${rightSidebarCollapsed ? 'overflow-hidden' : 'overflow-y-auto'}`}>
           <div className="p-6 space-y-6">
             {/* Game Status Header */}
-            <div className="typewriter-card">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium text-[#1A1A1A]">Game Status</h3>
+                <h3 className="text-lg font-medium text-white">Game Status</h3>
                 {!isMobile && (
                   <button
                     onClick={toggleRightSidebar}
-                    className="typewriter-btn"
+                    className="text-purple-200 hover:text-white transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -799,42 +820,42 @@ const Game: React.FC = () => {
             </div>
 
             {/* Context Usage */}
-            <div className="typewriter-card">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="flex items-center gap-2 mb-4">
-                <Activity className="w-5 h-5 text-[#2B6CB0]" />
-                <h4 className="text-[#1A1A1A] font-medium">Context Usage</h4>
+                <Activity className="w-5 h-5 text-purple-300" />
+                <h4 className="text-white font-medium">Context Usage</h4>
               </div>
               <ContextProgressBar 
                 tokensUsed={currentContextUsage}
                 className="mb-2"
               />
-              <p className="text-[#1A1A1A] text-xs font-light">
+              <p className="text-purple-200 text-xs font-light">
                 Context usage healthy • {currentContextUsage.toLocaleString()} tokens
               </p>
             </div>
 
             {/* Current Scene */}
-            <div className="typewriter-card">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="flex items-center gap-2 mb-4">
-                <MapPin className="w-5 h-5 text-[#2B6CB0]" />
-                <h4 className="text-[#1A1A1A] font-medium">Current Scene</h4>
+                <MapPin className="w-5 h-5 text-purple-300" />
+                <h4 className="text-white font-medium">Current Scene</h4>
               </div>
               <div className="space-y-2">
                 <div>
-                  <span className="text-[#1A1A1A] text-sm font-medium">Time:</span>
-                  <span className="text-[#1A1A1A] text-sm font-light ml-2">
+                  <span className="text-purple-200 text-sm font-medium">Time:</span>
+                  <span className="text-purple-100 text-sm font-light ml-2">
                     {worldState.time_of_day}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[#1A1A1A] text-sm font-medium">Mood:</span>
-                  <span className="text-[#1A1A1A] text-sm font-light ml-2">
+                  <span className="text-purple-200 text-sm font-medium">Mood:</span>
+                  <span className="text-purple-100 text-sm font-light ml-2">
                     {worldState.mood_atmosphere || 'exploring, vibrant, curious'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[#1A1A1A] text-sm font-medium">Location:</span>
-                  <span className="text-[#1A1A1A] text-sm font-light ml-2">
+                  <span className="text-purple-200 text-sm font-medium">Location:</span>
+                  <span className="text-purple-100 text-sm font-light ml-2">
                     {worldState.current_location || 'Meryton village green'}
                   </span>
                 </div>
@@ -842,13 +863,13 @@ const Game: React.FC = () => {
             </div>
 
             {/* Characters Present */}
-            <div className="typewriter-card">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <Users className="w-5 h-5 text-[#2B6CB0]" />
-                  <h4 className="text-[#1A1A1A] font-medium">Characters Present</h4>
+                  <Users className="w-5 h-5 text-purple-300" />
+                  <h4 className="text-white font-medium">Characters Present</h4>
                 </div>
-                <span className="text-[#1A1A1A] font-medium">
+                <span className="text-white font-medium">
                   {worldState.present_npcs?.length || 2}
                 </span>
               </div>
@@ -857,47 +878,56 @@ const Game: React.FC = () => {
                   worldState.present_npcs : ['Miss Bingley', 'Miss Bennet']
                 ).map((npc, index) => (
                   <div key={index} className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-[#2B6CB0] text-[#FAFAF8] flex items-center justify-center">
-                      <span className="text-xs font-medium">
+                    <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-medium text-white">
                         {npc.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <span className="text-[#1A1A1A] text-sm font-light">{npc}</span>
+                    <span className="text-purple-100 text-sm font-light">{npc}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Story Freedom */}
-            <div className="typewriter-card">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
               <div className="flex items-center gap-2 mb-4">
-                <Sparkles className="w-5 h-5 text-[#2B6CB0]" />
-                <h4 className="text-[#1A1A1A] font-medium">Story Freedom</h4>
+                <Sparkles className="w-5 h-5 text-purple-300" />
+                <h4 className="text-white font-medium">Story Freedom</h4>
               </div>
-              <div className="space-y-3">
-                <div className="p-3 bg-[#E5E5E5] border border-[#1A1A1A]">
-                  <h5 className="text-[#1A1A1A] font-medium text-sm">{creativityDisplay.name}</h5>
-                  <p className="text-[#1A1A1A] text-xs font-light mt-1">
-                    {creativityDisplay.description}
-                  </p>
-                </div>
-                <div className="text-xs text-[#1A1A1A] font-light">
-                  Change Mode:
-                </div>
-                <div className="space-y-2">
-                  <div className="p-2 bg-[#FAFAF8] border border-[#1A1A1A]">
-                    <span className="text-[#1A1A1A] text-xs font-medium">Story-Focused</span>
-                    <p className="text-[#1A1A1A] text-xs font-light">Staying true to the original narrative</p>
+              <div className="relative">
+                <button
+                  onClick={() => setStoryFreedomOpen(!storyFreedomOpen)}
+                  className="w-full p-3 bg-white/10 border border-white/20 rounded text-left text-white hover:bg-white/20 transition-colors flex items-center justify-between"
+                >
+                  <div>
+                    <div className="font-medium">{creativityDisplay.name}</div>
+                    <div className="text-sm text-purple-200 font-light">{creativityDisplay.description}</div>
                   </div>
-                  <div className="p-2 bg-[#FAFAF8] border border-[#1A1A1A]">
-                    <span className="text-[#1A1A1A] text-xs font-medium">Flexible Exploration</span>
-                    <p className="text-[#1A1A1A] text-xs font-light">Balanced adventure with creative possibilities</p>
+                  {storyFreedomOpen ? 
+                    <ChevronUp className="w-4 h-4 text-purple-300" /> : 
+                    <ChevronDown className="w-4 h-4 text-purple-300" />
+                  }
+                </button>
+                
+                {storyFreedomOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white/20 backdrop-blur-sm border border-white/20 rounded-lg z-10">
+                    {[
+                      { key: 'faithful', name: 'Story-Focused', description: 'Staying true to the original narrative' },
+                      { key: 'balanced', name: 'Flexible Exploration', description: 'Balanced adventure with creative possibilities' },
+                      { key: 'creative', name: 'Open World', description: 'Complete creative freedom' }
+                    ].map((option) => (
+                      <button
+                        key={option.key}
+                        onClick={() => handleCreativityLevelChange(option.key as any)}
+                        className="w-full p-3 text-left text-white hover:bg-white/10 transition-colors first:rounded-t-lg last:rounded-b-lg border-b border-white/10 last:border-b-0"
+                      >
+                        <div className="font-medium">{option.name}</div>
+                        <div className="text-sm text-purple-200 font-light">{option.description}</div>
+                      </button>
+                    ))}
                   </div>
-                  <div className="p-2 bg-[#FAFAF8] border border-[#1A1A1A]">
-                    <span className="text-[#1A1A1A] text-xs font-medium">Open World</span>
-                    <p className="text-[#1A1A1A] text-xs font-light">Complete creative freedom</p>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
