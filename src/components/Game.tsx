@@ -1142,7 +1142,7 @@ const Game: React.FC = () => {
                         <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                         <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
-                      <span className="text-purple-200 text-sm">Thinking...</span>
+                      <span className="text-purple-200 text-sm">Writing...</span>
                     </div>
                   </div>
                 </div>
