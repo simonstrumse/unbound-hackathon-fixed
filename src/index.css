@@ -2,108 +2,308 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom scrollbar styles */
+/* Literary Design System */
+:root {
+  /* Classic Literature Color Palette */
+  --parchment: #f7f3e9;
+  --cream: #faf8f3;
+  --warm-white: #fefcf7;
+  --sepia-light: #f5f1e8;
+  --sepia: #e8dcc0;
+  --charcoal: #2c2c2c;
+  --ink: #1a1a1a;
+  --burgundy: #8b2635;
+  --burgundy-light: #a53545;
+  --forest: #2d5016;
+  --forest-light: #3d6b1f;
+  --antique-gold: #d4af37;
+  --antique-gold-light: #e6c547;
+  --leather: #8b4513;
+  --aged-paper: #f0ead6;
+  
+  /* Typography */
+  --font-display: 'Playfair Display', serif;
+  --font-reading: 'Crimson Pro', serif;
+  --font-ui: 'Inter', sans-serif;
+}
+
+/* Base styles */
+body {
+  background: linear-gradient(135deg, var(--parchment) 0%, var(--sepia-light) 50%, var(--aged-paper) 100%);
+  color: var(--charcoal);
+  font-family: var(--font-ui);
+  min-height: 100vh;
+}
+
+/* Typography classes */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-reading {
+  font-family: var(--font-reading);
+}
+
+.font-ui {
+  font-family: var(--font-ui);
+}
+
+/* Paper texture background */
+.paper-texture {
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(139, 38, 53, 0.02) 1px, transparent 1px),
+    radial-gradient(circle at 80% 50%, rgba(45, 80, 22, 0.02) 1px, transparent 1px),
+    radial-gradient(circle at 40% 20%, rgba(212, 175, 55, 0.01) 1px, transparent 1px);
+  background-size: 50px 50px, 60px 60px, 40px 40px;
+}
+
+/* Book page styling */
+.book-page {
+  background: var(--warm-white);
+  box-shadow: 
+    inset 0 0 20px rgba(139, 38, 53, 0.05),
+    0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(139, 38, 53, 0.1);
+}
+
+/* Vintage decorative elements */
+.vintage-border {
+  border: 2px solid var(--burgundy);
+  position: relative;
+}
+
+.vintage-border::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border: 1px solid var(--antique-gold);
+  pointer-events: none;
+}
+
+/* Drop cap styling */
+.drop-cap::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 3rem;
+  padding-right: 8px;
+  padding-top: 4px;
+  color: var(--burgundy);
+  font-weight: 600;
+}
+
+/* Ornamental dividers */
+.ornamental-divider {
+  position: relative;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.ornamental-divider::before {
+  content: '❦';
+  font-size: 1.5rem;
+  color: var(--antique-gold);
+  background: var(--warm-white);
+  padding: 0 1rem;
+}
+
+.ornamental-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--burgundy), transparent);
+  z-index: -1;
+}
+
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  background: var(--sepia);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.5);
-  border-radius: 3px;
+  background: var(--burgundy);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.7);
+  background: var(--burgundy-light);
 }
 
 /* Hide scrollbars while keeping scroll functionality */
 .scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+  display: none;
 }
 
-/* Custom range slider styles */
-.slider {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 8px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  outline: none;
+/* Literary button styles */
+.btn-literary {
+  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-light));
+  color: var(--warm-white);
+  border: 1px solid var(--leather);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(139, 38, 53, 0.2);
 }
 
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: linear-gradient(45deg, #8b5cf6, #06b6d4);
-  cursor: pointer;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+.btn-literary:hover {
+  background: linear-gradient(135deg, var(--burgundy-light), var(--burgundy));
+  box-shadow: 0 4px 8px rgba(139, 38, 53, 0.3);
+  transform: translateY(-1px);
 }
 
-.slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: linear-gradient(45deg, #8b5cf6, #06b6d4);
-  cursor: pointer;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+.btn-secondary {
+  background: var(--warm-white);
+  color: var(--charcoal);
+  border: 2px solid var(--burgundy);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
-/* Animation classes for smooth transitions */
-.animate-in {
-  animation: slideIn 0.3s ease-out forwards;
+.btn-secondary:hover {
+  background: var(--burgundy);
+  color: var(--warm-white);
 }
 
-.slide-in-from-right-full {
-  transform: translateX(100%);
+/* Page turn animation */
+@keyframes pageFlip {
+  0% { transform: rotateY(0deg); }
+  50% { transform: rotateY(-90deg); }
+  100% { transform: rotateY(0deg); }
 }
 
-/* Hide scrollbar while keeping scroll functionality */
-.scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+.page-turn {
+  animation: pageFlip 0.6s ease-in-out;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Ensure proper gradient backgrounds */
-body {
-  background: linear-gradient(135deg, #581c87 0%, #7c2d12 50%, #0f172a 100%);
-  min-height: 100vh;
-}
-
-/* Fix text selection colors */
+/* Text selection colors */
 ::selection {
-  background: rgba(139, 92, 246, 0.3);
-  color: white;
+  background: rgba(139, 38, 53, 0.2);
+  color: var(--ink);
 }
 
 ::-moz-selection {
-  background: rgba(139, 92, 246, 0.3);
-  color: white;
+  background: rgba(139, 38, 53, 0.2);
+  color: var(--ink);
+}
+
+/* Literary card styling */
+.literary-card {
+  background: var(--warm-white);
+  border: 1px solid rgba(139, 38, 53, 0.15);
+  box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.literary-card:hover {
+  box-shadow: 
+    0 8px 15px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
+}
+
+/* Margin notes styling */
+.margin-note {
+  background: var(--sepia-light);
+  border-left: 3px solid var(--antique-gold);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  color: var(--charcoal);
+  padding: 0.75rem;
+  margin: 1rem 0;
+  position: relative;
+}
+
+.margin-note::before {
+  content: '✎';
+  position: absolute;
+  left: -12px;
+  top: 0.5rem;
+  background: var(--antique-gold);
+  color: var(--warm-white);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+/* Enhanced focus states for accessibility */
+.focus-literary:focus {
+  outline: 2px solid var(--burgundy);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(139, 38, 53, 0.1);
+}
+
+/* Literary gradient backgrounds */
+.bg-literary-gradient {
+  background: linear-gradient(135deg, var(--parchment) 0%, var(--cream) 50%, var(--warm-white) 100%);
+}
+
+.bg-literary-dark {
+  background: linear-gradient(135deg, var(--charcoal) 0%, var(--ink) 100%);
+}
+
+/* Responsive typography */
+@media (max-width: 640px) {
+  .drop-cap::first-letter {
+    font-size: 3rem;
+    line-height: 2.5rem;
+  }
+}
+
+/* Animation for literary elements */
+@keyframes fadeInLiterary {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-literary {
+  animation: fadeInLiterary 0.6s ease-out;
+}
+
+/* Vintage input styling */
+.input-literary {
+  background: var(--warm-white);
+  border: 2px solid var(--sepia);
+  color: var(--charcoal);
+  font-family: var(--font-reading);
+  transition: all 0.3s ease;
+}
+
+.input-literary:focus {
+  border-color: var(--burgundy);
+  box-shadow: 0 0 0 3px rgba(139, 38, 53, 0.1);
+  outline: none;
+}
+
+.input-literary::placeholder {
+  color: rgba(44, 44, 44, 0.5);
+  font-style: italic;
 }
