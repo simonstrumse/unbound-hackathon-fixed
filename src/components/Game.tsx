@@ -1,830 +1,465 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import {
-  MessageCircle,
-  Send,
-  Book,
-  User,
-  X,
-  Info,
-  Download,
-  ArrowLeft,
-  Loader2,
+import { 
+  ArrowLeft, 
+  Send, 
+  Download, 
+  Info, 
+  X, 
+  RefreshCw, 
   AlertCircle,
-  RefreshCw,
-  ChevronRight,
-  Sparkles,
-  Clock,
-  Zap,
-  Heart,
+  Settings,
+  ChevronDown,
+  ChevronUp,
   Activity,
-  ChevronDown
+  Users,
+  MapPin,
+  Clock,
+  Loader2,
+  User,
+  Heart,
+  MessageCircle,
+  Calendar,
+  Eye,
+  Sparkles
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNotifications } from '../contexts/NotificationContext';
-import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
-import { supabase, StorySession, Story, Character, Message } from '../lib/supabase';
-import { openaiService, ConversationMessage } from '../lib/openai';
-import { cleanStoryContent } from '../lib/contentCleaner';
-import ContextProgressBar from '../components/ContextProgressBar';
-import EnhancedExportModal from '../components/EnhancedExportModal';
-import CompletionScreen from '../components/CompletionScreen';
-import { MemoryEvent } from '../lib/types';
+import { supabase, Message, Character, Story, StorySession } from '../lib/supabase';
+import { openaiService } from '../lib/openai';
+import { validateAndCleanContent } from '../lib/contentCleaner';
+import { MemoryEvent, CharacterRelationship, WorldState } from '../lib/types';
+import EnhancedExportModal from './EnhancedExportModal';
+import ContextProgressBar from './ContextProgressBar';
 import AutoSaveIndicator from './AutoSaveIndicator';
+
+// Utility function to validate UUID
+const isValidUUID = (uuid: string): boolean => {
+  if (!uuid || typeof uuid !== 'string') return false;
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(uuid);
+};
 
 const Game: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
+  const navigate = useNavigate();
   const { user, profile } = useAuth();
   const { showNotification } = useNotifications();
-  const navigate = useNavigate();
+  
+  // Core state
   const [session, setSession] = useState<StorySession | null>(null);
   const [story, setStory] = useState<Story | null>(null);
   const [character, setCharacter] = useState<Character | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [memoryEvents, setMemoryEvents] = useState<MemoryEvent[]>([]);
-  const [loadingSession, setLoadingSession] = useState(true);
-  const [loadingMessages, setLoadingMessages] = useState(true);
-  const [processing, setProcessing] = useState(false);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [inputValue, setInputValue] = useState('');
-  const [showStoryInfo, setShowStoryInfo] = useState(false);
-  const [showExportModal, setShowExportModal] = useState(false);
-  const [showCompletionScreen, setShowCompletionScreen] = useState(false);
-  const [summary, setSummary] = useState('');
-  const [tokensUsed, setTokensUsed] = useState(0);
-  const [timeStarted, setTimeStarted] = useState<Date | null>(null);
-  const [reachedEnd, setReachedEnd] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
-  const [relationships, setRelationships] = useState<any[]>([]);
   
+  // Enhanced state
+  const [memoryEvents, setMemoryEvents] = useState<MemoryEvent[]>([]);
+  const [relationships, setRelationships] = useState<CharacterRelationship[]>([]);
+  const [worldState, setWorldState] = useState<WorldState>({
+    current_location: '',
+    time_of_day: 'morning',
+    present_npcs: [],
+    mood_atmosphere: '',
+    important_objects: []
+  });
+  
+  // UI state
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showStoryInfo, setShowStoryInfo] = useState(false);
+  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
+  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(false);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  
+  // Mobile responsive state
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Refs
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const generatingResponseRef = useRef<boolean>(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [showLeftSidebar, setShowLeftSidebar] = useState(!isMobile);
-  const [showRightSidebar, setShowRightSidebar] = useState(!isMobile);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
+  // Check mobile on mount and resize
   useEffect(() => {
-    const handleResize = () => {
+    const checkMobile = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      if (!mobile) {
-        setShowLeftSidebar(true);
-        setShowRightSidebar(true);
-      } else {
-        setShowLeftSidebar(false);
-        setShowRightSidebar(false);
+      if (mobile) {
+        setLeftSidebarCollapsed(true);
+        setRightSidebarCollapsed(true);
       }
     };
     
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Scroll to bottom of messages
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  // Set up keyboard shortcuts
-  useKeyboardShortcuts({
-    onSendMessage: () => {
-      if (inputValue.trim() && !processing) {
-        handleSendMessage();
-      }
-    },
-    onEscape: () => {
-      // Close any open modals or sidebars
-      if (showStoryInfo) setShowStoryInfo(false);
-      if (showExportModal) setShowExportModal(false);
-      if (isMobile) {
-        setShowLeftSidebar(false);
-        setShowRightSidebar(false);
-      }
-    },
-  });
-
-  // Initial data loading
-  useEffect(() => {
-    if (sessionId) {
-      loadInitialData();
+  // Auto-scroll to bottom when new messages arrive
+  const scrollToBottom = useCallback(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [sessionId]);
+  }, []);
 
-  // Auto scroll when messages change
+  // Scroll to bottom when messages change
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const timer = setTimeout(scrollToBottom, 100);
+    return () => clearTimeout(timer);
+  }, [messages, scrollToBottom]);
 
-  // Track conversation time
+  // Load session data
   useEffect(() => {
-    if (session && !timeStarted) {
-      setTimeStarted(new Date(session.created_at));
+    if (!sessionId || !isValidUUID(sessionId)) {
+      console.error('Invalid session ID:', sessionId);
+      setError('Invalid session ID');
+      setLoading(false);
+      return;
     }
-  }, [session]);
 
-  // Extract relationships from messages
-  useEffect(() => {
-    const extractRelationships = () => {
-      const relationshipMap = new Map();
-
-      messages.forEach(message => {
-        if (message.metadata?.relationship_updates && Array.isArray(message.metadata.relationship_updates)) {
-          message.metadata.relationship_updates.forEach((relation: any) => {
-            if (relation.character_name && relation.relationship_type) {
-              relationshipMap.set(relation.character_name, {
-                ...relation,
-                last_updated: message.created_at
-              });
-            }
-          });
-        }
-      });
-
-      return Array.from(relationshipMap.values());
-    };
-
-    const updatedRelationships = extractRelationships();
-    setRelationships(updatedRelationships);
-  }, [messages]);
-
-  // Handle retry button
-  const handleRetry = () => {
-    if (sessionId) {
-      setError(null);
-      loadInitialData();
+    if (!user) {
+      console.log('No user found, redirecting to signin');
+      navigate('/signin');
+      return;
     }
-  };
 
-  // Load all required data
-  const loadInitialData = async () => {
-    if (!sessionId) return;
+    fetchSessionData();
+  }, [sessionId, user, navigate]);
+
+  const fetchSessionData = async () => {
+    if (!sessionId || !user) return;
 
     try {
-      setLoadingSession(true);
+      console.log('Fetching session data for:', sessionId);
+      setLoading(true);
       setError(null);
 
-      // First fetch the session
+      // Fetch session with related data
       const { data: sessionData, error: sessionError } = await supabase
         .from('story_sessions')
         .select('*')
         .eq('id', sessionId)
+        .eq('user_id', user.id)
         .single();
 
-      if (sessionError) throw sessionError;
-      if (!sessionData) throw new Error('Session not found');
+      if (sessionError) {
+        console.error('Error fetching session:', sessionError);
+        throw new Error('Session not found or access denied');
+      }
 
+      if (!sessionData) {
+        throw new Error('Session not found');
+      }
+
+      console.log('Session data loaded:', sessionData);
       setSession(sessionData);
 
-      // Then fetch the story
+      // Extract world state from session
+      if (sessionData.session_state?.world_state) {
+        setWorldState(sessionData.session_state.world_state);
+      }
+
+      // Fetch story
       const { data: storyData, error: storyError } = await supabase
         .from('stories')
         .select('*')
         .eq('id', sessionData.story_id)
         .single();
 
-      if (storyError) throw storyError;
+      if (storyError) {
+        console.error('Error fetching story:', storyError);
+        throw new Error('Story not found');
+      }
+
+      console.log('Story data loaded:', storyData);
       setStory(storyData);
 
-      // Then fetch the character
+      // Fetch character
       const { data: characterData, error: characterError } = await supabase
         .from('characters')
         .select('*')
         .eq('id', sessionData.player_character_id)
         .single();
 
-      if (characterError) throw characterError;
+      if (characterError) {
+        console.error('Error fetching character:', characterError);
+        throw new Error('Character not found');
+      }
+
+      console.log('Character data loaded:', characterData);
       setCharacter(characterData);
 
-      // Finally load messages
-      await loadMessages();
-
-      // Initialize memory events from the messages
-      extractMemoryEvents();
-
-    } catch (err) {
-      console.error('Error loading session data:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load session data';
-      setError(errorMessage);
-      showNotification(errorMessage, 'error');
-    } finally {
-      setLoadingSession(false);
-    }
-  };
-
-  // Load messages for the session
-  const loadMessages = async () => {
-    if (!sessionId) return;
-
-    try {
-      setLoadingMessages(true);
-
-      const { data, error } = await supabase
+      // Fetch messages
+      const { data: messagesData, error: messagesError } = await supabase
         .from('messages')
         .select('*')
         .eq('session_id', sessionId)
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
-      
-      setMessages(data || []);
-      
-      // If no messages and we have story/character, generate opening scene
-      if (data?.length === 0 && story && character) {
-        await generateOpeningScene();
+      if (messagesError) {
+        console.error('Error fetching messages:', messagesError);
+        throw new Error('Failed to load conversation history');
       }
-      
-      // If already enough messages, update the context usage
-      if (data && data.length > 0) {
-        const totalTokens = session?.session_state?.context_tokens_used || 0;
-        setTokensUsed(totalTokens);
+
+      console.log('Messages loaded:', messagesData?.length || 0);
+      setMessages(messagesData || []);
+
+      // Load enhanced data from session state
+      if (sessionData.session_state) {
+        const state = sessionData.session_state;
+        if (state.memory_events) setMemoryEvents(state.memory_events);
+        if (state.relationships) setRelationships(state.relationships);
       }
+
     } catch (err) {
-      console.error('Error loading messages:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load messages';
+      console.error('Error in fetchSessionData:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load session data';
       setError(errorMessage);
       showNotification(errorMessage, 'error');
     } finally {
-      setLoadingMessages(false);
+      setLoading(false);
     }
   };
 
-  // Extract memory events from messages
-  const extractMemoryEvents = () => {
-    const events: MemoryEvent[] = [];
-    
-    messages.forEach(message => {
-      if (message.metadata?.memory_updates && Array.isArray(message.metadata.memory_updates)) {
-        message.metadata.memory_updates.forEach((memory: any) => {
-          events.push({
-            id: memory.id || `mem-${Math.random().toString(36).substring(7)}`,
-            description: memory.description,
-            importance: memory.importance || 'medium',
-            timestamp: message.created_at,
-            characters_involved: memory.characters_involved || [],
-            tags: memory.tags || []
-          });
-        });
-      }
-    });
-    
-    setMemoryEvents(events);
-  };
-
-  // Generate opening scene
-  const generateOpeningScene = async () => {
-    if (!story || !character || !session) return;
-    
-    try {
-      setProcessing(true);
-      generatingResponseRef.current = true;
-
-      // Map creativity level
-      const creativityLevel = 
-        session.creativity_level === 'faithful' ? 1 :
-        session.creativity_level === 'creative' ? 3 : 2;
-
-      // Generate the opening scene
-      const { response, tokensUsed: tokens, usage } = await openaiService.generateOpeningScene(
-        story,
-        character,
-        creativityLevel
-      );
-
-      // Create system message for the opening scene
-      const systemMessage = {
-        session_id: sessionId,
-        character_id: character.id,
-        content: cleanStoryContent(response.narration),
-        message_type: 'system',
-        metadata: {
-          scene_description: response.scene_description,
-          npcs: response.npcs,
-          suggested_actions: response.suggested_actions,
-          memory_updates: response.memory_updates,
-          world_state: response.world_state,
-          tokens_used: tokens
-        },
-        created_at: new Date().toISOString()
-      };
-
-      // Insert the opening scene message
-      const { data: newMessage, error: messageError } = await supabase
-        .from('messages')
-        .insert(systemMessage)
-        .select()
-        .single();
-
-      if (messageError) throw messageError;
-
-      // Update session state with token usage
-      const { error: updateError } = await supabase
-        .from('story_sessions')
-        .update({
-          session_state: {
-            ...session.session_state,
-            context_tokens_used: tokens,
-            last_update: new Date().toISOString()
-          },
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', sessionId);
-
-      if (updateError) throw updateError;
-
-      // Track API usage
-      if (usage) {
-        await trackApiUsage({
-          tokens: usage.totalTokens,
-          inputTokens: usage.inputTokens,
-          outputTokens: usage.outputTokens,
-          responseTime: usage.responseTime,
-          modelType: usage.modelType,
-          operationType: 'opening_scene',
-          inputCost: usage.costs.inputCost,
-          outputCost: usage.costs.outputCost,
-          totalCost: usage.costs.totalCost
-        });
-      }
-
-      // Update the messages state
-      setMessages([newMessage]);
-      
-      // Update token count
-      setTokensUsed(tokens);
-      
-      // Extract initial memory events
-      if (response.memory_updates) {
-        const initialEvents: MemoryEvent[] = response.memory_updates.map(mem => ({
-          id: mem.id,
-          description: mem.description,
-          importance: mem.importance as 'low' | 'medium' | 'high',
-          timestamp: newMessage.created_at,
-          characters_involved: mem.characters_involved,
-          tags: mem.tags
-        }));
-        
-        setMemoryEvents(initialEvents);
-      }
-
-      // Update local session state
-      setSession(prev => prev ? {
-        ...prev,
-        session_state: {
-          ...prev.session_state,
-          context_tokens_used: tokens,
-          last_update: new Date().toISOString()
-        }
-      } : null);
-
-    } catch (err) {
-      console.error('Error generating opening scene:', err);
-      const errorMessage = err instanceof Error 
-        ? err.message 
-        : 'Failed to generate opening scene';
-      
-      setError(errorMessage);
-      showNotification(errorMessage, 'error');
-      
-      // Create a fallback message if all else fails
-      if (sessionId && character) {
-        try {
-          const fallbackMessage = {
-            session_id: sessionId,
-            character_id: character.id,
-            content: `Welcome to ${story?.title}. As ${character.name}, you're about to embark on an adventure through this classic tale. What would you like to do first?`,
-            message_type: 'system',
-            metadata: {},
-            created_at: new Date().toISOString()
-          };
-          
-          const { data: newMessage } = await supabase
-            .from('messages')
-            .insert(fallbackMessage)
-            .select()
-            .single();
-            
-          if (newMessage) {
-            setMessages([newMessage]);
-          }
-        } catch (fallbackError) {
-          console.error('Even fallback message failed:', fallbackError);
-        }
-      }
-    } finally {
-      setProcessing(false);
-      generatingResponseRef.current = false;
-    }
-  };
-
-  // Handle sending a user message
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || !session || !character || !story || processing) return;
-    
-    const userMessageContent = inputValue.trim();
-    setInputValue('');
+    if (!input.trim() || sending || !session || !story || !character) {
+      return;
+    }
+
+    const userMessage = input.trim();
+    setInput('');
+    setSending(true);
+    setAutoSaveStatus('saving');
 
     try {
-      setProcessing(true);
-      generatingResponseRef.current = true;
+      console.log('Sending message:', userMessage);
 
-      // First, add the user message to local state for immediate feedback
-      const userMessage: Message = {
-        id: `temp-${Date.now()}`, // Temporary ID
+      // Add user message to UI immediately
+      const tempUserMessage: Message = {
+        id: `temp-${Date.now()}`,
         session_id: sessionId!,
         character_id: character.id,
-        content: userMessageContent,
+        content: userMessage,
         message_type: 'user',
         metadata: {},
         created_at: new Date().toISOString()
       };
-      
-      setMessages(prev => [...prev, userMessage]);
 
-      // Then send it to Supabase
-      const { data: newUserMessage, error: userMessageError } = await supabase
+      setMessages(prev => [...prev, tempUserMessage]);
+
+      // Save user message to database
+      const { data: savedUserMessage, error: userMessageError } = await supabase
         .from('messages')
         .insert({
-          session_id: sessionId,
+          session_id: sessionId!,
           character_id: character.id,
-          content: userMessageContent,
+          content: userMessage,
           message_type: 'user',
-          metadata: {},
+          metadata: {}
         })
         .select()
         .single();
 
-      if (userMessageError) throw userMessageError;
+      if (userMessageError) {
+        console.error('Error saving user message:', userMessageError);
+        throw new Error('Failed to save your message');
+      }
 
-      // Replace temporary user message with the real one
-      setMessages(prev => prev.map(msg => 
-        msg.id === userMessage.id ? newUserMessage : msg
-      ));
+      // Update the temporary message with the real one
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === tempUserMessage.id ? savedUserMessage : msg
+        )
+      );
 
-      // Map creativity level
-      const creativityLevel = 
-        session.creativity_level === 'faithful' ? 1 :
-        session.creativity_level === 'creative' ? 3 : 2;
-
-      // Prepare conversation history for the AI
-      const conversationHistory: ConversationMessage[] = messages.map(msg => ({
-        role: msg.message_type === 'user' ? 'user' : 'assistant',
+      // Prepare conversation history for AI
+      const conversationHistory = [...messages, savedUserMessage].map(msg => ({
+        role: msg.message_type === 'user' ? 'user' as const : 'assistant' as const,
         content: msg.content
       }));
 
-      // Add the new user message to the history
-      conversationHistory.push({
-        role: 'user',
-        content: userMessageContent
-      });
+      // Get creativity level
+      const creativityLevel = session.creativity_level === 'faithful' ? 1 : 
+                             session.creativity_level === 'creative' ? 3 : 2;
 
-      // Generate AI response
-      const { response, tokensUsed: tokens, usage } = await openaiService.continueConversation(
+      console.log('Calling AI service with creativity level:', creativityLevel);
+
+      // Call AI service
+      const aiResponse = await openaiService.continueConversation(
         story,
         character,
         conversationHistory,
-        userMessageContent,
+        userMessage,
         creativityLevel,
         memoryEvents,
-        {},
+        worldState,
         relationships
       );
 
-      // Create AI response message
-      const aiResponseMessage = {
-        session_id: sessionId,
+      console.log('AI response received:', aiResponse);
+
+      // Clean the AI response
+      const cleanedResponse = validateAndCleanContent(aiResponse.response.response);
+
+      // Create system message
+      const systemMessage: Message = {
+        id: `temp-system-${Date.now()}`,
+        session_id: sessionId!,
         character_id: character.id,
-        content: cleanStoryContent(response.response),
+        content: cleanedResponse,
         message_type: 'character',
         metadata: {
-          suggested_actions: response.suggested_actions,
-          memory_updates: response.memory_updates,
-          world_state_updates: response.world_state_updates,
-          relationship_updates: response.relationship_updates,
-          tokens_used: tokens
+          suggested_actions: aiResponse.response.suggested_actions || [],
+          world_state_updates: aiResponse.response.world_state_updates || {},
+          memory_updates: aiResponse.response.memory_updates || [],
+          relationship_updates: aiResponse.response.relationship_updates || [],
+          tokens_used: aiResponse.tokensUsed || 0,
+          context_usage: aiResponse.response.context_usage || 0
         },
         created_at: new Date().toISOString()
       };
 
-      // Insert the AI response message
-      const { data: newAiMessage, error: aiMessageError } = await supabase
+      // Add to UI immediately
+      setMessages(prev => [...prev, systemMessage]);
+
+      // Save system message to database
+      const { data: savedSystemMessage, error: systemMessageError } = await supabase
         .from('messages')
-        .insert(aiResponseMessage)
+        .insert({
+          session_id: sessionId!,
+          character_id: character.id,
+          content: cleanedResponse,
+          message_type: 'character',
+          metadata: systemMessage.metadata
+        })
         .select()
         .single();
 
-      if (aiMessageError) throw aiMessageError;
+      if (systemMessageError) {
+        console.error('Error saving system message:', systemMessageError);
+        throw new Error('Failed to save AI response');
+      }
 
-      // Update session state with token usage
-      const newTokenTotal = (session.session_state?.context_tokens_used || 0) + tokens;
-      
-      const { error: updateError } = await supabase
+      // Update with saved message
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === systemMessage.id ? savedSystemMessage : msg
+        )
+      );
+
+      // Update enhanced state
+      if (aiResponse.response.memory_updates?.length > 0) {
+        setMemoryEvents(prev => [...prev, ...aiResponse.response.memory_updates]);
+      }
+
+      if (aiResponse.response.relationship_updates?.length > 0) {
+        setRelationships(prev => {
+          const updated = [...prev];
+          aiResponse.response.relationship_updates.forEach(update => {
+            const existingIndex = updated.findIndex(r => r.character_name === update.character_name);
+            if (existingIndex >= 0) {
+              updated[existingIndex] = { ...updated[existingIndex], ...update };
+            } else {
+              updated.push({
+                character_name: update.character_name,
+                relationship_type: update.relationship_type || 'neutral',
+                trust_level: update.trust_level || 50,
+                notes: update.notes || '',
+                last_interaction: new Date().toISOString()
+              });
+            }
+          });
+          return updated;
+        });
+      }
+
+      if (aiResponse.response.world_state_updates) {
+        setWorldState(prev => ({ ...prev, ...aiResponse.response.world_state_updates }));
+      }
+
+      // Save enhanced state to session
+      const enhancedState = {
+        ...session.session_state,
+        memory_events: memoryEvents,
+        relationships: relationships,
+        world_state: worldState,
+        context_tokens_used: aiResponse.response.context_usage || 0
+      };
+
+      await supabase
         .from('story_sessions')
-        .update({
-          session_state: {
-            ...session.session_state,
-            context_tokens_used: newTokenTotal,
-            last_update: new Date().toISOString()
-          },
+        .update({ 
+          session_state: enhancedState,
           updated_at: new Date().toISOString()
         })
-        .eq('id', sessionId);
-
-      if (updateError) throw updateError;
-
-      // Update the local state
-      setMessages(prev => [...prev, newAiMessage]);
-      setTokensUsed(newTokenTotal);
+        .eq('id', sessionId!);
 
       // Track API usage
-      if (usage) {
-        await trackApiUsage({
-          tokens: usage.totalTokens,
-          inputTokens: usage.inputTokens,
-          outputTokens: usage.outputTokens,
-          responseTime: usage.responseTime,
-          modelType: usage.modelType,
-          operationType: 'continue_conversation',
-          inputCost: usage.costs.inputCost,
-          outputCost: usage.costs.outputCost,
-          totalCost: usage.costs.totalCost
+      if (aiResponse.usage) {
+        await supabase.from('api_usage').insert({
+          user_id: user.id,
+          session_id: sessionId!,
+          tokens_used: aiResponse.usage.totalTokens,
+          input_tokens: aiResponse.usage.inputTokens,
+          output_tokens: aiResponse.usage.outputTokens,
+          operation_type: 'continue_conversation',
+          model_type: aiResponse.usage.modelType,
+          response_time_ms: aiResponse.usage.responseTime,
+          input_cost: aiResponse.usage.costs.inputCost,
+          output_cost: aiResponse.usage.costs.outputCost,
+          total_cost: aiResponse.usage.costs.totalCost,
+          api_provider: 'openai'
         });
       }
 
-      // Update memory events
-      if (response.memory_updates && Array.isArray(response.memory_updates)) {
-        const newEvents: MemoryEvent[] = response.memory_updates.map(mem => ({
-          id: mem.id || `mem-${Math.random().toString(36).substring(7)}`,
-          description: mem.description,
-          importance: mem.importance as 'low' | 'medium' | 'high',
-          timestamp: newAiMessage.created_at,
-          characters_involved: mem.characters_involved || [],
-          tags: mem.tags || []
-        }));
-        
-        setMemoryEvents(prev => [...prev, ...newEvents]);
-      }
-
-      // Update relationships
-      if (response.relationship_updates && Array.isArray(response.relationship_updates)) {
-        const updatedRelationships = [...relationships];
-        
-        response.relationship_updates.forEach(update => {
-          const existingIndex = updatedRelationships.findIndex(r => 
-            r.character_name === update.character_name);
-            
-          if (existingIndex >= 0) {
-            updatedRelationships[existingIndex] = {
-              ...updatedRelationships[existingIndex],
-              ...update,
-              last_updated: newAiMessage.created_at
-            };
-          } else {
-            updatedRelationships.push({
-              ...update,
-              last_updated: newAiMessage.created_at
-            });
-          }
-        });
-        
-        setRelationships(updatedRelationships);
-      }
-
-      // Update local session state
-      setSession(prev => prev ? {
-        ...prev,
-        session_state: {
-          ...prev.session_state,
-          context_tokens_used: newTokenTotal,
-          last_update: new Date().toISOString()
-        }
-      } : null);
-
-      // Focus back on input
-      inputRef.current?.focus();
+      setAutoSaveStatus('saved');
+      setTimeout(() => setAutoSaveStatus('idle'), 2000);
 
     } catch (err) {
-      console.error('Error in conversation:', err);
-      const errorMessage = err instanceof Error 
-        ? err.message 
-        : 'Failed to generate response';
-      
+      console.error('Error sending message:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
       setError(errorMessage);
       showNotification(errorMessage, 'error');
-      
-      // Add a fallback AI message if the real one failed
-      try {
-        const fallbackMessage = {
-          session_id: sessionId!,
-          character_id: character.id,
-          content: "I'm sorry, I couldn't process that properly. Could you try again or phrase it differently?",
-          message_type: 'character',
-          metadata: {},
-          created_at: new Date().toISOString()
-        };
-        
-        const { data: fallbackResponse } = await supabase
-          .from('messages')
-          .insert(fallbackMessage)
-          .select()
-          .single();
-          
-        if (fallbackResponse) {
-          setMessages(prev => [...prev, fallbackResponse]);
-        }
-      } catch (fallbackError) {
-        console.error('Even fallback message failed:', fallbackError);
-      }
+      setAutoSaveStatus('error');
+      setTimeout(() => setAutoSaveStatus('idle'), 3000);
     } finally {
-      setProcessing(false);
-      generatingResponseRef.current = false;
+      setSending(false);
     }
   };
 
-  // Track API usage
-  const trackApiUsage = async ({
-    tokens,
-    inputTokens,
-    outputTokens,
-    responseTime,
-    modelType,
-    operationType,
-    inputCost,
-    outputCost,
-    totalCost
-  }: {
-    tokens: number;
-    inputTokens: number;
-    outputTokens: number;
-    responseTime: number;
-    modelType: string;
-    operationType: string;
-    inputCost: number;
-    outputCost: number;
-    totalCost: number;
-  }) => {
-    if (!user || !sessionId) return;
-    
-    try {
-      await supabase
-        .from('api_usage')
-        .insert({
-          user_id: user.id,
-          session_id: sessionId,
-          tokens_used: tokens,
-          api_provider: 'openai',
-          operation_type: operationType,
-          model_type: modelType,
-          input_tokens: inputTokens,
-          output_tokens: outputTokens,
-          response_time_ms: responseTime,
-          input_cost: inputCost,
-          output_cost: outputCost,
-          total_cost: totalCost
-        });
-    } catch (err) {
-      console.error('Error tracking API usage:', err);
-      // Non-fatal error - don't show to user
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
-  // Handle text input change
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  // Auto-grow textarea
-  const handleTextareaInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    const target = e.currentTarget;
-    target.style.height = 'auto';
-    target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
-  };
-
-  // Export the conversation
-  const handleExportConversation = () => {
+  const handleExport = () => {
     setShowExportModal(true);
   };
 
-  // End the story
-  const handleEndStory = async () => {
-    if (!session || !sessionId || !character || !story) return;
-    
-    try {
-      setSaveStatus('saving');
-      
-      // Convert messages to conversation format
-      const conversationHistory: ConversationMessage[] = messages.map(msg => ({
-        role: msg.message_type === 'user' ? 'user' : 'assistant',
-        content: msg.content
-      }));
-      
-      // Generate summary
-      const { summary: storySummary, tokensUsed: summaryTokens, usage } = 
-        await openaiService.generateStorySummary(story, character, conversationHistory, memoryEvents);
-      
-      // Mark session as inactive
-      const { error: updateError } = await supabase
-        .from('story_sessions')
-        .update({
-          is_active: false,
-          session_state: {
-            ...session.session_state,
-            completed: true,
-            completion_summary: storySummary,
-            context_tokens_used: (session.session_state?.context_tokens_used || 0) + summaryTokens,
-            completion_date: new Date().toISOString()
-          },
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', sessionId);
+  const formatTime = (dateString: string) => {
+    return new Date(dateString).toLocaleTimeString([], { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+  };
 
-      if (updateError) throw updateError;
-      
-      // Track API usage for summary
-      if (usage) {
-        await trackApiUsage({
-          tokens: usage.totalTokens,
-          inputTokens: usage.inputTokens,
-          outputTokens: usage.outputTokens,
-          responseTime: usage.responseTime,
-          modelType: usage.modelType,
-          operationType: 'generate_summary',
-          inputCost: usage.costs.inputCost,
-          outputCost: usage.costs.outputCost,
-          totalCost: usage.costs.totalCost
-        });
-      }
-      
-      // Set data for completion screen
-      setSummary(storySummary);
-      setSaveStatus('saved');
-      setReachedEnd(true);
-      setShowCompletionScreen(true);
-      
-    } catch (err) {
-      console.error('Error ending story:', err);
-      setSaveStatus('error');
-      const errorMessage = err instanceof Error 
-        ? err.message 
-        : 'Failed to complete the story';
-      
-      showNotification(errorMessage, 'error');
+  const getCreativityLevelDisplay = () => {
+    switch (session?.creativity_level) {
+      case 'faithful': return { name: 'Story-Focused', description: 'Staying true to the original narrative' };
+      case 'creative': return { name: 'Open World', description: 'Complete creative freedom' };
+      default: return { name: 'Flexible Exploration', description: 'Balanced adventure with creative possibilities' };
     }
   };
 
-  // Start a new game with the same character
-  const handleNewGameSameCharacter = async () => {
-    if (!session || !character || !story || !user) return;
-    
-    try {
-      // Create a new session with the same character
-      const { data: newSession, error: sessionError } = await supabase
-        .from('story_sessions')
-        .insert({
-          user_id: user.id,
-          story_id: story.id,
-          player_character_id: character.id,
-          creativity_level: session.creativity_level,
-          session_state: { context_tokens_used: 0 },
-          is_active: true,
-        })
-        .select()
-        .single();
+  const toggleLeftSidebar = () => setLeftSidebarCollapsed(!leftSidebarCollapsed);
+  const toggleRightSidebar = () => setRightSidebarCollapsed(!rightSidebarCollapsed);
 
-      if (sessionError) throw sessionError;
-      
-      // Navigate to the new session
-      navigate(`/game/${newSession.id}`);
-      
-    } catch (err) {
-      console.error('Error starting new game:', err);
-      const errorMessage = err instanceof Error 
-        ? err.message 
-        : 'Failed to start a new game';
-      
-      showNotification(errorMessage, 'error');
-    }
-  };
-
-  // Calculate time played
-  const getTimePlayed = (): string => {
-    if (!timeStarted) return '0 minutes';
-    
-    const now = reachedEnd ? new Date(session?.updated_at || '') : new Date();
-    const diffMs = now.getTime() - timeStarted.getTime();
-    const diffMins = Math.round(diffMs / 60000);
-    
-    if (diffMins < 60) {
-      return `${diffMins} minute${diffMins !== 1 ? 's' : ''}`;
-    } else {
-      const hours = Math.floor(diffMins / 60);
-      const mins = diffMins % 60;
-      return `${hours} hour${hours !== 1 ? 's' : ''} ${mins} minute${mins !== 1 ? 's' : ''}`;
-    }
-  };
-
-  // Loading state
-  if (loadingSession) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
@@ -834,550 +469,438 @@ const Game: React.FC = () => {
     );
   }
 
-  // Error state
-  if (error && !session) {
-    return (
-      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
-        <div className="text-center max-w-xl mx-auto px-4">
-          <AlertCircle className="w-16 h-16 text-[#E53E3E] mx-auto mb-4" />
-          <h2 className="text-2xl font-medium text-[#1A1A1A] mb-2">Error Loading Session</h2>
-          <p className="text-[#1A1A1A] mb-4">{error}</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-              onClick={handleRetry} 
-              className="typewriter-btn-primary"
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Try Again
-            </button>
-            <Link to="/dashboard" className="typewriter-btn">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Return to Dashboard
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Session not found
-  if (!session || !story || !character) {
+  if (error || !session || !story || !character) {
     return (
       <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-[#E53E3E] mx-auto mb-4" />
-          <h2 className="text-2xl font-medium text-[#1A1A1A] mb-2">Session Not Found</h2>
-          <p className="text-[#1A1A1A] mb-4">This adventure session doesn't exist or you don't have permission to view it.</p>
-          <Link to="/dashboard" className="typewriter-btn">
-            Return to Dashboard
+          <h2 className="text-2xl font-medium text-[#1A1A1A] mb-2">Unable to Load Adventure</h2>
+          <p className="text-[#1A1A1A] mb-4 font-light">{error || 'Session data not found'}</p>
+          <Link to="/dashboard" className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8]">
+            ← Back to Dashboard
           </Link>
         </div>
       </div>
     );
   }
 
-  // Completion screen
-  if (showCompletionScreen) {
-    return (
-      <CompletionScreen
-        storyTitle={story.title}
-        characterName={character.name}
-        totalConversations={messages.filter(m => m.message_type === 'user').length}
-        timePlayed={getTimePlayed()}
-        keyDecisions={memoryEvents
-          .filter(m => m.importance === 'high')
-          .map(m => m.description)}
-        summary={summary}
-        onExport={handleExportConversation}
-        onNewGameSameCharacter={handleNewGameSameCharacter}
-      />
-    );
-  }
-
-  // Get avatar color from character
   const avatarColorIndex = parseInt(character.avatar_url?.split('-')[1] || '0');
-  
+  const currentContextUsage = session.session_state?.context_tokens_used || 0;
+  const creativityDisplay = getCreativityLevelDisplay();
+
   return (
-    <div className="min-h-screen bg-[#FAFAF8] flex flex-col game-chat">
+    <div className="h-screen bg-[#FAFAF8] flex flex-col overflow-hidden game-chat">
       {/* Header */}
-      <header className="typewriter-header">
-        <div className="max-w-full mx-auto px-2 sm:px-4 py-3">
+      <header className="typewriter-header flex-shrink-0">
+        <div className="px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <Link
                 to="/dashboard"
-                className="flex items-center gap-1 sm:gap-2 text-[#1A1A1A] typewriter-hover"
+                className="flex items-center gap-2 text-[#1A1A1A] typewriter-hover"
               >
-                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="text-sm">Back</span>
+                <ArrowLeft className="w-5 h-5" />
+                Back
               </Link>
-              
-              <div className="flex items-center gap-2 ml-4">
-                <div className="w-6 h-6 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
-                  <span className="text-xs font-medium">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
+                  <span className="text-sm font-medium">
                     {character.name.charAt(0).toUpperCase()}
                   </span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-medium text-[#1A1A1A]">{character.name}</span>
-                  <span className="text-xs text-[#1A1A1A] hidden sm:block">in {story.title}</span>
+                <div>
+                  <div className="text-[#1A1A1A] font-medium">{character.name}</div>
+                  <div className="text-[#1A1A1A] text-sm font-light">in {story.title}</div>
                 </div>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setShowStoryInfo(!showStoryInfo)}
-                className="typewriter-btn text-xs py-1 px-2"
-                aria-label="Story Info"
-                title="Story Info"
-              >
-                <Info className="w-4 h-4" />
-              </button>
-              <button
-                onClick={handleExportConversation}
-                className="typewriter-btn text-xs py-1 px-2"
-                aria-label="Export"
-                title="Export Conversation"
-              >
-                <Download className="w-4 h-4" />
-              </button>
-            </div>
+            {/* Mobile toggle buttons */}
+            {isMobile && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={toggleLeftSidebar}
+                  className="typewriter-btn"
+                  aria-label="Toggle character info"
+                >
+                  <User className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={toggleRightSidebar}
+                  className="typewriter-btn"
+                  aria-label="Toggle game status"
+                >
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+            
+            {/* Desktop controls */}
+            {!isMobile && (
+              <div className="flex items-center gap-2">
+                <AutoSaveIndicator status={autoSaveStatus} />
+                <button
+                  onClick={() => setShowStoryInfo(true)}
+                  className="typewriter-btn"
+                >
+                  <Info className="w-4 h-4" />
+                  Info
+                </button>
+                <button
+                  onClick={handleExport}
+                  className="typewriter-btn"
+                >
+                  <Download className="w-4 h-4" />
+                  Export
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
-      
-      {/* Main content - 3-column layout with sidebars */}
+
+      {/* Main Game Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar */}
-        <div 
-          className={`${
-            showLeftSidebar ? 'w-64 border-r-2 border-[#1A1A1A]' : 'w-0'
-          } bg-[#FAFAF8] transition-all duration-300 ease-in-out flex flex-col overflow-hidden`}
-        >
-          {showLeftSidebar && (
-            <div className="p-4 flex flex-col h-full">
+        {/* Left Sidebar - Character Info */}
+        <div className={`bg-[#FAFAF8] border-r-2 border-[#1A1A1A] flex-shrink-0 transition-all duration-300 ${
+          leftSidebarCollapsed ? (isMobile ? 'w-0' : 'w-0') : 'w-80'
+        } ${leftSidebarCollapsed ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+          <div className="p-6 space-y-6">
+            {/* Character Header */}
+            <div className="typewriter-card">
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
-                    <span className="text-xs font-medium">
-                      {character.name.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-[#1A1A1A]">{character.name}</h3>
-                    <p className="text-xs text-[#1A1A1A]">Your Character</p>
-                  </div>
-                </div>
-                {isMobile && (
-                  <button 
-                    onClick={() => setShowLeftSidebar(false)}
-                    className="text-[#1A1A1A]"
+                <h3 className="text-lg font-medium text-[#1A1A1A]">{character.name}</h3>
+                {!isMobile && (
+                  <button
+                    onClick={toggleLeftSidebar}
+                    className="typewriter-btn"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 )}
               </div>
+              <p className="text-[#1A1A1A] text-sm font-light">Your Character</p>
+            </div>
 
-              {/* Traits */}
-              <div className="mb-6">
-                <div className="flex items-center gap-1 mb-2">
-                  <User className="w-4 h-4 text-[#1A1A1A]" />
-                  <span className="text-xs font-medium text-[#1A1A1A]">Traits</span>
-                </div>
-                <div className="flex flex-wrap gap-1">
-                  {character.personality_traits?.map((trait) => (
-                    <span 
-                      key={trait} 
-                      className="px-2 py-1 text-xs bg-[#1A1A1A] text-[#FAFAF8]"
+            {/* Character Traits */}
+            <div className="typewriter-card">
+              <div className="flex items-center gap-2 mb-4">
+                <Heart className="w-5 h-5 text-[#2B6CB0]" />
+                <h4 className="text-[#1A1A1A] font-medium">Traits</h4>
+              </div>
+              {character.personality_traits && character.personality_traits.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {character.personality_traits.map((trait, index) => (
+                    <span
+                      key={index}
+                      className="typewriter-badge bg-[#1A1A1A] text-[#FAFAF8] text-xs"
                     >
                       {trait}
                     </span>
                   ))}
                 </div>
-              </div>
+              ) : (
+                <p className="text-[#1A1A1A] text-sm font-light">No traits defined</p>
+              )}
+            </div>
 
-              {/* Conversations Count */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-1">
-                    <MessageCircle className="w-4 h-4 text-[#1A1A1A]" />
-                    <span className="text-xs font-medium text-[#1A1A1A]">Conversations</span>
-                  </div>
-                  <span className="text-[#1A1A1A] text-sm font-medium">
-                    {messages.filter(m => m.message_type === 'user').length}
-                  </span>
+            {/* Conversation Count */}
+            <div className="typewriter-card">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5 text-[#2B6CB0]" />
+                  <span className="text-[#1A1A1A] font-medium">Conversations</span>
                 </div>
-              </div>
-
-              {/* Key Memories */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4 text-[#1A1A1A]" />
-                    <span className="text-xs font-medium text-[#1A1A1A]">Key Memories</span>
-                  </div>
-                  <span className="flex items-center gap-1 text-[#1A1A1A] text-xs">
-                    {memoryEvents.filter(m => m.importance === 'high').length}
-                    <ChevronDown className="w-3 h-3" />
-                  </span>
-                </div>
-                <div className="space-y-2 max-h-32 overflow-y-auto">
-                  {memoryEvents
-                    .filter(memory => memory.importance === 'high')
-                    .map((memory) => (
-                      <div 
-                        key={memory.id} 
-                        className="border-l-2 border-[#1A1A1A] pl-2 py-1 text-xs text-[#1A1A1A] font-light"
-                      >
-                        <div className="flex items-center gap-1 mb-1">
-                          <span className="inline-block w-2 h-2 bg-[#1A1A1A]"></span>
-                          <span className="uppercase text-xs">HIGH</span>
-                        </div>
-                        {memory.description}
-                      </div>
-                    ))}
-                  
-                  {memoryEvents.filter(m => m.importance === 'high').length === 0 && (
-                    <p className="text-xs text-[#1A1A1A] italic font-light">No key memories yet</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Relationships */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-1">
-                    <Heart className="w-4 h-4 text-[#1A1A1A]" />
-                    <span className="text-xs font-medium text-[#1A1A1A]">Relationships</span>
-                  </div>
-                  <span className="flex items-center gap-1 text-[#1A1A1A] text-xs">
-                    {relationships.length}
-                    <ChevronDown className="w-3 h-3" />
-                  </span>
-                </div>
-                <div className="space-y-2 max-h-32 overflow-y-auto">
-                  {relationships.map((rel, index) => (
-                    <div 
-                      key={index} 
-                      className="border-l-2 border-[#1A1A1A] pl-2 py-1 text-xs text-[#1A1A1A] font-light"
-                    >
-                      <div className="font-medium">{rel.character_name}</div>
-                      <div>{rel.relationship_type} • Trust: {rel.trust_level}%</div>
-                    </div>
-                  ))}
-                  
-                  {relationships.length === 0 && (
-                    <p className="text-xs text-[#1A1A1A] italic font-light">No relationships formed yet</p>
-                  )}
-                </div>
-              </div>
-              
-              <div className="mt-auto">
-                <button
-                  onClick={handleEndStory}
-                  className="w-full typewriter-btn text-sm"
-                >
-                  End Story & Generate Summary
-                </button>
+                <span className="text-2xl font-medium text-[#1A1A1A]">
+                  {messages.filter(m => m.message_type === 'user').length}
+                </span>
               </div>
             </div>
-          )}
-          
-          {/* Toggle button for mobile */}
-          {isMobile && !showLeftSidebar && (
-            <button
-              onClick={() => setShowLeftSidebar(true)}
-              className="absolute top-16 left-0 bg-[#1A1A1A] text-[#FAFAF8] p-2 rounded-r"
-              aria-label="Show character info"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-        
-        {/* Chat area */}
-        <div className="flex-1 flex flex-col overflow-hidden relative">
-          {/* Messages container */}
-          <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
-            {loadingMessages ? (
-              <div className="flex justify-center items-center h-full">
-                <div className="text-[#1A1A1A] text-lg loading-dots">Loading conversation</div>
-              </div>
-            ) : messages.length === 0 ? (
-              <div className="flex justify-center items-center h-full">
-                <div className="text-center max-w-md">
-                  <Book className="w-16 h-16 text-[#1A1A1A] mx-auto mb-4 opacity-50" />
-                  <h3 className="text-xl font-medium text-[#1A1A1A] mb-2">Starting Your Adventure</h3>
-                  <p className="text-[#1A1A1A] font-light">
-                    Your journey in {story.title} is about to begin. Please wait while we set the scene...
-                  </p>
+
+            {/* Key Memories */}
+            <div className="typewriter-card">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-[#2B6CB0]" />
+                  <span className="text-[#1A1A1A] font-medium">Key Memories</span>
                 </div>
+                <span className="text-[#1A1A1A] font-medium">
+                  {memoryEvents.filter(e => e.importance === 'high').length}
+                </span>
+              </div>
+              {memoryEvents.length > 0 ? (
+                <div className="space-y-2">
+                  {memoryEvents.slice(-3).map((memory, index) => (
+                    <div key={index} className="p-2 bg-[#E5E5E5] border border-[#1A1A1A]">
+                      <p className="text-[#1A1A1A] text-sm font-light">{memory.description}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[#1A1A1A] text-sm font-light">No key memories yet</p>
+              )}
+            </div>
+
+            {/* Relationships */}
+            <div className="typewriter-card">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-[#2B6CB0]" />
+                  <span className="text-[#1A1A1A] font-medium">Relationships</span>
+                </div>
+                <span className="text-[#1A1A1A] font-medium">
+                  {relationships.length}
+                </span>
+              </div>
+              {relationships.length > 0 ? (
+                <div className="space-y-2">
+                  {relationships.slice(-4).map((rel, index) => (
+                    <div key={index} className="p-2 bg-[#E5E5E5] border border-[#1A1A1A]">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[#1A1A1A] font-medium text-sm">{rel.character_name}</span>
+                        <span className="text-[#1A1A1A] text-xs">{rel.trust_level}%</span>
+                      </div>
+                      <p className="text-[#1A1A1A] text-xs font-light">{rel.relationship_type} • Trust: {rel.trust_level}%</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-[#1A1A1A] text-sm font-light">No relationships yet</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Chat Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Messages Container - Fixed height with internal scrolling */}
+          <div 
+            ref={messagesContainerRef}
+            className="flex-1 overflow-y-auto p-4 space-y-4"
+            style={{ maxHeight: 'calc(100vh - 200px)' }}
+          >
+            {messages.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-[#1A1A1A] font-light">Your adventure begins...</p>
               </div>
             ) : (
-              <div className="space-y-6">
-                {messages.map((message, index) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${
-                      message.message_type === 'user' ? 'justify-end' : 'justify-start'
-                    }`}
-                  >
+              messages.map((message) => (
+                <div key={message.id} className="space-y-2">
+                  <div className={`flex gap-3 ${
+                    message.message_type === 'user' ? 'justify-end' : 'justify-start'
+                  }`}>
                     {message.message_type !== 'user' && (
-                      <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center flex-shrink-0 mt-1">
+                      <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center flex-shrink-0">
                         <MessageCircle className="w-4 h-4" />
                       </div>
                     )}
-                    <div
-                      className={`max-w-md md:max-w-2xl p-4 ${
-                        message.message_type === 'user'
-                          ? 'ml-12 border-2 border-[#1A1A1A] bg-[#1A1A1A] text-[#FAFAF8]'
-                          : 'mr-12 border-2 border-[#1A1A1A] bg-[#FAFAF8] text-[#1A1A1A]'
-                      }`}
-                    >
-                      <p className="whitespace-pre-wrap leading-relaxed font-light">{message.content}</p>
-                      <p className="text-xs opacity-70 mt-2 font-mono">
-                        {new Date(message.created_at).toLocaleTimeString()}
+                    <div className={`max-w-md lg:max-w-2xl p-4 border-2 border-[#1A1A1A] ${
+                      message.message_type === 'user'
+                        ? 'bg-[#1A1A1A] text-[#FAFAF8] ml-12'
+                        : 'bg-[#FAFAF8] text-[#1A1A1A]'
+                    }`}>
+                      <p className="whitespace-pre-wrap leading-relaxed font-light">
+                        {message.content}
+                      </p>
+                      <p className="text-xs mt-2 opacity-70 font-light">
+                        {formatTime(message.created_at)}
                       </p>
                     </div>
                     {message.message_type === 'user' && (
-                      <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center flex-shrink-0 mt-1">
-                        <User className="w-4 h-4" />
+                      <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center flex-shrink-0">
+                        <span className="text-sm font-medium">
+                          {character.name.charAt(0).toUpperCase()}
+                        </span>
                       </div>
                     )}
                   </div>
-                ))}
-                
-                {processing && (
-                  <div className="flex justify-start">
-                    <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center flex-shrink-0 mt-1">
-                      <MessageCircle className="w-4 h-4" />
+                  
+                  {/* Suggested Actions */}
+                  {message.message_type === 'character' && message.metadata?.suggested_actions && (
+                    <div className="flex flex-wrap gap-2 ml-11">
+                      {message.metadata.suggested_actions.slice(0, 3).map((action: any, index: number) => (
+                        <button
+                          key={index}
+                          onClick={() => setInput(action.text)}
+                          className="typewriter-btn text-sm"
+                        >
+                          {action.text}
+                        </button>
+                      ))}
                     </div>
-                    <div className="max-w-md md:max-w-2xl p-4 mr-12 border-2 border-[#1A1A1A] bg-[#FAFAF8] text-[#1A1A1A]">
-                      <p className="font-light loading-dots">Writing</p>
-                    </div>
-                  </div>
-                )}
-                
-                <div ref={messagesEndRef} />
-              </div>
+                  )}
+                </div>
+              ))
             )}
-          </div>
-          
-          {/* Suggested actions */}
-          {messages.length > 0 && !processing && (
-            <div className="px-4 py-2">
-              <div className="flex flex-wrap gap-2">
-                {messages[messages.length - 1]?.metadata?.suggested_actions?.slice(0, 3).map((action: any) => (
-                  <button
-                    key={action.id}
-                    onClick={() => {
-                      setInputValue(action.text);
-                      setTimeout(() => {
-                        if (inputRef.current) {
-                          inputRef.current.focus();
-                          inputRef.current.style.height = 'auto';
-                          inputRef.current.style.height = `${Math.min(inputRef.current.scrollHeight, 200)}px`;
-                        }
-                      }, 0);
-                    }}
-                    className="text-xs px-3 py-1 bg-[#E5E5E5] text-[#1A1A1A] border border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-[#FAFAF8] transition-colors"
-                  >
-                    {action.text}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {/* Input area */}
-          <div className="border-t-2 border-[#1A1A1A] p-4 bg-[#FAFAF8]">
-            <div className="flex items-end gap-3">
-              <div className="flex-1 relative">
-                <textarea
-                  ref={inputRef}
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  onInput={handleTextareaInput}
-                  placeholder={`What does ${character.name} do next?`}
-                  className="w-full p-3 border-2 border-[#1A1A1A] resize-none bg-[#FAFAF8] text-[#1A1A1A] font-light"
-                  style={{ minHeight: '2.5rem' }}
-                  rows={1}
-                  disabled={processing || loadingMessages}
-                />
-                <div className="absolute top-0 right-0 m-2">
-                  <AutoSaveIndicator status={saveStatus} />
+            
+            {sending && (
+              <div className="flex gap-3">
+                <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4" />
+                </div>
+                <div className="p-4 border-2 border-[#1A1A1A] bg-[#FAFAF8]">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 text-[#1A1A1A] animate-spin" />
+                    <span className="text-[#1A1A1A] font-light loading-dots">Writing</span>
+                  </div>
                 </div>
               </div>
+            )}
+            
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Area - Fixed at bottom */}
+          <div className="border-t-2 border-[#1A1A1A] p-4 bg-[#FAFAF8] flex-shrink-0">
+            <div className="flex gap-2">
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={`What does ${character.name} do next?`}
+                className="flex-1 p-3 typewriter-input resize-none"
+                rows={2}
+                disabled={sending}
+              />
               <button
                 onClick={handleSendMessage}
-                disabled={!inputValue.trim() || processing || loadingMessages}
-                className="p-3 bg-[#1A1A1A] border-2 border-[#1A1A1A] text-[#FAFAF8] disabled:opacity-50"
+                disabled={!input.trim() || sending}
+                className="typewriter-btn-primary px-6 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {processing ? (
-                  <span className="loading-dots">Sending</span>
-                ) : (
-                  <Send className="w-5 h-5" />
-                )}
+                <Send className="w-5 h-5" />
               </button>
             </div>
             <div className="flex justify-between items-center mt-2 text-xs text-[#1A1A1A] font-light">
-              <div className="flex items-center gap-1">
-                <span>Press</span>
-                <kbd className="px-1 py-0.5 border border-[#1A1A1A] text-[#1A1A1A]">Ctrl+Enter</kbd>
-                <span>to send</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  <span>{getTimePlayed()}</span>
-                </span>
-                <span>|</span>
-                <span className="flex items-center gap-1">
-                  <Zap className="w-3 h-3" />
-                  <span>{tokensUsed.toLocaleString()} tokens</span>
-                </span>
-              </div>
+              <span>Press Ctrl+Enter to send</span>
+              <span>{Math.floor(currentContextUsage / 1000)}k / 128,000 tokens</span>
             </div>
           </div>
         </div>
-        
-        {/* Right Sidebar */}
-        <div 
-          className={`${
-            showRightSidebar ? 'w-64 border-l-2 border-[#1A1A1A]' : 'w-0'
-          } bg-[#FAFAF8] transition-all duration-300 ease-in-out flex flex-col overflow-hidden`}
-        >
-          {showRightSidebar && (
-            <div className="p-4 flex flex-col h-full">
+
+        {/* Right Sidebar - Game Status */}
+        <div className={`bg-[#FAFAF8] border-l-2 border-[#1A1A1A] flex-shrink-0 transition-all duration-300 ${
+          rightSidebarCollapsed ? (isMobile ? 'w-0' : 'w-0') : 'w-80'
+        } ${rightSidebarCollapsed ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+          <div className="p-6 space-y-6">
+            {/* Game Status Header */}
+            <div className="typewriter-card">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-medium text-[#1A1A1A]">Game Status</h3>
-                {isMobile && (
-                  <button 
-                    onClick={() => setShowRightSidebar(false)}
-                    className="text-[#1A1A1A]"
+                <h3 className="text-lg font-medium text-[#1A1A1A]">Game Status</h3>
+                {!isMobile && (
+                  <button
+                    onClick={toggleRightSidebar}
+                    className="typewriter-btn"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 )}
               </div>
+            </div>
 
-              {/* Context Usage */}
-              <div className="mb-6">
-                <div className="flex items-center gap-1 mb-2">
-                  <Activity className="w-4 h-4 text-[#1A1A1A]" />
-                  <span className="text-xs font-medium text-[#1A1A1A]">Context Usage</span>
-                </div>
+            {/* Context Usage */}
+            <div className="typewriter-card">
+              <div className="flex items-center gap-2 mb-4">
+                <Activity className="w-5 h-5 text-[#2B6CB0]" />
+                <h4 className="text-[#1A1A1A] font-medium">Context Usage</h4>
+              </div>
+              <ContextProgressBar 
+                tokensUsed={currentContextUsage}
+                className="mb-2"
+              />
+              <p className="text-[#1A1A1A] text-xs font-light">
+                Context usage healthy • {currentContextUsage.toLocaleString()} tokens
+              </p>
+            </div>
+
+            {/* Current Scene */}
+            <div className="typewriter-card">
+              <div className="flex items-center gap-2 mb-4">
+                <MapPin className="w-5 h-5 text-[#2B6CB0]" />
+                <h4 className="text-[#1A1A1A] font-medium">Current Scene</h4>
+              </div>
+              <div className="space-y-2">
                 <div>
-                  <div className="h-2 w-full bg-[#E5E5E5] border border-[#1A1A1A]">
-                    <div 
-                      className="h-full bg-[#1A1A1A]" 
-                      style={{ 
-                        width: `${Math.min((tokensUsed / 128000) * 100, 100)}%`,
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-xs text-[#1A1A1A] mt-1 font-mono">
-                    <span>Context usage healthy</span>
-                    <span>{Math.round((tokensUsed / 128000) * 100)}%</span>
-                  </div>
-                  <div className="text-xs text-[#1A1A1A] mt-1 font-mono">
-                    {tokensUsed.toLocaleString()} / 128,000 tokens
-                  </div>
-                </div>
-              </div>
-
-              {/* Current Scene */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-1">
-                    <Book className="w-4 h-4 text-[#1A1A1A]" />
-                    <span className="text-xs font-medium text-[#1A1A1A]">Current Scene</span>
-                  </div>
-                  <ChevronDown className="w-3 h-3 text-[#1A1A1A]" />
-                </div>
-                {messages.length > 0 && messages[0].metadata?.scene_description && (
-                  <div className="text-xs text-[#1A1A1A] font-light">
-                    <div className="mb-1">
-                      <span className="font-medium">Time:</span> {messages[0].metadata.world_state?.time_of_day || 'unknown'}
-                    </div>
-                    <div className="mb-1">
-                      <span className="font-medium">Mood:</span> {messages[0].metadata.world_state?.mood_atmosphere || 'unknown'}
-                    </div>
-                    <div>
-                      <span className="font-medium">Location:</span> {messages[0].metadata.scene_description}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Characters Present */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-1">
-                    <User className="w-4 h-4 text-[#1A1A1A]" />
-                    <span className="text-xs font-medium text-[#1A1A1A]">Characters Present</span>
-                  </div>
-                  <span className="flex items-center gap-1 text-[#1A1A1A] text-xs">
-                    {messages.length > 0 && messages[0].metadata?.npcs?.length || 0}
-                    <ChevronDown className="w-3 h-3" />
+                  <span className="text-[#1A1A1A] text-sm font-medium">Time:</span>
+                  <span className="text-[#1A1A1A] text-sm font-light ml-2">
+                    {worldState.time_of_day}
                   </span>
                 </div>
-                {messages.length > 0 && messages[0].metadata?.npcs && (
-                  <div>
-                    {messages[0].metadata.npcs.map((npc: string, index: number) => (
-                      <div key={index} className="text-xs text-[#1A1A1A] p-1 border-l-2 border-[#1A1A1A] mb-1 pl-2 font-light">
-                        {npc}
-                      </div>
-                    ))}
-                    {messages[0].metadata.npcs.length === 0 && (
-                      <p className="text-xs text-[#1A1A1A] italic font-light">No characters present yet</p>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Story Freedom */}
-              <div className="mt-auto">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-1">
-                    <Sparkles className="w-4 h-4 text-[#1A1A1A]" />
-                    <span className="text-xs font-medium text-[#1A1A1A]">Story Freedom</span>
-                  </div>
-                  <ChevronDown className="w-3 h-3 text-[#1A1A1A]" />
+                <div>
+                  <span className="text-[#1A1A1A] text-sm font-medium">Mood:</span>
+                  <span className="text-[#1A1A1A] text-sm font-light ml-2">
+                    {worldState.mood_atmosphere || 'exploring, vibrant, curious'}
+                  </span>
                 </div>
+                <div>
+                  <span className="text-[#1A1A1A] text-sm font-medium">Location:</span>
+                  <span className="text-[#1A1A1A] text-sm font-light ml-2">
+                    {worldState.current_location || 'Meryton village green'}
+                  </span>
+                </div>
+              </div>
+            </div>
 
-                {/* Creativity Level */}
-                <div className="space-y-1 mb-4">
-                  <div className={`p-2 text-xs border-2 ${session.creativity_level === 'faithful' ? 'border-[#1A1A1A] bg-[#1A1A1A] text-[#FAFAF8]' : 'border-[#1A1A1A] text-[#1A1A1A]'}`}>
-                    <div className="font-medium">Story-Focused</div>
-                    <div className="text-xs font-light">Staying true to the original narrative</div>
+            {/* Characters Present */}
+            <div className="typewriter-card">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-[#2B6CB0]" />
+                  <h4 className="text-[#1A1A1A] font-medium">Characters Present</h4>
+                </div>
+                <span className="text-[#1A1A1A] font-medium">
+                  {worldState.present_npcs?.length || 2}
+                </span>
+              </div>
+              <div className="space-y-2">
+                {(worldState.present_npcs && worldState.present_npcs.length > 0 ? 
+                  worldState.present_npcs : ['Miss Bingley', 'Miss Bennet']
+                ).map((npc, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-[#2B6CB0] text-[#FAFAF8] flex items-center justify-center">
+                      <span className="text-xs font-medium">
+                        {npc.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="text-[#1A1A1A] text-sm font-light">{npc}</span>
                   </div>
-                  
-                  <div className={`p-2 text-xs border-2 ${session.creativity_level === 'balanced' ? 'border-[#1A1A1A] bg-[#1A1A1A] text-[#FAFAF8]' : 'border-[#1A1A1A] text-[#1A1A1A]'}`}>
-                    <div className="font-medium">Flexible Exploration</div>
-                    <div className="text-xs font-light">Balanced adventure with creative possibilities</div>
+                ))}
+              </div>
+            </div>
+
+            {/* Story Freedom */}
+            <div className="typewriter-card">
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-5 h-5 text-[#2B6CB0]" />
+                <h4 className="text-[#1A1A1A] font-medium">Story Freedom</h4>
+              </div>
+              <div className="space-y-3">
+                <div className="p-3 bg-[#E5E5E5] border border-[#1A1A1A]">
+                  <h5 className="text-[#1A1A1A] font-medium text-sm">{creativityDisplay.name}</h5>
+                  <p className="text-[#1A1A1A] text-xs font-light mt-1">
+                    {creativityDisplay.description}
+                  </p>
+                </div>
+                <div className="text-xs text-[#1A1A1A] font-light">
+                  Change Mode:
+                </div>
+                <div className="space-y-2">
+                  <div className="p-2 bg-[#FAFAF8] border border-[#1A1A1A]">
+                    <span className="text-[#1A1A1A] text-xs font-medium">Story-Focused</span>
+                    <p className="text-[#1A1A1A] text-xs font-light">Staying true to the original narrative</p>
                   </div>
-                  
-                  <div className={`p-2 text-xs border-2 ${session.creativity_level === 'creative' ? 'border-[#1A1A1A] bg-[#1A1A1A] text-[#FAFAF8]' : 'border-[#1A1A1A] text-[#1A1A1A]'}`}>
-                    <div className="font-medium">Open World</div>
-                    <div className="text-xs font-light">Complete creative freedom</div>
+                  <div className="p-2 bg-[#FAFAF8] border border-[#1A1A1A]">
+                    <span className="text-[#1A1A1A] text-xs font-medium">Flexible Exploration</span>
+                    <p className="text-[#1A1A1A] text-xs font-light">Balanced adventure with creative possibilities</p>
+                  </div>
+                  <div className="p-2 bg-[#FAFAF8] border border-[#1A1A1A]">
+                    <span className="text-[#1A1A1A] text-xs font-medium">Open World</span>
+                    <p className="text-[#1A1A1A] text-xs font-light">Complete creative freedom</p>
                   </div>
                 </div>
               </div>
             </div>
-          )}
-          
-          {/* Toggle button for mobile */}
-          {isMobile && !showRightSidebar && (
-            <button
-              onClick={() => setShowRightSidebar(true)}
-              className="absolute top-16 right-0 bg-[#1A1A1A] text-[#FAFAF8] p-2 rounded-l"
-              aria-label="Show game info"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          )}
+          </div>
         </div>
       </div>
 
@@ -1391,7 +914,6 @@ const Game: React.FC = () => {
           characterName={character.name}
           memoryEvents={memoryEvents}
           totalConversations={messages.filter(m => m.message_type === 'user').length}
-          storyPhase={reachedEnd ? 'complete' : 'ongoing'}
         />
       )}
     </div>

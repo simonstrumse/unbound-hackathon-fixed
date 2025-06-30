@@ -32,18 +32,24 @@ body {
   background-size: 20px 20px;
 }
 
-/* Typewriter cursor animation - limited to one per page - HEADER ONLY */
+/* Typewriter cursor animation - limited to header logo only */
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
 }
 
-/* Only apply to specific class */
-.typewriter-cursor::after {
+/* Only apply to header logo */
+header .typewriter-cursor::after,
+.typewriter-header .typewriter-cursor::after {
   content: '|';
   animation: blink 1s infinite;
   color: var(--typewriter-text);
   font-weight: 300;
+}
+
+/* No other cursors anywhere else */
+.typewriter-cursor:not(header .typewriter-cursor):not(.typewriter-header .typewriter-cursor)::after {
+  display: none;
 }
 
 /* Typing animation */
@@ -71,6 +77,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+  cursor: pointer;
 }
 
 .typewriter-btn:hover {
@@ -95,6 +103,8 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+  cursor: pointer;
 }
 
 .typewriter-btn-primary:hover {
@@ -666,4 +676,86 @@ body::before {
 .global-analytics-page table {
   color: var(--typewriter-text);
   border: 2px solid var(--typewriter-border);
+}
+
+/* CRITICAL FIX: Remove all black overlay bars and ensure proper visibility */
+/* This removes the black censoring rectangles that are covering content */
+
+/* Remove any black overlay elements */
+.admin-page *::before,
+.admin-page *::after,
+.game-chat *::before,
+.game-chat *::after {
+  background: transparent !important;
+  color: var(--typewriter-text) !important;
+}
+
+/* Fix profile pictures and avatars - ensure they're visible */
+.admin-page [class*="w-8"],
+.admin-page [class*="w-10"],
+.admin-page [class*="w-12"],
+.admin-page [class*="w-16"],
+.game-chat [class*="w-8"],
+.game-chat [class*="w-10"] {
+  background: var(--typewriter-text) !important;
+  color: var(--typewriter-bg) !important;
+  border: 2px solid var(--typewriter-border) !important;
+}
+
+/* Fix trait badges and other small elements */
+.typewriter-badge,
+.admin-page .typewriter-badge,
+.game-chat .typewriter-badge {
+  background: var(--typewriter-text) !important;
+  color: var(--typewriter-bg) !important;
+  border: 2px solid var(--typewriter-border) !important;
+}
+
+/* Fix any remaining black overlays */
+.admin-page .bg-black,
+.game-chat .bg-black,
+.admin-page [style*="background: black"],
+.game-chat [style*="background: black"],
+.admin-page [style*="background-color: black"],
+.game-chat [style*="background-color: black"] {
+  background: var(--typewriter-text) !important;
+  color: var(--typewriter-bg) !important;
+}
+
+/* Ensure proper text visibility everywhere */
+.admin-page *,
+.game-chat *,
+.analytics-page * {
+  color: var(--typewriter-text) !important;
+}
+
+/* Fix status badges specifically */
+.admin-page [class*="status"],
+.admin-page [class*="badge"],
+.game-chat [class*="status"],
+.game-chat [class*="badge"] {
+  background: var(--typewriter-text) !important;
+  color: var(--typewriter-bg) !important;
+  border: 1px solid var(--typewriter-border) !important;
+}
+
+/* Chat scrolling fix - ensure proper container behavior */
+.game-chat {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.game-chat .messages-container {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+/* Ensure input area stays at bottom */
+.game-chat .input-area {
+  position: sticky;
+  bottom: 0;
+  background: var(--typewriter-bg);
+  border-top: 2px solid var(--typewriter-border);
+  z-index: 10;
 }
