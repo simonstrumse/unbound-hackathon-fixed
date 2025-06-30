@@ -64,32 +64,31 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <Link to="/" className="inline-flex items-center justify-center w-16 h-16 border-2 border-[#1A1A1A] bg-[#FAFAF8] mb-6 typewriter-hover">
-            <Book className="w-8 h-8 text-[#1A1A1A]" />
+          <Link to="/" className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full backdrop-blur-sm mb-6 hover:bg-white/20 transition-colors">
+            <Book className="w-8 h-8 text-white" />
           </Link>
-          <h2 className="text-3xl font-medium text-[#1A1A1A] mb-2 typewriter-cursor">Join Unbound</h2>
-          <div className="ascii-divider mb-4"></div>
-          <p className="text-[#1A1A1A] font-light">Create your account to start your literary adventure</p>
+          <h2 className="text-3xl font-serif font-bold text-white mb-2">Join Unbound</h2>
+          <p className="text-purple-100">Create your account to start your literary adventure</p>
         </div>
 
-        <div className="typewriter-form">
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
           {error && (
-            <div className="mb-6 p-4 typewriter-card typewriter-error flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-[#E53E3E] flex-shrink-0" />
-              <p className="text-[#E53E3E] text-sm">{error}</p>
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+              <p className="text-red-100 text-sm">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="typewriter-form-field">
-              <label htmlFor="email" className="typewriter-form-label">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-purple-100 mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-0 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#1A1A1A]" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
                 <input
                   id="email"
                   name="email"
@@ -97,18 +96,18 @@ const SignUpPage: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-8 typewriter-input"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Enter your email"
                 />
               </div>
             </div>
 
-            <div className="typewriter-form-field">
-              <label htmlFor="username" className="typewriter-form-label">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-purple-100 mb-2">
                 Username
               </label>
               <div className="relative">
-                <User className="absolute left-0 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#1A1A1A]" />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
                 <input
                   id="username"
                   name="username"
@@ -116,18 +115,18 @@ const SignUpPage: React.FC = () => {
                   required
                   value={formData.username}
                   onChange={handleChange}
-                  className="w-full pl-8 typewriter-input"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Choose a username"
                 />
               </div>
             </div>
 
-            <div className="typewriter-form-field">
-              <label htmlFor="password" className="typewriter-form-label">
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-purple-100 mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-0 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#1A1A1A]" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
                 <input
                   id="password"
                   name="password"
@@ -135,18 +134,18 @@ const SignUpPage: React.FC = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-8 typewriter-input"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Create a password"
                 />
               </div>
             </div>
 
-            <div className="typewriter-form-field">
-              <label htmlFor="confirmPassword" className="typewriter-form-label">
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-purple-100 mb-2">
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-0 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#1A1A1A]" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -154,7 +153,7 @@ const SignUpPage: React.FC = () => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full pl-8 typewriter-input"
+                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Confirm your password"
                 />
               </div>
@@ -163,11 +162,12 @@ const SignUpPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full typewriter-btn-primary py-3 px-4 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-white text-purple-900 py-3 px-4 rounded-lg font-semibold hover:bg-purple-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
-                  <span className="loading-dots">Creating Account</span>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Creating Account...
                 </>
               ) : (
                 'Create Account'
@@ -176,9 +176,9 @@ const SignUpPage: React.FC = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-[#1A1A1A] font-light">
+            <p className="text-purple-100">
               Already have an account?{' '}
-              <Link to="/signin" className="text-[#2B6CB0] typewriter-hover font-medium">
+              <Link to="/signin" className="text-purple-300 hover:text-white font-medium transition-colors">
                 Sign in
               </Link>
             </p>
@@ -186,7 +186,7 @@ const SignUpPage: React.FC = () => {
         </div>
 
         <div className="text-center">
-          <Link to="/" className="text-[#2B6CB0] typewriter-hover">
+          <Link to="/" className="text-purple-300 hover:text-white transition-colors">
             ← Back to home
           </Link>
         </div>

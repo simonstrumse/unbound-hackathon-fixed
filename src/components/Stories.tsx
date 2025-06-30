@@ -229,32 +229,33 @@ const Stories: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-[#1A1A1A] text-xl mb-4 loading-dots">Loading stories</div>
+          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
+          <p className="text-white text-xl">Loading stories...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8]">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
       {/* Header */}
-      <header className="typewriter-header">
+      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
                 to="/dashboard"
-                className="flex items-center gap-2 text-[#1A1A1A] typewriter-hover"
+                className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Dashboard
               </Link>
             </div>
             <div className="flex items-center gap-3">
-              <Book className="w-8 h-8 text-[#1A1A1A]" />
-              <span className="text-2xl font-medium text-[#1A1A1A] typewriter-cursor">Unbound</span>
+              <Book className="w-8 h-8 text-white" />
+              <span className="text-2xl font-serif font-bold text-white">Unbound</span>
             </div>
           </div>
         </div>
@@ -263,20 +264,19 @@ const Stories: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-medium text-[#1A1A1A] mb-4 typewriter-cursor">
+          <h1 className="text-4xl sm:text-5xl font-serif font-bold text-white mb-4">
             Choose Your Adventure
           </h1>
-          <div className="ascii-divider mb-6"></div>
-          <p className="text-xl text-[#1A1A1A] max-w-2xl mx-auto font-light">
+          <p className="text-xl text-purple-100 max-w-2xl mx-auto">
             Select a classic story to begin your literary journey. Use <strong>Quick Play</strong> to start instantly 
             or <strong>Customize Character</strong> for a personalized experience.
           </p>
         </div>
 
         {error && (
-          <div className="max-w-2xl mx-auto mb-8 p-4 typewriter-card typewriter-error flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-[#E53E3E] flex-shrink-0" />
-            <p className="text-[#E53E3E]">{error}</p>
+          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+            <p className="text-red-100">{error}</p>
           </div>
         )}
 
@@ -289,14 +289,14 @@ const Stories: React.FC = () => {
             return (
               <div
                 key={story.id}
-                className="typewriter-card typewriter-hover"
+                className="group bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:border-white/40 transition-all duration-300 transform hover:-translate-y-2"
               >
                 {/* Cover Image */}
-                <div className="h-64 overflow-hidden border-b-2 border-[#1A1A1A]">
+                <div className="h-64 overflow-hidden">
                   <img
                     src={story.cover_image_url || 'https://images.pexels.com/photos/1029141/pexels-photo-1029141.jpeg'}
                     alt={story.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
 
@@ -304,31 +304,31 @@ const Stories: React.FC = () => {
                 <div className="p-6">
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="typewriter-badge bg-[#2B6CB0] text-[#FAFAF8] text-sm">
+                      <span className="inline-block px-3 py-1 bg-purple-500/20 text-purple-200 text-sm rounded-full">
                         {story.genre}
                       </span>
                     </div>
-                    <h3 className="text-2xl font-medium text-[#1A1A1A] mb-1 typewriter-cursor">
+                    <h3 className="text-2xl font-serif font-bold text-white mb-1">
                       {story.title}
                     </h3>
-                    <p className="text-[#1A1A1A] font-medium mb-3">
+                    <p className="text-purple-200 font-medium mb-3">
                       by {story.author}
                     </p>
                   </div>
 
-                  <p className="text-[#1A1A1A] text-sm leading-relaxed mb-4 line-clamp-3 font-light">
+                  <p className="text-purple-100 text-sm leading-relaxed mb-4 line-clamp-3">
                     {story.description}
                   </p>
 
                   {/* Story Suggestions */}
                   {suggestions && (
-                    <div className="mb-6 p-3 bg-[#E5E5E5] border border-[#1A1A1A]">
-                      <h4 className="text-sm font-medium text-[#1A1A1A] mb-2">Popular in this story:</h4>
+                    <div className="mb-6 p-3 bg-white/5 rounded-lg border border-white/10">
+                      <h4 className="text-sm font-semibold text-purple-200 mb-2">Popular in this story:</h4>
                       <div className="space-y-1">
-                        <div className="text-xs text-[#1A1A1A] font-light">
+                        <div className="text-xs text-purple-300">
                           <strong>Scenarios:</strong> {suggestions.scenarios.slice(0, 2).join(', ')}
                         </div>
-                        <div className="text-xs text-[#1A1A1A] font-light">
+                        <div className="text-xs text-purple-300">
                           <strong>Character types:</strong> {suggestions.characterTypes.slice(0, 2).join(', ')}
                         </div>
                       </div>
@@ -340,11 +340,12 @@ const Stories: React.FC = () => {
                     <button
                       onClick={() => handleQuickStart(story.id)}
                       disabled={isStarting}
-                      className="w-full typewriter-btn-primary py-3 px-4 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {isStarting ? (
                         <>
-                          <span className="loading-dots">Creating Adventure</span>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Creating Adventure...
                         </>
                       ) : (
                         <>
@@ -357,14 +358,14 @@ const Stories: React.FC = () => {
                     <button
                       onClick={() => handleStartAdventure(story.id)}
                       disabled={isStarting}
-                      className="w-full typewriter-btn py-3 px-4 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full bg-white/10 hover:bg-white/20 text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-white/20"
                     >
                       <Settings className="w-5 h-5" />
                       Customize Character
                     </button>
                   </div>
 
-                  <p className="text-xs text-[#1A1A1A] text-center mt-3 font-light">
+                  <p className="text-xs text-purple-300 text-center mt-3">
                     Quick Play uses balanced settings with a randomized character
                   </p>
                 </div>
@@ -375,9 +376,9 @@ const Stories: React.FC = () => {
 
         {stories.length === 0 && !loading && (
           <div className="text-center py-12">
-            <Book className="w-16 h-16 text-[#1A1A1A] opacity-50 mx-auto mb-4" />
-            <h3 className="text-2xl font-medium text-[#1A1A1A] mb-2 typewriter-cursor">No Stories Available</h3>
-            <p className="text-[#1A1A1A] font-light">
+            <Book className="w-16 h-16 text-white/50 mx-auto mb-4" />
+            <h3 className="text-2xl font-serif font-bold text-white mb-2">No Stories Available</h3>
+            <p className="text-purple-100">
               Check back soon for new adventures to explore.
             </p>
           </div>

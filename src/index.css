@@ -1,478 +1,109 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Typewriter Design System */
-:root {
-  --typewriter-bg: #FAFAF8;
-  --typewriter-text: #1A1A1A;
-  --typewriter-red: #E53E3E;
-  --typewriter-blue: #2B6CB0;
-  --typewriter-gray-light: #E5E5E5;
-  --typewriter-gray: #D4D4D4;
-  --typewriter-border: #1A1A1A;
-}
-
-/* Global Typography */
-* {
-  font-family: 'JetBrains Mono', 'Courier New', monospace !important;
-  letter-spacing: 0.025em;
-}
-
-/* Remove all gradients and transparency */
-body {
-  background: var(--typewriter-bg) !important;
-  color: var(--typewriter-text) !important;
-  min-height: 100vh;
-  background-image: 
-    linear-gradient(var(--typewriter-gray-light) 1px, transparent 1px),
-    linear-gradient(90deg, var(--typewriter-gray-light) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-/* Typewriter cursor animation */
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
-.typewriter-cursor::after {
-  content: '|';
-  animation: blink 1s infinite;
-  color: var(--typewriter-text);
-  font-weight: 300;
-}
-
-/* Typing animation */
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-.typing-effect {
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid var(--typewriter-text);
-  animation: typing 2s steps(40, end), blink 1s infinite step-end;
-}
-
-/* Button styles - typewriter keys */
-.typewriter-btn {
-  background: var(--typewriter-bg);
-  border: 2px solid var(--typewriter-border);
-  color: var(--typewriter-text);
-  padding: 8px 16px;
-  font-weight: 400;
-  transition: all 0.1s ease;
-  position: relative;
-}
-
-.typewriter-btn:hover {
-  background: var(--typewriter-text);
-  color: var(--typewriter-bg);
-}
-
-.typewriter-btn:active {
-  transform: translateY(1px);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Primary button variant */
-.typewriter-btn-primary {
-  background: var(--typewriter-text);
-  color: var(--typewriter-bg);
-}
-
-.typewriter-btn-primary:hover {
-  background: var(--typewriter-bg);
-  color: var(--typewriter-text);
-}
-
-/* Card styles */
-.typewriter-card {
-  background: var(--typewriter-bg);
-  border: 2px solid var(--typewriter-border);
-  padding: 20px;
-}
-
-/* Input styles */
-.typewriter-input {
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid var(--typewriter-border);
-  color: var(--typewriter-text);
-  padding: 8px 0;
-  font-weight: 400;
-}
-
-.typewriter-input:focus {
-  outline: none;
-  border-bottom-color: var(--typewriter-blue);
-}
-
-.typewriter-input::placeholder {
-  color: var(--typewriter-gray);
-  font-style: italic;
-}
-
-/* Header styles */
-.typewriter-header {
-  border-bottom: 2px solid var(--typewriter-border);
-  background: var(--typewriter-bg);
-}
-
-.typewriter-header::after {
-  content: '';
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--typewriter-border) 0px,
-    var(--typewriter-border) 10px,
-    transparent 10px,
-    transparent 20px
-  );
-  margin-top: 2px;
-}
-
-/* Divider styles */
-.typewriter-divider {
-  border: none;
-  height: 2px;
-  background: var(--typewriter-border);
-  margin: 20px 0;
-}
-
-.typewriter-divider-dashed {
-  border: none;
-  height: 2px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--typewriter-border) 0px,
-    var(--typewriter-border) 10px,
-    transparent 10px,
-    transparent 20px
-  );
-  margin: 20px 0;
-}
-
-/* ASCII-style dividers */
-.ascii-divider::before {
-  content: '================================================================================';
-  display: block;
-  color: var(--typewriter-gray);
-  font-size: 12px;
-  line-height: 1;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-/* Loading dots */
-@keyframes dots {
-  0%, 20% { content: '.'; }
-  40% { content: '..'; }
-  60%, 100% { content: '...'; }
-}
-
-.loading-dots::after {
-  content: '.';
-  animation: dots 1.5s infinite;
-}
-
-/* Success/Error states */
-.typewriter-success {
-  color: var(--typewriter-red);
-  font-weight: 400;
-}
-
-.typewriter-error {
-  color: var(--typewriter-red);
-  text-decoration: line-through;
-  font-weight: 400;
-}
-
-/* Navigation styles */
-.typewriter-nav {
-  background: var(--typewriter-bg);
-  border-bottom: 2px solid var(--typewriter-border);
-}
-
-.typewriter-nav-link {
-  color: var(--typewriter-text);
-  text-decoration: none;
-  padding: 8px 16px;
-  border: 2px solid transparent;
-  transition: all 0.1s ease;
-}
-
-.typewriter-nav-link:hover {
-  border-color: var(--typewriter-border);
-  background: var(--typewriter-gray-light);
-}
-
-.typewriter-nav-link.active {
-  background: var(--typewriter-text);
-  color: var(--typewriter-bg);
-  border-color: var(--typewriter-border);
-}
-
-/* Focus states */
-.typewriter-focus:focus {
-  outline: 2px dashed var(--typewriter-border);
-  outline-offset: 2px;
-}
-
-/* Active states with brackets */
-.typewriter-active::before {
-  content: '[';
-  color: var(--typewriter-blue);
-}
-
-.typewriter-active::after {
-  content: ']';
-  color: var(--typewriter-blue);
-}
-
-/* Remove all rounded corners */
-* {
-  border-radius: 0 !important;
-}
-
-/* Override Tailwind utilities */
-.bg-gradient-to-br,
-.bg-gradient-to-r,
-.bg-gradient-to-l,
-.bg-gradient-to-t,
-.bg-gradient-to-b {
-  background: var(--typewriter-bg) !important;
-}
-
-.backdrop-blur-sm,
-.backdrop-blur,
-.backdrop-blur-md,
-.backdrop-blur-lg {
-  backdrop-filter: none !important;
-  background: var(--typewriter-bg) !important;
-}
-
-/* Custom scrollbar */
+/* Custom scrollbar styles */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--typewriter-gray-light);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--typewriter-border);
-  border: 2px solid var(--typewriter-gray-light);
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--typewriter-text);
+  background: rgba(139, 92, 246, 0.7);
 }
 
-/* Selection colors */
+/* Hide scrollbars while keeping scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Custom range slider styles */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #8b5cf6, #06b6d4);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #8b5cf6, #06b6d4);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Animation classes for smooth transitions */
+.animate-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.slide-in-from-right-full {
+  transform: translateX(100%);
+}
+
+/* Hide scrollbar while keeping scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Ensure proper gradient backgrounds */
+body {
+  background: linear-gradient(135deg, #581c87 0%, #7c2d12 50%, #0f172a 100%);
+  min-height: 100vh;
+}
+
+/* Fix text selection colors */
 ::selection {
-  background: var(--typewriter-text);
-  color: var(--typewriter-bg);
+  background: rgba(139, 92, 246, 0.3);
+  color: white;
 }
 
 ::-moz-selection {
-  background: var(--typewriter-text);
-  color: var(--typewriter-bg);
-}
-
-/* Message typing effect */
-.message-typing {
-  overflow: hidden;
-  white-space: nowrap;
-  animation: typing 1s steps(40, end);
-}
-
-/* Timestamp styles */
-.typewriter-timestamp {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  font-size: 10px;
-  color: var(--typewriter-gray);
-  font-style: italic;
-}
-
-/* Table styles for analytics */
-.typewriter-table {
-  border-collapse: collapse;
-  width: 100%;
-  border: 2px solid var(--typewriter-border);
-}
-
-.typewriter-table th,
-.typewriter-table td {
-  border: 1px solid var(--typewriter-border);
-  padding: 8px 12px;
-  text-align: left;
-}
-
-.typewriter-table th {
-  background: var(--typewriter-gray-light);
-  font-weight: 500;
-}
-
-/* Form styles */
-.typewriter-form {
-  background: var(--typewriter-bg);
-  border: 2px solid var(--typewriter-border);
-  padding: 24px;
-}
-
-.typewriter-form-field {
-  margin-bottom: 16px;
-}
-
-.typewriter-form-label {
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 500;
-  color: var(--typewriter-text);
-}
-
-/* Modal styles */
-.typewriter-modal {
-  background: var(--typewriter-bg);
-  border: 4px solid var(--typewriter-border);
-  box-shadow: 8px 8px 0px var(--typewriter-border);
-}
-
-/* Notification styles */
-.typewriter-notification {
-  background: var(--typewriter-bg);
-  border: 2px solid var(--typewriter-border);
-  color: var(--typewriter-text);
-}
-
-.typewriter-notification.success {
-  border-color: var(--typewriter-red);
-  color: var(--typewriter-red);
-}
-
-.typewriter-notification.error {
-  border-color: var(--typewriter-red);
-  color: var(--typewriter-red);
-  text-decoration: line-through;
-}
-
-/* Badge styles */
-.typewriter-badge {
-  background: var(--typewriter-text);
-  color: var(--typewriter-bg);
-  padding: 4px 8px;
-  border: 2px solid var(--typewriter-border);
-  font-size: 12px;
-  font-weight: 400;
-}
-
-/* Progress bar */
-.typewriter-progress {
-  background: var(--typewriter-gray-light);
-  border: 2px solid var(--typewriter-border);
-  height: 20px;
-}
-
-.typewriter-progress-fill {
-  background: var(--typewriter-text);
-  height: 100%;
-  transition: width 0.3s ease;
-}
-
-/* Sidebar styles */
-.typewriter-sidebar {
-  background: var(--typewriter-bg);
-  border-right: 2px solid var(--typewriter-border);
-}
-
-.typewriter-sidebar-item {
-  padding: 8px 16px;
-  border-bottom: 1px solid var(--typewriter-gray-light);
-  cursor: pointer;
-}
-
-.typewriter-sidebar-item:hover {
-  background: var(--typewriter-gray-light);
-}
-
-.typewriter-sidebar-item.active {
-  background: var(--typewriter-text);
-  color: var(--typewriter-bg);
-}
-
-/* List styles with typewriter bullets */
-.typewriter-list {
-  list-style: none;
-  padding: 0;
-}
-
-.typewriter-list li::before {
-  content: '> ';
-  color: var(--typewriter-blue);
-  font-weight: 500;
-}
-
-/* Code/monospace emphasis */
-.typewriter-code {
-  background: var(--typewriter-gray-light);
-  border: 1px solid var(--typewriter-border);
-  padding: 2px 4px;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-/* Hover effects */
-.typewriter-hover:hover {
-  background: var(--typewriter-text);
-  color: var(--typewriter-bg);
-  transition: all 0.1s ease;
-}
-
-/* Link styles */
-a {
-  color: var(--typewriter-blue);
-  text-decoration: underline;
-  font-weight: 400;
-}
-
-a:hover {
-  background: var(--typewriter-text);
-  color: var(--typewriter-bg);
-  text-decoration: none;
-}
-
-/* Disable all animations except typing effects */
-.animate-spin,
-.animate-pulse,
-.animate-bounce {
-  animation: none !important;
-}
-
-/* Keep only typing-related animations */
-.animate-typing {
-  animation: typing 2s steps(40, end);
-}
-
-/* Paper texture overlay */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    radial-gradient(circle at 1px 1px, rgba(26,26,26,0.05) 1px, transparent 0);
-  background-size: 20px 20px;
-  pointer-events: none;
-  z-index: -1;
+  background: rgba(139, 92, 246, 0.3);
+  color: white;
 }
