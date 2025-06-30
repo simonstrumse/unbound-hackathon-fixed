@@ -64,31 +64,31 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FAFAF8] paper-texture flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <Link to="/" className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full backdrop-blur-sm mb-6 hover:bg-white/20 transition-colors">
-            <Book className="w-8 h-8 text-white" />
+          <Link to="/" className="inline-flex items-center justify-center w-16 h-16 bg-[#FAFAF8] border-4 border-[#1A1A1A] mb-6 hover:bg-[#1A1A1A] hover:text-[#FAFAF8] transition-colors">
+            <Book className="w-8 h-8" />
           </Link>
-          <h2 className="text-3xl font-serif font-bold text-white mb-2">Join Unbound</h2>
-          <p className="text-purple-100">Create your account to start your literary adventure</p>
+          <h2 className="text-3xl font-mono font-medium text-[#1A1A1A] mb-2 typewriter-cursor">Join Unbound</h2>
+          <p className="text-[#666666] font-mono">Create your account to start your literary adventure</p>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+        <div className="card-typewriter">
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-              <p className="text-red-100 text-sm">{error}</p>
+            <div className="mb-6 p-4 bg-[#E53E3E] border-2 border-[#1A1A1A] text-[#FAFAF8] flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <p className="text-sm font-mono">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-purple-100 mb-2">
+              <label htmlFor="email" className="block text-sm font-mono text-[#1A1A1A] mb-2">
                 Email Address
               </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+              <div className="relative flex items-center">
+                <Mail className="w-5 h-5 text-[#666666] mr-3" />
                 <input
                   id="email"
                   name="email"
@@ -96,18 +96,18 @@ const SignUpPage: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="input-typewriter flex-1 font-mono"
                   placeholder="Enter your email"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-purple-100 mb-2">
+              <label htmlFor="username" className="block text-sm font-mono text-[#1A1A1A] mb-2">
                 Username
               </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+              <div className="relative flex items-center">
+                <User className="w-5 h-5 text-[#666666] mr-3" />
                 <input
                   id="username"
                   name="username"
@@ -115,18 +115,18 @@ const SignUpPage: React.FC = () => {
                   required
                   value={formData.username}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="input-typewriter flex-1 font-mono"
                   placeholder="Choose a username"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-purple-100 mb-2">
+              <label htmlFor="password" className="block text-sm font-mono text-[#1A1A1A] mb-2">
                 Password
               </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+              <div className="relative flex items-center">
+                <Lock className="w-5 h-5 text-[#666666] mr-3" />
                 <input
                   id="password"
                   name="password"
@@ -134,18 +134,18 @@ const SignUpPage: React.FC = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="input-typewriter flex-1 font-mono"
                   placeholder="Create a password"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-purple-100 mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-mono text-[#1A1A1A] mb-2">
                 Confirm Password
               </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-purple-300" />
+              <div className="relative flex items-center">
+                <Lock className="w-5 h-5 text-[#666666] mr-3" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -153,7 +153,7 @@ const SignUpPage: React.FC = () => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="input-typewriter flex-1 font-mono"
                   placeholder="Confirm your password"
                 />
               </div>
@@ -162,23 +162,23 @@ const SignUpPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-white text-purple-900 py-3 px-4 rounded-lg font-semibold hover:bg-purple-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="btn-typewriter-blue w-full py-3 px-4 font-mono disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Creating Account...
+                  <span className="loading-typewriter">Creating Account</span>
                 </>
               ) : (
-                'Create Account'
+                '> Create Account'
               )}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-purple-100">
+            <p className="text-[#666666] font-mono">
               Already have an account?{' '}
-              <Link to="/signin" className="text-purple-300 hover:text-white font-medium transition-colors">
+              <Link to="/signin" className="text-[#2B6CB0] hover:underline font-mono">
                 Sign in
               </Link>
             </p>
@@ -186,7 +186,7 @@ const SignUpPage: React.FC = () => {
         </div>
 
         <div className="text-center">
-          <Link to="/" className="text-purple-300 hover:text-white transition-colors">
+          <Link to="/" className="text-[#2B6CB0] hover:underline font-mono">
             ← Back to home
           </Link>
         </div>

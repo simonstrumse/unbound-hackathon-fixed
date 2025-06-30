@@ -264,7 +264,7 @@ const Dashboard: React.FC = () => {
   const getAdminBadge = () => {
     if (isSuperAdmin) {
       return (
-        <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 bg-yellow-500/20 text-yellow-200 rounded-full text-xs sm:text-sm">
+        <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 bg-[#E53E3E] text-[#FAFAF8] border-2 border-[#1A1A1A] text-xs sm:text-sm font-mono">
           <Crown className="w-4 h-4" />
           <span className="hidden sm:inline">Super Admin</span>
           <span className="sm:hidden">Super</span>
@@ -273,7 +273,7 @@ const Dashboard: React.FC = () => {
     }
     if (isAdmin) {
       return (
-        <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 bg-blue-500/20 text-blue-200 rounded-full text-xs sm:text-sm">
+        <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 bg-[#2B6CB0] text-[#FAFAF8] border-2 border-[#1A1A1A] text-xs sm:text-sm font-mono">
           <Shield className="w-4 h-4" />
           Admin
         </div>
@@ -283,19 +283,19 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
+    <div className="min-h-screen bg-[#FAFAF8] paper-texture">
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
+      <header className="nav-typewriter">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Book className="w-8 h-8 text-white" />
-              <span className="text-xl sm:text-2xl font-serif font-bold text-white">Unbound</span>
+              <Book className="w-8 h-8 text-[#1A1A1A]" />
+              <span className="text-xl sm:text-2xl font-mono font-medium text-[#1A1A1A] typewriter-cursor">Unbound</span>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
               <Link
                 to="/analytics"
-                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 rounded-lg transition-colors text-sm sm:text-base"
+                className="nav-link flex items-center gap-1 sm:gap-2 text-sm sm:text-base font-mono"
               >
                 <BarChart3 className="w-4 h-4" />
                 <span className="hidden sm:inline">Analytics</span>
@@ -303,7 +303,7 @@ const Dashboard: React.FC = () => {
               {isAdmin && (
                 <Link
                   to="/admin"
-                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 rounded-lg transition-colors text-sm sm:text-base"
+                  className="nav-link flex items-center gap-1 sm:gap-2 text-sm sm:text-base font-mono"
                 >
                   <Settings className="w-4 h-4" />
                   <span className="hidden sm:inline">{isSuperAdmin ? 'Super Admin' : 'Admin'}</span>
@@ -311,7 +311,7 @@ const Dashboard: React.FC = () => {
               )}
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm sm:text-base"
+                className="btn-typewriter flex items-center gap-1 sm:gap-2 text-sm sm:text-base font-mono"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Sign Out</span>
@@ -325,24 +325,24 @@ const Dashboard: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-4">
-            <h1 className="text-4xl sm:text-5xl font-serif font-bold text-white">
+            <h1 className="text-4xl sm:text-5xl font-mono font-medium text-[#1A1A1A] typewriter-cursor">
               Welcome back, {displayProfile.username}!
             </h1>
             {getAdminBadge()}
           </div>
-          <p className="text-xl text-purple-100">
+          <p className="text-xl text-[#666666] font-mono">
             Ready to continue your literary adventure?
           </p>
         </div>
 
         {/* Show any errors */}
         {error && (
-          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+          <div className="max-w-2xl mx-auto mb-8 p-4 bg-[#E53E3E] border-2 border-[#1A1A1A] text-[#FAFAF8]">
             <div className="flex items-center justify-between">
-              <p className="text-red-100">{error}</p>
+              <p className="font-mono">{error}</p>
               <button
                 onClick={handleRetry}
-                className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                className="btn-typewriter-red flex items-center gap-2 font-mono"
               >
                 <RefreshCw className="w-4 h-4" />
                 Retry
@@ -353,18 +353,18 @@ const Dashboard: React.FC = () => {
 
         {/* Beta Status Card */}
         <div className="max-w-2xl mx-auto mb-12">
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+          <div className="card-typewriter">
             <div className="flex items-center gap-4">
               {displayProfile.beta_approved ? (
-                <CheckCircle className="w-8 h-8 text-green-400" />
+                <CheckCircle className="w-8 h-8 text-[#2B6CB0]" />
               ) : (
-                <XCircle className="w-8 h-8 text-red-400" />
+                <XCircle className="w-8 h-8 text-[#E53E3E]" />
               )}
               <div>
-                <h3 className="text-xl font-semibold text-white mb-1">
+                <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-1">
                   Beta Access Status
                 </h3>
-                <p className="text-purple-100">
+                <p className="text-[#666666] font-mono">
                   {displayProfile.beta_approved 
                     ? "You have full access to all platform features!" 
                     : "Your beta access is pending approval."
@@ -379,13 +379,13 @@ const Dashboard: React.FC = () => {
         {loadingSessions ? (
           <div className="max-w-4xl mx-auto mb-12">
             <div className="text-center py-8">
-              <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-              <p className="text-purple-100">Loading your adventures...</p>
+              <div className="loading-typewriter text-[#1A1A1A] font-mono text-xl">Loading your adventures</div>
             </div>
           </div>
         ) : activeSessions.length > 0 ? (
           <div className="max-w-4xl mx-auto mb-12">
-            <h2 className="text-2xl font-serif font-bold text-white mb-6 text-center">
+            <div className="divider-ascii"></div>
+            <h2 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-6 text-center typewriter-cursor">
               Your Active Adventures
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
@@ -394,44 +394,44 @@ const Dashboard: React.FC = () => {
                 return (
                   <div
                     key={session.id}
-                    className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/40 transition-all duration-300"
+                    className="card-typewriter"
                   >
                     <div className="flex items-start gap-4 mb-4">
-                      <div className={`w-12 h-12 rounded-full ${avatarColors[avatarColorIndex]} flex items-center justify-center flex-shrink-0`}>
-                        <span className="text-lg font-bold text-white">
+                      <div className={`w-12 h-12 ${avatarColors[avatarColorIndex]} border-2 border-[#1A1A1A] flex items-center justify-center flex-shrink-0`}>
+                        <span className="text-lg font-mono text-[#FAFAF8]">
                           {session.character.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-serif font-bold text-white mb-1">
+                        <h3 className="text-lg font-mono font-medium text-[#1A1A1A] mb-1">
                           {session.story.title}
                         </h3>
-                        <p className="text-purple-200 text-sm mb-2">
+                        <p className="text-[#666666] text-sm mb-2 font-mono">
                           by {session.story.author}
                         </p>
-                        <div className="flex items-center gap-2 text-purple-100 text-sm">
+                        <div className="flex items-center gap-2 text-[#666666] text-sm font-mono">
                           <User className="w-4 h-4" />
-                          Playing as {session.character.name}
+                          > Playing as {session.character.name}
                         </div>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-purple-200 text-sm">
+                      <div className="flex items-center gap-2 text-[#666666] text-sm font-mono">
                         <Calendar className="w-4 h-4" />
                         {new Date(session.updated_at).toLocaleDateString()}
                       </div>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleContinueSession(session.id)}
-                          className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition-all duration-300"
+                          className="btn-typewriter-blue flex items-center gap-2 font-mono"
                         >
                           <Play className="w-4 h-4" />
                           Continue
                         </button>
                         <button
                           onClick={() => handleDeleteSession(session.id)}
-                          className="p-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors"
+                          className="btn-typewriter-red p-2"
                           title="Delete Adventure"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -447,58 +447,59 @@ const Dashboard: React.FC = () => {
 
         {/* Action Cards */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div className="group bg-gradient-to-br from-purple-600/20 to-blue-600/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 transform hover:-translate-y-2">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <BookOpen className="w-8 h-8 text-white" />
+          <div className="card-typewriter">
+            <div className="w-16 h-16 bg-[#2B6CB0] border-2 border-[#1A1A1A] flex items-center justify-center mb-6">
+              <BookOpen className="w-8 h-8 text-[#FAFAF8]" />
             </div>
-            <h3 className="text-2xl font-serif font-bold text-white mb-4">Browse Stories</h3>
-            <p className="text-purple-100 mb-6 leading-relaxed">
+            <h3 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-4">[Browse Stories]</h3>
+            <p className="text-[#666666] mb-6 leading-relaxed font-mono">
               Explore our curated collection of classic literature and choose your next adventure.
             </p>
             <button 
-              className="bg-white text-purple-900 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors"
+              className="btn-typewriter-blue font-mono"
               onClick={handleBrowseStories}
             >
-              Explore Stories
+              > Explore Stories
             </button>
           </div>
 
-          <div className="group bg-gradient-to-br from-green-600/20 to-teal-600/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 transform hover:-translate-y-2">
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <Book className="w-8 h-8 text-white" />
+          <div className="card-typewriter">
+            <div className="w-16 h-16 bg-[#E53E3E] border-2 border-[#1A1A1A] flex items-center justify-center mb-6">
+              <Book className="w-8 h-8 text-[#FAFAF8]" />
             </div>
-            <h3 className="text-2xl font-serif font-bold text-white mb-4">Create Character</h3>
-            <p className="text-purple-100 mb-6 leading-relaxed">
+            <h3 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-4">[Create Character]</h3>
+            <p className="text-[#666666] mb-6 leading-relaxed font-mono">
               Design unique characters with distinct personalities for your literary adventures.
             </p>
             <button 
-              className="bg-white text-purple-900 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors"
+              className="btn-typewriter-blue font-mono"
               onClick={handleBrowseStories}
             >
-              Start New Adventure
+              > Start New Adventure
             </button>
           </div>
         </div>
 
         {/* Stats Section */}
         <div className="mt-16 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-serif font-bold text-white mb-8 text-center">
+          <div className="divider-dashes"></div>
+          <h2 className="text-2xl font-mono font-medium text-[#1A1A1A] mb-8 text-center typewriter-cursor">
             Your Adventure Stats
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 text-center border border-white/10">
-              <div className="text-3xl font-bold text-white mb-2">{activeSessions.length}</div>
-              <div className="text-purple-200">Active Adventures</div>
+            <div className="card-typewriter text-center">
+              <div className="text-3xl font-mono font-medium text-[#1A1A1A] mb-2">{activeSessions.length}</div>
+              <div className="text-[#666666] font-mono">Active Adventures</div>
             </div>
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 text-center border border-white/10">
-              <div className="text-3xl font-bold text-white mb-2">
+            <div className="card-typewriter text-center">
+              <div className="text-3xl font-mono font-medium text-[#1A1A1A] mb-2">
                 {activeSessions.reduce((acc, session) => acc + (session.character.personality_traits?.length || 0), 0)}
               </div>
-              <div className="text-purple-200">Character Traits</div>
+              <div className="text-[#666666] font-mono">Character Traits</div>
             </div>
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 text-center border border-white/10">
-              <div className="text-3xl font-bold text-white mb-2">0</div>
-              <div className="text-purple-200">Conversations</div>
+            <div className="card-typewriter text-center">
+              <div className="text-3xl font-mono font-medium text-[#1A1A1A] mb-2">0</div>
+              <div className="text-[#666666] font-mono">Conversations</div>
             </div>
           </div>
         </div>
