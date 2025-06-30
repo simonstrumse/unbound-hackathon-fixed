@@ -350,7 +350,7 @@ const Stories: React.FC = () => {
                       ) : (
                         <>
                           <Zap className="w-5 h-5" />
-                          > Quick Play
+                         <span>&gt; Quick Play</span>
                         </>
                       )}
                     </button>
@@ -361,7 +361,7 @@ const Stories: React.FC = () => {
                       className="btn-typewriter w-full py-3 px-4 font-mono disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       <Settings className="w-5 h-5" />
-                      > Customize Character
+                     <span>&gt; Customize Character</span>
                     </button>
                   </div>
 

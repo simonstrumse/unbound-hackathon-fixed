@@ -250,7 +250,7 @@ const LandingPage: React.FC = () => {
               <div className="w-20 h-20 bg-[#2B6CB0] border-4 border-[#1A1A1A] flex items-center justify-center mx-auto mb-6">
                 <BookOpen className="w-10 h-10 text-[#FAFAF8]" />
               </div>
-              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">> Choose Your Story</h3>
+              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">&gt; Choose Your Story</h3>
               <p className="text-[#666666] font-mono">
                 Select from our curated library of classic literature and timeless tales.
               </p>
@@ -261,7 +261,7 @@ const LandingPage: React.FC = () => {
               <div className="w-20 h-20 bg-[#E53E3E] border-4 border-[#1A1A1A] flex items-center justify-center mx-auto mb-6">
                 <User className="w-10 h-10 text-[#FAFAF8]" />
               </div>
-              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">> Create Your Character</h3>
+              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">&gt; Create Your Character</h3>
               <p className="text-[#666666] font-mono">
                 Design a unique character with personality traits that will shape your journey.
               </p>
@@ -272,7 +272,7 @@ const LandingPage: React.FC = () => {
               <div className="w-20 h-20 bg-[#1A1A1A] border-4 border-[#1A1A1A] flex items-center justify-center mx-auto mb-6">
                 <MessageCircle className="w-10 h-10 text-[#FAFAF8]" />
               </div>
-              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">> Start Conversations</h3>
+              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">&gt; Start Conversations</h3>
               <p className="text-[#666666] font-mono">
                 Engage with beloved characters in natural, flowing conversations.
               </p>
@@ -283,7 +283,7 @@ const LandingPage: React.FC = () => {
               <div className="w-20 h-20 bg-[#666666] border-4 border-[#1A1A1A] flex items-center justify-center mx-auto mb-6">
                 <Sparkles className="w-10 h-10 text-[#FAFAF8]" />
               </div>
-              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">> Shape the Narrative</h3>
+              <h3 className="text-xl font-mono font-medium text-[#1A1A1A] mb-3">&gt; Shape the Narrative</h3>
               <p className="text-[#666666] font-mono">
                 Watch as your choices and decisions influence the story's direction.
               </p>
@@ -321,7 +321,7 @@ const LandingPage: React.FC = () => {
                   intertwine in the drawing rooms of the English countryside.
                 </p>
                 <button className="flex items-center gap-2 text-[#2B6CB0] font-mono hover:underline">
-                  > Begin Adventure <ArrowRight className="w-4 h-4" />
+                  <span>&gt; Begin Adventure</span> <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -341,7 +341,7 @@ const LandingPage: React.FC = () => {
                   collide in the lavish parties of West Egg.
                 </p>
                 <button className="flex items-center gap-2 text-[#2B6CB0] font-mono hover:underline">
-                  > Begin Adventure <ArrowRight className="w-4 h-4" />
+                  <span>&gt; Begin Adventure</span> <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -361,7 +361,7 @@ const LandingPage: React.FC = () => {
                   and imagination reigns supreme in curious adventures.
                 </p>
                 <button className="flex items-center gap-2 text-[#2B6CB0] font-mono hover:underline">
-                  > Begin Adventure <ArrowRight className="w-4 h-4" />
+                  <span>&gt; Begin Adventure</span> <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>

@@ -491,7 +491,7 @@ const CharacterCreation: React.FC = () => {
                 className="btn-typewriter flex items-center gap-2 font-mono"
               >
                 <Shuffle className="w-4 h-4" />
-                > Randomize All
+                <span>&gt; Randomize All</span>
               </button>
             </div>
 
@@ -636,7 +636,7 @@ const CharacterCreation: React.FC = () => {
                 ) : (
                   <>
                     <Sparkles className="w-6 h-6" />
-                    > Begin Adventure
+                    <span>&gt; Begin Adventure</span>
                   </>
                 )}
               </button>
@@ -672,7 +672,7 @@ const CharacterCreation: React.FC = () => {
                   <div className="bg-[#E5E5E5] border border-[#1A1A1A] p-4">
                     <h5 className="text-sm font-mono text-[#1A1A1A] mb-2 flex items-center gap-2">
                       <User className="w-4 h-4" />
-                      > Background
+                      <span>&gt; Background</span>
                     </h5>
                     <p className="text-[#1A1A1A] text-sm leading-relaxed font-mono">
                       {character.backstory}
@@ -684,7 +684,7 @@ const CharacterCreation: React.FC = () => {
                   <div className="bg-[#E5E5E5] border border-[#1A1A1A] p-4">
                     <h5 className="text-sm font-mono text-[#1A1A1A] mb-3 flex items-center gap-2">
                       <Heart className="w-4 h-4" />
-                      > Personality Traits
+                      <span>&gt; Personality Traits</span>
                     </h5>
                     <div className="flex flex-wrap gap-2 justify-center">
                       {character.personalityTraits.map((trait) => (
@@ -702,7 +702,7 @@ const CharacterCreation: React.FC = () => {
                 <div className="bg-[#E5E5E5] border border-[#1A1A1A] p-4">
                   <h5 className="text-sm font-mono text-[#1A1A1A] mb-2 flex items-center gap-2">
                     <Sparkles className="w-4 h-4" />
-                    > Adventure Style
+                    <span>&gt; Adventure Style</span>
                   </h5>
                   <p className="text-[#1A1A1A] text-sm font-mono">
                     {creativityLevels.find(l => l.level === character.creativityLevel)?.title}
