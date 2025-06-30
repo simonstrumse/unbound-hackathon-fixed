@@ -64,8 +64,6 @@ interface UserWithStats extends Profile {
   last_active: string;
 }
 
-const COLORS = ['#1A1A1A', '#2B6CB0', '#E53E3E', '#D4D4D4'];
-
 const EnhancedAdminDashboard: React.FC = () => {
   const { isAdmin, isSuperAdmin } = useAuth();
   const { showNotification } = useNotifications();
@@ -578,7 +576,7 @@ const EnhancedAdminDashboard: React.FC = () => {
                                     is_admin: false 
                                   })}
                                   disabled={actionLoading === user.id}
-                                  className="flex items-center gap-1 bg-[#E53E3E] border-[#E53E3E] text-[#FAFAF8] px-3 py-1 text-sm disabled:opacity-50"
+                                  className="flex items-center gap-1 typewriter-btn bg-[#E53E3E] border-[#E53E3E] text-[#FAFAF8] disabled:opacity-50"
                                 >
                                   {actionLoading === user.id ? (
                                     <span className="loading-dots">Working</span>
@@ -665,11 +663,8 @@ const EnhancedAdminDashboard: React.FC = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          <Link
-            to="/admin/analytics"
-            className="typewriter-card border-4 border-[#1A1A1A]"
-          >
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <div className="typewriter-card border-4 border-[#1A1A1A]">
             <div className="w-16 h-16 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center mb-6">
               <TrendingUp className="w-8 h-8" />
             </div>
@@ -680,12 +675,16 @@ const EnhancedAdminDashboard: React.FC = () => {
             <div className="mt-4 text-sm text-[#1A1A1A] font-light">
               Platform-wide data • All users • All activity
             </div>
-          </Link>
+            <Link
+              to="/admin/analytics"
+              className="typewriter-btn inline-block mt-4"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              View Analytics
+            </Link>
+          </div>
 
-          <Link
-            to="/admin/users"
-            className="typewriter-card border-4 border-[#1A1A1A]"
-          >
+          <div className="typewriter-card border-4 border-[#1A1A1A]">
             <div className="w-16 h-16 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center mb-6">
               <Users className="w-8 h-8" />
             </div>
@@ -696,7 +695,7 @@ const EnhancedAdminDashboard: React.FC = () => {
                 : 'Manage user accounts and beta approvals across the platform.'
               }
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-3 mb-4">
               <span className="px-3 py-1 bg-[#1A1A1A] text-[#FAFAF8] text-sm">
                 {platformStats.betaApproved} Approved
               </span>
@@ -704,7 +703,14 @@ const EnhancedAdminDashboard: React.FC = () => {
                 {platformStats.totalUsers - platformStats.betaApproved} Pending
               </span>
             </div>
-          </Link>
+            <Link
+              to="/admin/users"
+              className="typewriter-btn inline-block"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              View Users
+            </Link>
+          </div>
 
           {isSuperAdmin && (
             <div className="typewriter-card border-4 border-[#1A1A1A]">

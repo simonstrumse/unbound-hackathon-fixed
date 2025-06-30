@@ -169,7 +169,7 @@ const AdminUserManagement: React.FC = () => {
   const getUserStatusBadge = (user: ExtendedProfile) => {
     if (user.admin_level === 'superadmin') {
       return (
-        <span className="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 text-yellow-200 text-xs rounded-full">
+        <span className="flex items-center gap-1 px-2 py-1 bg-[#1A1A1A] text-[#FAFAF8] text-xs">
           <Crown className="w-3 h-3" />
           Super Admin
         </span>
@@ -177,7 +177,7 @@ const AdminUserManagement: React.FC = () => {
     }
     if (user.admin_level === 'admin' || (user.is_admin && user.admin_level !== 'superadmin')) {
       return (
-        <span className="flex items-center gap-1 px-2 py-1 bg-blue-500/20 text-blue-200 text-xs rounded-full">
+        <span className="flex items-center gap-1 px-2 py-1 bg-[#1A1A1A] text-[#FAFAF8] text-xs">
           <ShieldCheck className="w-3 h-3" />
           Admin
         </span>
@@ -185,14 +185,14 @@ const AdminUserManagement: React.FC = () => {
     }
     if (user.beta_approved) {
       return (
-        <span className="flex items-center gap-1 px-2 py-1 bg-green-500/20 text-green-200 text-xs rounded-full">
+        <span className="flex items-center gap-1 px-2 py-1 bg-[#1A1A1A] text-[#FAFAF8] text-xs">
           <CheckCircle className="w-3 h-3" />
           User
         </span>
       );
     }
     return (
-      <span className="flex items-center gap-1 px-2 py-1 bg-orange-500/20 text-orange-200 text-xs rounded-full">
+      <span className="flex items-center gap-1 px-2 py-1 bg-[#E53E3E] text-[#FAFAF8] text-xs">
         <XCircle className="w-3 h-3" />
         Pending
       </span>
@@ -209,7 +209,7 @@ const AdminUserManagement: React.FC = () => {
           label: 'Approve',
           icon: UserCheck,
           action: () => updateUserStatus(user.id, { beta_approved: true }),
-          className: 'bg-green-500 hover:bg-green-600'
+          className: 'bg-[#1A1A1A] text-[#FAFAF8]'
         });
       }
       
@@ -222,7 +222,7 @@ const AdminUserManagement: React.FC = () => {
             is_admin: true,
             beta_approved: true 
           }),
-          className: 'bg-blue-500 hover:bg-blue-600'
+          className: 'bg-[#1A1A1A] text-[#FAFAF8]'
         });
       }
 
@@ -234,7 +234,7 @@ const AdminUserManagement: React.FC = () => {
             admin_level: null, 
             is_admin: false 
           }),
-          className: 'bg-red-500 hover:bg-red-600'
+          className: 'bg-[#E53E3E] text-[#FAFAF8]'
         });
       }
 
@@ -243,7 +243,7 @@ const AdminUserManagement: React.FC = () => {
           label: 'Reject',
           icon: XCircle,
           action: () => updateUserStatus(user.id, { beta_approved: false }),
-          className: 'bg-red-500 hover:bg-red-600'
+          className: 'bg-[#E53E3E] text-[#FAFAF8]'
         });
       }
     }
@@ -255,14 +255,14 @@ const AdminUserManagement: React.FC = () => {
           label: 'Approve',
           icon: UserCheck,
           action: () => updateUserStatus(user.id, { beta_approved: true }),
-          className: 'bg-green-500 hover:bg-green-600'
+          className: 'bg-[#1A1A1A] text-[#FAFAF8]'
         });
       } else {
         actions.push({
           label: 'Reject',
           icon: XCircle,
           action: () => updateUserStatus(user.id, { beta_approved: false }),
-          className: 'bg-red-500 hover:bg-red-600'
+          className: 'bg-[#E53E3E] text-[#FAFAF8]'
         });
       }
     }
@@ -272,12 +272,12 @@ const AdminUserManagement: React.FC = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
-          <p className="text-purple-100 mb-4">You don't have admin permissions.</p>
-          <Link to="/dashboard" className="text-purple-300 hover:text-white transition-colors">
+          <AlertCircle className="w-16 h-16 text-[#E53E3E] mx-auto mb-4" />
+          <h2 className="text-2xl font-medium text-[#1A1A1A] mb-2">Access Denied</h2>
+          <p className="text-[#1A1A1A] mb-4 font-light">You don't have admin permissions.</p>
+          <Link to="/dashboard" className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8]">
             ← Back to Dashboard
           </Link>
         </div>
@@ -287,10 +287,9 @@ const AdminUserManagement: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-          <p className="text-white text-xl">Loading users...</p>
+          <div className="text-[#1A1A1A] text-xl mb-4 loading-dots">Loading users</div>
         </div>
       </div>
     );
@@ -304,23 +303,23 @@ const AdminUserManagement: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
+    <div className="min-h-screen bg-[#FAFAF8] admin-page">
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
+      <header className="typewriter-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
                 to="/admin"
-                className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors"
+                className="flex items-center gap-2 text-[#1A1A1A] typewriter-hover"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Admin
               </Link>
             </div>
             <div className="flex items-center gap-3">
-              <Users className="w-8 h-8 text-white" />
-              <span className="text-2xl font-serif font-bold text-white">User Management</span>
+              <Users className="w-8 h-8 text-[#1A1A1A]" />
+              <span className="text-2xl font-medium text-[#1A1A1A] typewriter-cursor">User Management</span>
             </div>
           </div>
         </div>
@@ -329,14 +328,14 @@ const AdminUserManagement: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {error && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center justify-between">
+          <div className="mb-8 p-4 typewriter-card typewriter-error flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-              <p className="text-red-100">{error}</p>
+              <AlertCircle className="w-5 h-5 text-[#E53E3E] flex-shrink-0" />
+              <p className="text-[#E53E3E]">{error}</p>
             </div>
             <button
               onClick={fetchUsers}
-              className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+              className="typewriter-btn"
             >
               <RefreshCw className="w-4 h-4" />
               Retry
@@ -346,58 +345,58 @@ const AdminUserManagement: React.FC = () => {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Users className="w-6 h-6 text-blue-400" />
-              <span className="text-purple-200 text-sm">Total Users</span>
+              <Users className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Total Users</span>
             </div>
-            <p className="text-3xl font-bold text-white">{stats.total}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{stats.total}</p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Shield className="w-6 h-6 text-yellow-400" />
-              <span className="text-purple-200 text-sm">Admins</span>
+              <Shield className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Admins</span>
             </div>
-            <p className="text-3xl font-bold text-white">{stats.admins}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{stats.admins}</p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Activity className="w-6 h-6 text-green-400" />
-              <span className="text-purple-200 text-sm">Active Users</span>
+              <Activity className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Active Users</span>
             </div>
-            <p className="text-3xl font-bold text-white">{stats.active}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{stats.active}</p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <XCircle className="w-6 h-6 text-orange-400" />
-              <span className="text-purple-200 text-sm">Pending</span>
+              <XCircle className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Pending</span>
             </div>
-            <p className="text-3xl font-bold text-white">{stats.pending}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{stats.pending}</p>
           </div>
         </div>
 
         {/* Controls */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-purple-300" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#1A1A1A]" />
             <input
               type="text"
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 bg-[#FAFAF8] border-2 border-[#1A1A1A] text-[#1A1A1A] focus:outline-none"
             />
           </div>
           
           <div className="relative">
-            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-purple-300" />
+            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#1A1A1A]" />
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value as any)}
-              className="pl-10 pr-8 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none cursor-pointer"
+              className="pl-10 pr-8 py-2 bg-[#FAFAF8] border-2 border-[#1A1A1A] text-[#1A1A1A] focus:outline-none appearance-none cursor-pointer"
             >
               <option value="all">All Users</option>
               <option value="superadmin">Super Admins</option>
@@ -409,37 +408,37 @@ const AdminUserManagement: React.FC = () => {
         </div>
 
         {/* Users Table */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-          <div className="p-6 border-b border-white/10">
-            <h3 className="text-xl font-serif font-bold text-white">
+        <div className="typewriter-card">
+          <div className="p-6 border-b-2 border-[#1A1A1A]">
+            <h3 className="text-xl font-medium text-[#1A1A1A]">
               Platform Users ({filteredUsers.length})
             </h3>
           </div>
           <div className="p-6">
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="typewriter-table">
                 <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">User</th>
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">Status</th>
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">Activity</th>
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">Joined</th>
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">Actions</th>
+                  <tr className="border-b-2 border-[#1A1A1A]">
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">User</th>
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Status</th>
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Activity</th>
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Joined</th>
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredUsers.map((user) => (
-                    <tr key={user.id} className="border-b border-white/5 hover:bg-white/5">
+                    <tr key={user.id} className="border-b border-[#D4D4D4] hover:bg-[#E5E5E5]">
                       <td className="py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">
+                          <div className="w-10 h-10 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
+                            <span className="text-white font-medium text-sm">
                               {user.username.charAt(0).toUpperCase()}
                             </span>
                           </div>
                           <div>
-                            <p className="text-white font-medium">{user.username}</p>
-                            <p className="text-purple-200 text-sm">{user.email}</p>
+                            <p className="text-[#1A1A1A] font-medium">{user.username}</p>
+                            <p className="text-[#1A1A1A] text-sm font-light">{user.email}</p>
                           </div>
                         </div>
                       </td>
@@ -448,17 +447,17 @@ const AdminUserManagement: React.FC = () => {
                       </td>
                       <td className="py-4">
                         <div className="text-sm">
-                          <p className="text-white">{user.session_count} sessions</p>
-                          <p className="text-purple-200">{user.total_tokens.toLocaleString()} tokens</p>
+                          <p className="text-[#1A1A1A]">{user.session_count} sessions</p>
+                          <p className="text-[#1A1A1A] font-light">{user.total_tokens.toLocaleString()} tokens</p>
                           {user.last_active && (
-                            <p className="text-purple-300 text-xs">
+                            <p className="text-[#1A1A1A] text-xs font-light">
                               Last: {new Date(user.last_active).toLocaleDateString()}
                             </p>
                           )}
                         </div>
                       </td>
                       <td className="py-4">
-                        <span className="text-purple-200 text-sm">
+                        <span className="text-[#1A1A1A] text-sm font-light">
                           {new Date(user.created_at).toLocaleDateString()}
                         </span>
                       </td>
@@ -469,18 +468,20 @@ const AdminUserManagement: React.FC = () => {
                               key={index}
                               onClick={action.action}
                               disabled={actionLoading === user.id}
-                              className={`flex items-center gap-1 text-white px-3 py-1 rounded text-sm transition-colors disabled:opacity-50 ${action.className}`}
+                              className={`flex items-center gap-1 ${action.className} px-3 py-1 text-sm transition-colors disabled:opacity-50`}
                             >
                               {actionLoading === user.id ? (
-                                <Loader2 className="w-3 h-3 animate-spin" />
+                                <span className="loading-dots">Working</span>
                               ) : (
-                                <action.icon className="w-3 h-3" />
+                                <>
+                                  <action.icon className="w-3 h-3" />
+                                  {action.label}
+                                </>
                               )}
-                              {action.label}
                             </button>
                           ))}
                           {getAvailableActions(user).length === 0 && (
-                            <span className="text-purple-300 text-sm">No actions</span>
+                            <span className="text-[#1A1A1A] text-sm font-light">No actions</span>
                           )}
                         </div>
                       </td>
@@ -492,8 +493,8 @@ const AdminUserManagement: React.FC = () => {
             
             {filteredUsers.length === 0 && (
               <div className="text-center py-8">
-                <Users className="w-12 h-12 text-white/50 mx-auto mb-4" />
-                <p className="text-purple-200">
+                <Users className="w-12 h-12 text-[#1A1A1A] mx-auto mb-4 opacity-50" />
+                <p className="text-[#1A1A1A] font-light">
                   {searchTerm || filterType !== 'all' 
                     ? 'No users found matching your criteria.' 
                     : 'No users found.'

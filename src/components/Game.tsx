@@ -15,7 +15,10 @@ import {
   ChevronRight,
   Sparkles,
   Clock,
-  Zap
+  Zap,
+  Heart,
+  Activity,
+  ChevronDown
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNotifications } from '../contexts/NotificationContext';
@@ -52,10 +55,31 @@ const Game: React.FC = () => {
   const [timeStarted, setTimeStarted] = useState<Date | null>(null);
   const [reachedEnd, setReachedEnd] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [relationships, setRelationships] = useState<any[]>([]);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const generatingResponseRef = useRef<boolean>(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showLeftSidebar, setShowLeftSidebar] = useState(!isMobile);
+  const [showRightSidebar, setShowRightSidebar] = useState(!isMobile);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setShowLeftSidebar(true);
+        setShowRightSidebar(true);
+      } else {
+        setShowLeftSidebar(false);
+        setShowRightSidebar(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Scroll to bottom of messages
   const scrollToBottom = () => {
@@ -73,6 +97,10 @@ const Game: React.FC = () => {
       // Close any open modals or sidebars
       if (showStoryInfo) setShowStoryInfo(false);
       if (showExportModal) setShowExportModal(false);
+      if (isMobile) {
+        setShowLeftSidebar(false);
+        setShowRightSidebar(false);
+      }
     },
   });
 
@@ -94,6 +122,31 @@ const Game: React.FC = () => {
       setTimeStarted(new Date(session.created_at));
     }
   }, [session]);
+
+  // Extract relationships from messages
+  useEffect(() => {
+    const extractRelationships = () => {
+      const relationshipMap = new Map();
+
+      messages.forEach(message => {
+        if (message.metadata?.relationship_updates && Array.isArray(message.metadata.relationship_updates)) {
+          message.metadata.relationship_updates.forEach((relation: any) => {
+            if (relation.character_name && relation.relationship_type) {
+              relationshipMap.set(relation.character_name, {
+                ...relation,
+                last_updated: message.created_at
+              });
+            }
+          });
+        }
+      });
+
+      return Array.from(relationshipMap.values());
+    };
+
+    const updatedRelationships = extractRelationships();
+    setRelationships(updatedRelationships);
+  }, [messages]);
 
   // Handle retry button
   const handleRetry = () => {
@@ -432,7 +485,9 @@ const Game: React.FC = () => {
         conversationHistory,
         userMessageContent,
         creativityLevel,
-        memoryEvents
+        memoryEvents,
+        {},
+        relationships
       );
 
       // Create AI response message
@@ -508,6 +563,31 @@ const Game: React.FC = () => {
         }));
         
         setMemoryEvents(prev => [...prev, ...newEvents]);
+      }
+
+      // Update relationships
+      if (response.relationship_updates && Array.isArray(response.relationship_updates)) {
+        const updatedRelationships = [...relationships];
+        
+        response.relationship_updates.forEach(update => {
+          const existingIndex = updatedRelationships.findIndex(r => 
+            r.character_name === update.character_name);
+            
+          if (existingIndex >= 0) {
+            updatedRelationships[existingIndex] = {
+              ...updatedRelationships[existingIndex],
+              ...update,
+              last_updated: newAiMessage.created_at
+            };
+          } else {
+            updatedRelationships.push({
+              ...update,
+              last_updated: newAiMessage.created_at
+            });
+          }
+        });
+        
+        setRelationships(updatedRelationships);
       }
 
       // Update local session state
@@ -821,144 +901,205 @@ const Game: React.FC = () => {
     <div className="min-h-screen bg-[#FAFAF8] flex flex-col game-chat">
       {/* Header */}
       <header className="typewriter-header">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3">
+        <div className="max-w-full mx-auto px-2 sm:px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2">
               <Link
                 to="/dashboard"
                 className="flex items-center gap-1 sm:gap-2 text-[#1A1A1A] typewriter-hover"
               >
                 <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="text-sm sm:text-base">Back</span>
+                <span className="text-sm">Back</span>
               </Link>
               
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
-                  <span className="text-xs sm:text-sm font-medium">
+              <div className="flex items-center gap-2 ml-4">
+                <div className="w-6 h-6 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
+                  <span className="text-xs font-medium">
                     {character.name.charAt(0).toUpperCase()}
                   </span>
                 </div>
-                <div>
-                  <span className="text-xs sm:text-sm font-medium text-[#1A1A1A] block">{character.name}</span>
+                <div className="flex flex-col">
+                  <span className="text-xs font-medium text-[#1A1A1A]">{character.name}</span>
                   <span className="text-xs text-[#1A1A1A] hidden sm:block">in {story.title}</span>
                 </div>
               </div>
             </div>
             
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowStoryInfo(!showStoryInfo)}
-                className="typewriter-btn text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-3"
+                className="typewriter-btn text-xs py-1 px-2"
                 aria-label="Story Info"
                 title="Story Info"
               >
                 <Info className="w-4 h-4" />
-                <span className="hidden sm:inline ml-1">Info</span>
               </button>
               <button
                 onClick={handleExportConversation}
-                className="typewriter-btn text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-3"
+                className="typewriter-btn text-xs py-1 px-2"
                 aria-label="Export"
                 title="Export Conversation"
               >
                 <Download className="w-4 h-4" />
-                <span className="hidden sm:inline ml-1">Export</span>
               </button>
             </div>
           </div>
         </div>
       </header>
       
-      {/* Main content - chat area with info panel */}
+      {/* Main content - 3-column layout with sidebars */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Story info sidebar */}
-        {showStoryInfo && (
-          <div className="w-full sm:w-80 bg-[#FAFAF8] border-r-2 border-[#1A1A1A] p-4 flex flex-col absolute sm:relative right-0 h-full z-10">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-medium text-[#1A1A1A]">Story Information</h2>
-              <button 
-                onClick={() => setShowStoryInfo(false)}
-                className="text-[#1A1A1A] hover:text-[#E53E3E]"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            {/* Story details */}
-            <div className="mb-6">
-              <h3 className="text-md font-medium text-[#1A1A1A] mb-2">{story.title}</h3>
-              <p className="text-sm font-light text-[#1A1A1A] mb-2">by {story.author}</p>
-              <p className="text-sm font-light text-[#1A1A1A] border-t-2 border-[#D4D4D4] pt-2">{story.description}</p>
-            </div>
-            
-            {/* Character details */}
-            <div className="mb-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
-                  <span className="text-sm font-medium">{character.name.charAt(0).toUpperCase()}</span>
-                </div>
-                <h3 className="text-md font-medium text-[#1A1A1A]">{character.name}</h3>
-              </div>
-              
-              {character.description && (
-                <p className="text-sm font-light text-[#1A1A1A] mb-3">{character.description}</p>
-              )}
-              
-              {character.personality_traits && character.personality_traits.length > 0 && (
-                <div className="mb-3">
-                  <h4 className="text-xs font-medium text-[#1A1A1A] mb-2">Personality Traits:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {character.personality_traits.map(trait => (
-                      <span key={trait} className="text-xs bg-[#1A1A1A] text-[#FAFAF8] px-2 py-1">
-                        {trait}
-                      </span>
-                    ))}
+        {/* Left Sidebar */}
+        <div 
+          className={`${
+            showLeftSidebar ? 'w-64 border-r-2 border-[#1A1A1A]' : 'w-0'
+          } bg-[#FAFAF8] transition-all duration-300 ease-in-out flex flex-col overflow-hidden`}
+        >
+          {showLeftSidebar && (
+            <div className="p-4 flex flex-col h-full">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
+                    <span className="text-xs font-medium">
+                      {character.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-[#1A1A1A]">{character.name}</h3>
+                    <p className="text-xs text-[#1A1A1A]">Your Character</p>
                   </div>
                 </div>
-              )}
-            </div>
-            
-            {/* Memory Events */}
-            <div className="flex-1 overflow-y-auto">
-              <h3 className="text-md font-medium text-[#1A1A1A] mb-2 border-t-2 border-[#D4D4D4] pt-2">Key Memories</h3>
-              {memoryEvents.length === 0 ? (
-                <p className="text-sm font-light text-[#1A1A1A] italic">No significant memories yet.</p>
-              ) : (
-                <div className="space-y-3">
+                {isMobile && (
+                  <button 
+                    onClick={() => setShowLeftSidebar(false)}
+                    className="text-[#1A1A1A]"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+              {/* Traits */}
+              <div className="mb-6">
+                <div className="flex items-center gap-1 mb-2">
+                  <User className="w-4 h-4 text-[#1A1A1A]" />
+                  <span className="text-xs font-medium text-[#1A1A1A]">Traits</span>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {character.personality_traits?.map((trait) => (
+                    <span 
+                      key={trait} 
+                      className="px-2 py-1 text-xs bg-[#1A1A1A] text-[#FAFAF8]"
+                    >
+                      {trait}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Conversations Count */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1">
+                    <MessageCircle className="w-4 h-4 text-[#1A1A1A]" />
+                    <span className="text-xs font-medium text-[#1A1A1A]">Conversations</span>
+                  </div>
+                  <span className="text-[#1A1A1A] text-sm font-medium">
+                    {messages.filter(m => m.message_type === 'user').length}
+                  </span>
+                </div>
+              </div>
+
+              {/* Key Memories */}
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4 text-[#1A1A1A]" />
+                    <span className="text-xs font-medium text-[#1A1A1A]">Key Memories</span>
+                  </div>
+                  <span className="flex items-center gap-1 text-[#1A1A1A] text-xs">
+                    {memoryEvents.filter(m => m.importance === 'high').length}
+                    <ChevronDown className="w-3 h-3" />
+                  </span>
+                </div>
+                <div className="space-y-2 max-h-32 overflow-y-auto">
                   {memoryEvents
-                    .filter(event => event.importance === 'high')
-                    .map(event => (
-                      <div key={event.id} className="text-sm bg-[#E5E5E5] p-2 border-l-4 border-[#1A1A1A]">
-                        <p className="text-[#1A1A1A] font-light">{event.description}</p>
+                    .filter(memory => memory.importance === 'high')
+                    .map((memory) => (
+                      <div 
+                        key={memory.id} 
+                        className="border-l-2 border-[#1A1A1A] pl-2 py-1 text-xs text-[#1A1A1A] font-light"
+                      >
+                        <div className="flex items-center gap-1 mb-1">
+                          <span className="inline-block w-2 h-2 bg-[#1A1A1A]"></span>
+                          <span className="uppercase text-xs">HIGH</span>
+                        </div>
+                        {memory.description}
                       </div>
                     ))}
+                  
+                  {memoryEvents.filter(m => m.importance === 'high').length === 0 && (
+                    <p className="text-xs text-[#1A1A1A] italic font-light">No key memories yet</p>
+                  )}
                 </div>
-              )}
-            </div>
-            
-            {/* Controls */}
-            <div className="mt-4 pt-4 border-t-2 border-[#1A1A1A]">
+              </div>
+
+              {/* Relationships */}
               <div className="mb-4">
-                <ContextProgressBar 
-                  tokensUsed={tokensUsed} 
-                  maxTokens={128000}
-                />
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1">
+                    <Heart className="w-4 h-4 text-[#1A1A1A]" />
+                    <span className="text-xs font-medium text-[#1A1A1A]">Relationships</span>
+                  </div>
+                  <span className="flex items-center gap-1 text-[#1A1A1A] text-xs">
+                    {relationships.length}
+                    <ChevronDown className="w-3 h-3" />
+                  </span>
+                </div>
+                <div className="space-y-2 max-h-32 overflow-y-auto">
+                  {relationships.map((rel, index) => (
+                    <div 
+                      key={index} 
+                      className="border-l-2 border-[#1A1A1A] pl-2 py-1 text-xs text-[#1A1A1A] font-light"
+                    >
+                      <div className="font-medium">{rel.character_name}</div>
+                      <div>{rel.relationship_type} • Trust: {rel.trust_level}%</div>
+                    </div>
+                  ))}
+                  
+                  {relationships.length === 0 && (
+                    <p className="text-xs text-[#1A1A1A] italic font-light">No relationships formed yet</p>
+                  )}
+                </div>
               </div>
               
-              <button
-                onClick={handleEndStory}
-                className="w-full typewriter-btn"
-              >
-                End Story & Generate Summary
-              </button>
+              <div className="mt-auto">
+                <button
+                  onClick={handleEndStory}
+                  className="w-full typewriter-btn text-sm"
+                >
+                  End Story & Generate Summary
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+          
+          {/* Toggle button for mobile */}
+          {isMobile && !showLeftSidebar && (
+            <button
+              onClick={() => setShowLeftSidebar(true)}
+              className="absolute top-16 left-0 bg-[#1A1A1A] text-[#FAFAF8] p-2 rounded-r"
+              aria-label="Show character info"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
+        </div>
         
         {/* Chat area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden relative">
           {/* Messages container */}
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
             {loadingMessages ? (
               <div className="flex justify-center items-center h-full">
                 <div className="text-[#1A1A1A] text-lg loading-dots">Loading conversation</div>
@@ -988,7 +1129,7 @@ const Game: React.FC = () => {
                       </div>
                     )}
                     <div
-                      className={`max-w-3xl p-4 ${
+                      className={`max-w-md md:max-w-2xl p-4 ${
                         message.message_type === 'user'
                           ? 'ml-12 border-2 border-[#1A1A1A] bg-[#1A1A1A] text-[#FAFAF8]'
                           : 'mr-12 border-2 border-[#1A1A1A] bg-[#FAFAF8] text-[#1A1A1A]'
@@ -1012,7 +1153,7 @@ const Game: React.FC = () => {
                     <div className="w-8 h-8 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center flex-shrink-0 mt-1">
                       <MessageCircle className="w-4 h-4" />
                     </div>
-                    <div className="max-w-3xl p-4 mr-12 border-2 border-[#1A1A1A] bg-[#FAFAF8] text-[#1A1A1A]">
+                    <div className="max-w-md md:max-w-2xl p-4 mr-12 border-2 border-[#1A1A1A] bg-[#FAFAF8] text-[#1A1A1A]">
                       <p className="font-light loading-dots">Writing</p>
                     </div>
                   </div>
@@ -1022,6 +1163,32 @@ const Game: React.FC = () => {
               </div>
             )}
           </div>
+          
+          {/* Suggested actions */}
+          {messages.length > 0 && !processing && (
+            <div className="px-4 py-2">
+              <div className="flex flex-wrap gap-2">
+                {messages[messages.length - 1]?.metadata?.suggested_actions?.slice(0, 3).map((action: any) => (
+                  <button
+                    key={action.id}
+                    onClick={() => {
+                      setInputValue(action.text);
+                      setTimeout(() => {
+                        if (inputRef.current) {
+                          inputRef.current.focus();
+                          inputRef.current.style.height = 'auto';
+                          inputRef.current.style.height = `${Math.min(inputRef.current.scrollHeight, 200)}px`;
+                        }
+                      }, 0);
+                    }}
+                    className="text-xs px-3 py-1 bg-[#E5E5E5] text-[#1A1A1A] border border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-[#FAFAF8] transition-colors"
+                  >
+                    {action.text}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           
           {/* Input area */}
           <div className="border-t-2 border-[#1A1A1A] p-4 bg-[#FAFAF8]">
@@ -1073,6 +1240,144 @@ const Game: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+        
+        {/* Right Sidebar */}
+        <div 
+          className={`${
+            showRightSidebar ? 'w-64 border-l-2 border-[#1A1A1A]' : 'w-0'
+          } bg-[#FAFAF8] transition-all duration-300 ease-in-out flex flex-col overflow-hidden`}
+        >
+          {showRightSidebar && (
+            <div className="p-4 flex flex-col h-full">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-medium text-[#1A1A1A]">Game Status</h3>
+                {isMobile && (
+                  <button 
+                    onClick={() => setShowRightSidebar(false)}
+                    className="text-[#1A1A1A]"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+              {/* Context Usage */}
+              <div className="mb-6">
+                <div className="flex items-center gap-1 mb-2">
+                  <Activity className="w-4 h-4 text-[#1A1A1A]" />
+                  <span className="text-xs font-medium text-[#1A1A1A]">Context Usage</span>
+                </div>
+                <div>
+                  <div className="h-2 w-full bg-[#E5E5E5] border border-[#1A1A1A]">
+                    <div 
+                      className="h-full bg-[#1A1A1A]" 
+                      style={{ 
+                        width: `${Math.min((tokensUsed / 128000) * 100, 100)}%`,
+                      }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-xs text-[#1A1A1A] mt-1 font-mono">
+                    <span>Context usage healthy</span>
+                    <span>{Math.round((tokensUsed / 128000) * 100)}%</span>
+                  </div>
+                  <div className="text-xs text-[#1A1A1A] mt-1 font-mono">
+                    {tokensUsed.toLocaleString()} / 128,000 tokens
+                  </div>
+                </div>
+              </div>
+
+              {/* Current Scene */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1">
+                    <Book className="w-4 h-4 text-[#1A1A1A]" />
+                    <span className="text-xs font-medium text-[#1A1A1A]">Current Scene</span>
+                  </div>
+                  <ChevronDown className="w-3 h-3 text-[#1A1A1A]" />
+                </div>
+                {messages.length > 0 && messages[0].metadata?.scene_description && (
+                  <div className="text-xs text-[#1A1A1A] font-light">
+                    <div className="mb-1">
+                      <span className="font-medium">Time:</span> {messages[0].metadata.world_state?.time_of_day || 'unknown'}
+                    </div>
+                    <div className="mb-1">
+                      <span className="font-medium">Mood:</span> {messages[0].metadata.world_state?.mood_atmosphere || 'unknown'}
+                    </div>
+                    <div>
+                      <span className="font-medium">Location:</span> {messages[0].metadata.scene_description}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Characters Present */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1">
+                    <User className="w-4 h-4 text-[#1A1A1A]" />
+                    <span className="text-xs font-medium text-[#1A1A1A]">Characters Present</span>
+                  </div>
+                  <span className="flex items-center gap-1 text-[#1A1A1A] text-xs">
+                    {messages.length > 0 && messages[0].metadata?.npcs?.length || 0}
+                    <ChevronDown className="w-3 h-3" />
+                  </span>
+                </div>
+                {messages.length > 0 && messages[0].metadata?.npcs && (
+                  <div>
+                    {messages[0].metadata.npcs.map((npc: string, index: number) => (
+                      <div key={index} className="text-xs text-[#1A1A1A] p-1 border-l-2 border-[#1A1A1A] mb-1 pl-2 font-light">
+                        {npc}
+                      </div>
+                    ))}
+                    {messages[0].metadata.npcs.length === 0 && (
+                      <p className="text-xs text-[#1A1A1A] italic font-light">No characters present yet</p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Story Freedom */}
+              <div className="mt-auto">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1">
+                    <Sparkles className="w-4 h-4 text-[#1A1A1A]" />
+                    <span className="text-xs font-medium text-[#1A1A1A]">Story Freedom</span>
+                  </div>
+                  <ChevronDown className="w-3 h-3 text-[#1A1A1A]" />
+                </div>
+
+                {/* Creativity Level */}
+                <div className="space-y-1 mb-4">
+                  <div className={`p-2 text-xs border-2 ${session.creativity_level === 'faithful' ? 'border-[#1A1A1A] bg-[#1A1A1A] text-[#FAFAF8]' : 'border-[#1A1A1A] text-[#1A1A1A]'}`}>
+                    <div className="font-medium">Story-Focused</div>
+                    <div className="text-xs font-light">Staying true to the original narrative</div>
+                  </div>
+                  
+                  <div className={`p-2 text-xs border-2 ${session.creativity_level === 'balanced' ? 'border-[#1A1A1A] bg-[#1A1A1A] text-[#FAFAF8]' : 'border-[#1A1A1A] text-[#1A1A1A]'}`}>
+                    <div className="font-medium">Flexible Exploration</div>
+                    <div className="text-xs font-light">Balanced adventure with creative possibilities</div>
+                  </div>
+                  
+                  <div className={`p-2 text-xs border-2 ${session.creativity_level === 'creative' ? 'border-[#1A1A1A] bg-[#1A1A1A] text-[#FAFAF8]' : 'border-[#1A1A1A] text-[#1A1A1A]'}`}>
+                    <div className="font-medium">Open World</div>
+                    <div className="text-xs font-light">Complete creative freedom</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Toggle button for mobile */}
+          {isMobile && !showRightSidebar && (
+            <button
+              onClick={() => setShowRightSidebar(true)}
+              className="absolute top-16 right-0 bg-[#1A1A1A] text-[#FAFAF8] p-2 rounded-l"
+              aria-label="Show game info"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 

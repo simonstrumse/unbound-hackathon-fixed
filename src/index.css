@@ -32,12 +32,13 @@ body {
   background-size: 20px 20px;
 }
 
-/* Typewriter cursor animation - limited to one per page */
+/* Typewriter cursor animation - limited to one per page - HEADER ONLY */
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
 }
 
+/* Only apply to specific class */
 .typewriter-cursor::after {
   content: '|';
   animation: blink 1s infinite;
@@ -67,6 +68,9 @@ body {
   font-weight: 400;
   transition: all 0.1s ease;
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .typewriter-btn:hover {
@@ -83,6 +87,14 @@ body {
 .typewriter-btn-primary {
   background: var(--typewriter-text);
   color: var(--typewriter-bg);
+  border: 2px solid var(--typewriter-border);
+  padding: 8px 16px;
+  font-weight: 400;
+  transition: all 0.1s ease;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .typewriter-btn-primary:hover {
@@ -100,12 +112,12 @@ body {
 /* Card hover styles - fixed to not turn entirely black */
 .typewriter-hover:hover {
   border-color: var(--typewriter-text);
-  background: var(--typewriter-bg);
+  background: var(--typewriter-bg) !important;
+  color: var(--typewriter-text) !important;
 }
 
-.typewriter-hover:hover h3,
-.typewriter-hover:hover p {
-  color: var(--typewriter-text);
+.typewriter-hover:hover * {
+  color: var(--typewriter-text) !important;
 }
 
 /* Input styles */
@@ -529,6 +541,10 @@ a:hover {
   background: var(--typewriter-bg) !important;
 }
 
+.typewriter-card.typewriter-hover:hover * {
+  color: var(--typewriter-text) !important;
+}
+
 /* Paper texture overlay */
 body::before {
   content: '';
@@ -559,6 +575,7 @@ body::before {
   background: var(--typewriter-bg) !important;
   border: 2px solid var(--typewriter-border) !important;
   color: var(--typewriter-text) !important;
+  border-radius: 0 !important;
 }
 
 /* Game chat fixes */
@@ -570,6 +587,83 @@ body::before {
 
 .game-chat-message {
   background: var(--typewriter-bg);
+  color: var(--typewriter-text);
+  border: 2px solid var(--typewriter-border);
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Fix black hover issue in cards */
+.admin-page .typewriter-card:hover {
+  background-color: var(--typewriter-bg) !important;
+}
+
+.admin-page .typewriter-card:hover * {
+  color: var(--typewriter-text) !important;
+}
+
+/* Fix for global analytics page */
+.admin-analytics-page .recharts-surface,
+.global-analytics-page .recharts-surface {
+  overflow: visible;
+}
+
+/* Global admin dashboard fixes */
+.admin-page div:hover,
+.admin-page a:hover,
+.admin-page button:hover {
+  background-color: var(--typewriter-bg) !important;
+  border-color: var(--typewriter-border) !important;
+}
+
+.admin-page div:hover *,
+.admin-page a:hover *,
+.admin-page button:hover * {
+  color: var(--typewriter-text) !important;
+}
+
+/* Make specific elements properly handle hover */
+.admin-page .typewriter-btn:hover,
+.admin-page a.typewriter-btn:hover,
+.admin-page button.typewriter-btn:hover {
+  background-color: var(--typewriter-text) !important;
+  color: var(--typewriter-bg) !important;
+}
+
+.admin-page .typewriter-btn:hover *,
+.admin-page a.typewriter-btn:hover *,
+.admin-page button.typewriter-btn:hover * {
+  color: var(--typewriter-bg) !important;
+}
+
+/* Specific styling for Global Analytics */
+.global-analytics-page .recharts-wrapper,
+.global-analytics-page .recharts-surface {
+  color: var(--typewriter-text) !important;
+}
+
+.global-analytics-page th,
+.global-analytics-page td {
+  border: 1px solid var(--typewriter-border);
+  background-color: var(--typewriter-bg) !important;
+  color: var(--typewriter-text) !important;
+}
+
+.global-analytics-page th {
+  background-color: var(--typewriter-gray-light) !important;
+}
+
+/* Fix tables in analytics components */
+.analytics-page table,
+.global-analytics-page table {
   color: var(--typewriter-text);
   border: 2px solid var(--typewriter-border);
 }
