@@ -194,9 +194,10 @@ const Dashboard: React.FC = () => {
   if (authLoading) {
     console.log('Dashboard: Auth is loading, showing loading screen');
     return (
-      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-[#1A1A1A] text-xl mb-4 loading-dots">Loading</div>
+          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
+          <p className="text-white text-xl">Loading...</p>
         </div>
       </div>
     );
@@ -206,10 +207,10 @@ const Dashboard: React.FC = () => {
   if (!user) {
     console.log('Dashboard: No user found after auth loaded');
     return (
-      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-[#1A1A1A] text-xl">Please sign in to continue</p>
-          <Link to="/signin" className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8] mt-4 block">
+          <p className="text-white text-xl">Please sign in to continue</p>
+          <Link to="/signin" className="text-purple-300 hover:text-white transition-colors mt-4 block">
             Go to Sign In
           </Link>
         </div>
@@ -233,12 +234,12 @@ const Dashboard: React.FC = () => {
   if (!displayProfile) {
     console.log('Dashboard: No profile or user found');
     return (
-      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-[#1A1A1A] text-xl">Unable to load user data</p>
+          <p className="text-white text-xl">Unable to load user data</p>
           <button 
             onClick={handleSignOut}
-            className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8] mt-4 block"
+            className="text-purple-300 hover:text-white transition-colors mt-4 block"
           >
             Sign Out and Try Again
           </button>
@@ -247,20 +248,32 @@ const Dashboard: React.FC = () => {
     );
   }
 
+  const avatarColors = [
+    'bg-gradient-to-br from-purple-500 to-pink-500',
+    'bg-gradient-to-br from-blue-500 to-cyan-500',
+    'bg-gradient-to-br from-green-500 to-teal-500',
+    'bg-gradient-to-br from-orange-500 to-red-500',
+    'bg-gradient-to-br from-indigo-500 to-purple-500',
+    'bg-gradient-to-br from-emerald-500 to-blue-500',
+    'bg-gradient-to-br from-rose-500 to-pink-500',
+    'bg-gradient-to-br from-amber-500 to-orange-500'
+  ];
+
   console.log('Dashboard: Rendering main dashboard for user:', displayProfile.username);
 
   const getAdminBadge = () => {
     if (isSuperAdmin) {
       return (
-        <div className="typewriter-badge bg-[#1A1A1A] text-[#FAFAF8] text-xs sm:text-sm">
+        <div className="typewriter-badge bg-[#E53E3E] text-[#FAFAF8] text-xs sm:text-sm">
           <Crown className="w-4 h-4" />
-          <span>Super Admin</span>
+          <span className="hidden sm:inline">Super Admin</span>
+          <span className="sm:hidden">Super</span>
         </div>
       );
     }
     if (isAdmin) {
       return (
-        <div className="typewriter-badge bg-[#1A1A1A] text-[#FAFAF8] text-xs sm:text-sm">
+        <div className="typewriter-badge bg-[#2B6CB0] text-[#FAFAF8] text-xs sm:text-sm">
           <Shield className="w-4 h-4" />
           Admin
         </div>
@@ -349,7 +362,7 @@ const Dashboard: React.FC = () => {
                 <XCircle className="w-8 h-8 text-[#E53E3E]" />
               )}
               <div>
-                <h3 className="text-xl font-medium text-[#1A1A1A] mb-1">
+                <h3 className="text-xl font-medium text-[#1A1A1A] mb-1 typewriter-cursor">
                   Beta Access Status
                 </h3>
                 <p className="text-[#1A1A1A] font-light">
@@ -372,7 +385,7 @@ const Dashboard: React.FC = () => {
           </div>
         ) : activeSessions.length > 0 ? (
           <div className="max-w-4xl mx-auto mb-12">
-            <h2 className="text-2xl font-medium text-[#1A1A1A] mb-6 text-center">
+            <h2 className="text-2xl font-medium text-[#1A1A1A] mb-6 text-center typewriter-cursor">
               Your Active Adventures
             </h2>
             <div className="typewriter-divider-dashed"></div>
@@ -382,7 +395,7 @@ const Dashboard: React.FC = () => {
                 return (
                   <div
                     key={session.id}
-                    className="typewriter-card"
+                    className="typewriter-card typewriter-hover"
                   >
                     <div className="flex items-start gap-4 mb-4">
                       <div className="w-12 h-12 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center flex-shrink-0">
@@ -391,7 +404,7 @@ const Dashboard: React.FC = () => {
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-medium text-[#1A1A1A] mb-1">
+                        <h3 className="text-lg font-medium text-[#1A1A1A] mb-1 typewriter-cursor">
                           {session.story.title}
                         </h3>
                         <p className="text-[#1A1A1A] text-sm mb-2 font-light">
@@ -435,11 +448,11 @@ const Dashboard: React.FC = () => {
 
         {/* Action Cards */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div className="typewriter-card">
+          <div className="typewriter-card typewriter-hover">
             <div className="w-16 h-16 bg-[#1A1A1A] flex items-center justify-center mb-6">
               <BookOpen className="w-8 h-8 text-[#FAFAF8]" />
             </div>
-            <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">Browse Stories</h3>
+            <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4 typewriter-cursor">Browse Stories</h3>
             <p className="text-[#1A1A1A] mb-6 leading-relaxed font-light">
               Explore our curated collection of classic literature and choose your next adventure.
             </p>
@@ -451,11 +464,11 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
 
-          <div className="typewriter-card">
+          <div className="typewriter-card typewriter-hover">
             <div className="w-16 h-16 bg-[#1A1A1A] flex items-center justify-center mb-6">
               <Book className="w-8 h-8 text-[#FAFAF8]" />
             </div>
-            <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">Create Character</h3>
+            <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4 typewriter-cursor">Create Character</h3>
             <p className="text-[#1A1A1A] mb-6 leading-relaxed font-light">
               Design unique characters with distinct personalities for your literary adventures.
             </p>
@@ -470,7 +483,7 @@ const Dashboard: React.FC = () => {
 
         {/* Stats Section */}
         <div className="mt-16 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-medium text-[#1A1A1A] mb-8 text-center">
+          <h2 className="text-2xl font-medium text-[#1A1A1A] mb-8 text-center typewriter-cursor">
             Your Adventure Stats
           </h2>
           <div className="typewriter-divider-dashed"></div>

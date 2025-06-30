@@ -1,297 +1,255 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-  }
-
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-[hsl(var(--border))];
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-/* Game Chat Scrollbar - Thin and Minimal */
-.game-chat::-webkit-scrollbar,
-.game-chat *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.game-chat::-webkit-scrollbar-track,
-.game-chat *::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.game-chat::-webkit-scrollbar-thumb,
-.game-chat *::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.3);
-  border-radius: 3px;
-  transition: background 0.2s;
-}
-
-.game-chat::-webkit-scrollbar-thumb:hover,
-.game-chat *::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.5);
-}
-
-/* Hide scrollbar for Firefox */
-.game-chat,
-.game-chat * {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
-}
-
-/* Apply the thin scrollbar to all child elements that might scroll */
-.game-chat .overflow-y-auto::-webkit-scrollbar,
-.game-chat .overflow-x-auto::-webkit-scrollbar,
-.game-chat .overflow-auto::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-/* Ensure the chat container uses the thin scrollbar */
-.game-chat .flex-1.overflow-y-auto {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
-}
-
-/* Suggestion animation - slide up and fade in */
-@keyframes suggestion-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.suggestion-appear {
-  animation: suggestion-slide-up 0.3s ease-out;
-}
-
-/* Add hover effect for suggestions */
-.suggestion-card {
-  transition: all 0.2s ease;
-}
-
-.suggestion-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
-}
-
-/* Improved pulse animation */
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.8;
-  }
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Default scrollbar styling for non-game areas */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Typography enhancements */
-.font-display {
-  font-family: 'Playfair Display', serif;
-}
-
-.font-mono {
-  font-family: 'Space Mono', monospace;
-}
-
-/* Font weight utilities */
-.font-light {
-  font-weight: 300;
-}
-
-.font-normal {
-  font-weight: 400;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-/* Smooth transitions for interactive elements */
-button, a, input, textarea, select {
-  transition: all 0.2s ease;
-}
-
-/* Focus styles for accessibility */
-button:focus-visible, 
-a:focus-visible, 
-input:focus-visible, 
-textarea:focus-visible, 
-select:focus-visible {
-  outline: 2px solid rgba(139, 92, 246, 0.5);
-  outline-offset: 2px;
-}
-
-/* Auto-save indicator styles */
-.auto-save-indicator {
-  transition: all 0.3s ease;
-}
-
-/* Skeleton loading animation */
-@keyframes skeleton-loading {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.1) 0px,
-    rgba(255, 255, 255, 0.2) 20px,
-    rgba(255, 255, 255, 0.2) 40px,
-    rgba(255, 255, 255, 0.1) 100px
-  );
-  background-size: 200px 100%;
-  animation: skeleton-loading 1.5s ease-in-out infinite;
-}
-
-/* Ensure modals and popups have proper z-index */
-.modal-backdrop {
-  z-index: 40;
-}
-
-.modal-content {
-  z-index: 50;
-}
-
-/* Virtual list optimization */
-.virtual-list {
-  contain: strict;
-}
-
-.virtual-list-item {
-  contain: layout style paint;
-}
-
-/* Typewriter theme colors and consistent styling */
+/* Typewriter Design System */
 :root {
   --typewriter-bg: #FAFAF8;
   --typewriter-text: #1A1A1A;
-  --typewriter-border: #E5E5E0;
-  --typewriter-accent: #8B5CF6;
-  --typewriter-muted: #6B7280;
+  --typewriter-red: #E53E3E;
+  --typewriter-blue: #2B6CB0;
+  --typewriter-gray-light: #E5E5E5;
+  --typewriter-gray: #D4D4D4;
+  --typewriter-border: #1A1A1A;
 }
 
-/* Ensure typewriter theme elements have consistent styling */
-.typewriter-bg {
-  background-color: var(--typewriter-bg) !important;
+/* Global Typography */
+* {
+  font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+  letter-spacing: 0.025em;
 }
 
-.typewriter-text {
+/* Remove all gradients and transparency */
+body {
+  background: var(--typewriter-bg) !important;
   color: var(--typewriter-text) !important;
+  min-height: 100vh;
+  background-image: 
+    linear-gradient(var(--typewriter-gray-light) 1px, transparent 1px),
+    linear-gradient(90deg, var(--typewriter-gray-light) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
+/* Typewriter cursor animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.typewriter-cursor::after {
+  content: '|';
+  animation: blink 1s infinite;
+  color: var(--typewriter-text);
+  font-weight: 300;
+}
+
+/* Typing animation */
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.typing-effect {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid var(--typewriter-text);
+  animation: typing 2s steps(40, end), blink 1s infinite step-end;
+}
+
+/* Button styles - typewriter keys */
+.typewriter-btn {
+  background: var(--typewriter-bg);
+  border: 2px solid var(--typewriter-border);
+  color: var(--typewriter-text);
+  padding: 8px 16px;
+  font-weight: 400;
+  transition: all 0.1s ease;
+  position: relative;
+}
+
+.typewriter-btn:hover {
+  background: var(--typewriter-text);
+  color: var(--typewriter-bg);
+}
+
+.typewriter-btn:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Primary button variant */
+.typewriter-btn-primary {
+  background: var(--typewriter-text);
+  color: var(--typewriter-bg);
+}
+
+.typewriter-btn-primary:hover {
+  background: var(--typewriter-bg);
+  color: var(--typewriter-text);
+}
+
+/* Card styles */
 .typewriter-card {
-  background-color: var(--typewriter-bg) !important;
-  color: var(--typewriter-text) !important;
-  border-color: var(--typewriter-border) !important;
+  background: var(--typewriter-bg);
+  border: 2px solid var(--typewriter-border);
+  padding: 20px;
 }
 
-/* Override backdrop blur effects that can cause readability issues */
+/* Input styles */
+.typewriter-input {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--typewriter-border);
+  color: var(--typewriter-text);
+  padding: 8px 0;
+  font-weight: 400;
+}
+
+.typewriter-input:focus {
+  outline: none;
+  border-bottom-color: var(--typewriter-blue);
+}
+
+.typewriter-input::placeholder {
+  color: var(--typewriter-gray);
+  font-style: italic;
+}
+
+/* Header styles */
+.typewriter-header {
+  border-bottom: 2px solid var(--typewriter-border);
+  background: var(--typewriter-bg);
+}
+
+.typewriter-header::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--typewriter-border) 0px,
+    var(--typewriter-border) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  margin-top: 2px;
+}
+
+/* Divider styles */
+.typewriter-divider {
+  border: none;
+  height: 2px;
+  background: var(--typewriter-border);
+  margin: 20px 0;
+}
+
+.typewriter-divider-dashed {
+  border: none;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--typewriter-border) 0px,
+    var(--typewriter-border) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  margin: 20px 0;
+}
+
+/* ASCII-style dividers */
+.ascii-divider::before {
+  content: '================================================================================';
+  display: block;
+  color: var(--typewriter-gray);
+  font-size: 12px;
+  line-height: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Loading dots */
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+.loading-dots::after {
+  content: '.';
+  animation: dots 1.5s infinite;
+}
+
+/* Success/Error states */
+.typewriter-success {
+  color: var(--typewriter-red);
+  font-weight: 400;
+}
+
+.typewriter-error {
+  color: var(--typewriter-red);
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+/* Navigation styles */
+.typewriter-nav {
+  background: var(--typewriter-bg);
+  border-bottom: 2px solid var(--typewriter-border);
+}
+
+.typewriter-nav-link {
+  color: var(--typewriter-text);
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 2px solid transparent;
+  transition: all 0.1s ease;
+}
+
+.typewriter-nav-link:hover {
+  border-color: var(--typewriter-border);
+  background: var(--typewriter-gray-light);
+}
+
+.typewriter-nav-link.active {
+  background: var(--typewriter-text);
+  color: var(--typewriter-bg);
+  border-color: var(--typewriter-border);
+}
+
+/* Focus states */
+.typewriter-focus:focus {
+  outline: 2px dashed var(--typewriter-border);
+  outline-offset: 2px;
+}
+
+/* Active states with brackets */
+.typewriter-active::before {
+  content: '[';
+  color: var(--typewriter-blue);
+}
+
+.typewriter-active::after {
+  content: ']';
+  color: var(--typewriter-blue);
+}
+
+/* Remove all rounded corners */
+* {
+  border-radius: 0 !important;
+}
+
+/* Override Tailwind utilities */
+.bg-gradient-to-br,
+.bg-gradient-to-r,
+.bg-gradient-to-l,
+.bg-gradient-to-t,
+.bg-gradient-to-b {
+  background: var(--typewriter-bg) !important;
+}
+
 .backdrop-blur-sm,
 .backdrop-blur,
 .backdrop-blur-md,
@@ -300,442 +258,221 @@ select:focus-visible {
   background: var(--typewriter-bg) !important;
 }
 
-/* Force text visibility in admin and analytics pages */
-.admin-page *,
-.analytics-page *,
-.global-analytics-page * {
-  color: var(--typewriter-text) !important;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
 }
 
-/* Specific overrides for typewriter theme components */
-.typewriter-card h1,
-.typewriter-card h2,
-.typewriter-card h3,
-.typewriter-card h4,
-.typewriter-card h5,
-.typewriter-card h6,
-.typewriter-card p,
-.typewriter-card span,
-.typewriter-card div,
-.typewriter-card a,
-.typewriter-card li,
-.typewriter-card td,
-.typewriter-card th,
-.typewriter-card label {
-  color: var(--typewriter-text) !important;
+::-webkit-scrollbar-track {
+  background: var(--typewriter-gray-light);
 }
 
-/* Ensure form elements are visible */
-.typewriter-form input,
-.typewriter-form textarea,
-.typewriter-form select {
-  color: var(--typewriter-text) !important;
-  background-color: white !important;
-  border-color: var(--typewriter-border) !important;
+::-webkit-scrollbar-thumb {
+  background: var(--typewriter-border);
+  border: 2px solid var(--typewriter-gray-light);
 }
 
-.typewriter-form input::placeholder,
-.typewriter-form textarea::placeholder {
-  color: var(--typewriter-muted) !important;
+::-webkit-scrollbar-thumb:hover {
+  background: var(--typewriter-text);
 }
 
-/* Button styles for typewriter theme */
-.typewriter-button {
-  background-color: var(--typewriter-accent) !important;
-  color: white !important;
-  border: none !important;
+/* Selection colors */
+::selection {
+  background: var(--typewriter-text);
+  color: var(--typewriter-bg);
 }
 
-.typewriter-button:hover {
-  background-color: #7C3AED !important;
+::-moz-selection {
+  background: var(--typewriter-text);
+  color: var(--typewriter-bg);
 }
 
-.typewriter-button-secondary {
-  background-color: transparent !important;
-  color: var(--typewriter-accent) !important;
-  border: 1px solid var(--typewriter-accent) !important;
+/* Message typing effect */
+.message-typing {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 1s steps(40, end);
 }
 
-.typewriter-button-secondary:hover {
-  background-color: var(--typewriter-accent) !important;
-  color: white !important;
+/* Timestamp styles */
+.typewriter-timestamp {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 10px;
+  color: var(--typewriter-gray);
+  font-style: italic;
 }
 
-/* CRITICAL: Force all text in the entire app to be visible */
-* {
-  color: var(--typewriter-text) !important;
-}
-
-/* Specific overrides for light backgrounds */
-.admin-page .typewriter-card *,
-.analytics-page .typewriter-card *,
-.global-analytics-page .typewriter-card *,
-.typewriter-form *,
-.typewriter-card * {
-  color: var(--typewriter-text) !important;
-  background-color: transparent !important;
-}
-
-/* Fix table visibility specifically */
-.admin-page table,
-.analytics-page table,
-.global-analytics-page table {
-  background-color: var(--typewriter-bg) !important;
-}
-
-.admin-page table td,
-.admin-page table th,
-.analytics-page table td,
-.analytics-page table th,
-.global-analytics-page table td,
-.global-analytics-page table th {
-  color: var(--typewriter-text) !important;
-  background-color: transparent !important;
-  border-color: var(--typewriter-border) !important;
-}
-
-.admin-page table tr:hover td,
-.analytics-page table tr:hover td,
-.global-analytics-page table tr:hover td {
-  background-color: rgba(0, 0, 0, 0.02) !important;
-}
-
-/* Fix specific table classes */
+/* Table styles for analytics */
 .typewriter-table {
-  background-color: var(--typewriter-bg) !important;
+  border-collapse: collapse;
+  width: 100%;
+  border: 2px solid var(--typewriter-border);
 }
 
-.typewriter-table td,
+.typewriter-table th,
+.typewriter-table td {
+  border: 1px solid var(--typewriter-border);
+  padding: 8px 12px;
+  text-align: left;
+}
+
 .typewriter-table th {
-  color: var(--typewriter-text) !important;
-  background-color: transparent !important;
+  background: var(--typewriter-gray-light);
+  font-weight: 500;
 }
 
-/* Admin specific fixes */
-.admin-page {
-  background-color: var(--typewriter-bg) !important;
-  color: var(--typewriter-text) !important;
+/* Form styles */
+.typewriter-form {
+  background: var(--typewriter-bg);
+  border: 2px solid var(--typewriter-border);
+  padding: 24px;
 }
 
-.admin-page .bg-white,
-.admin-page .bg-gray-50,
-.admin-page .bg-gray-100 {
-  background-color: var(--typewriter-bg) !important;
+.typewriter-form-field {
+  margin-bottom: 16px;
 }
 
-.admin-page .text-gray-900,
-.admin-page .text-gray-800,
-.admin-page .text-gray-700,
-.admin-page .text-gray-600,
-.admin-page .text-gray-500 {
-  color: var(--typewriter-text) !important;
+.typewriter-form-label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: var(--typewriter-text);
 }
 
-/* Analytics specific fixes */
-.analytics-page,
-.global-analytics-page {
-  background-color: var(--typewriter-bg) !important;
-  color: var(--typewriter-text) !important;
+/* Modal styles */
+.typewriter-modal {
+  background: var(--typewriter-bg);
+  border: 4px solid var(--typewriter-border);
+  box-shadow: 8px 8px 0px var(--typewriter-border);
 }
 
-.analytics-page .bg-white,
-.analytics-page .bg-gray-50,
-.analytics-page .bg-gray-100,
-.global-analytics-page .bg-white,
-.global-analytics-page .bg-gray-50,
-.global-analytics-page .bg-gray-100 {
-  background-color: var(--typewriter-bg) !important;
+/* Notification styles */
+.typewriter-notification {
+  background: var(--typewriter-bg);
+  border: 2px solid var(--typewriter-border);
+  color: var(--typewriter-text);
 }
 
-.analytics-page .text-gray-900,
-.analytics-page .text-gray-800,
-.analytics-page .text-gray-700,
-.analytics-page .text-gray-600,
-.analytics-page .text-gray-500,
-.global-analytics-page .text-gray-900,
-.global-analytics-page .text-gray-800,
-.global-analytics-page .text-gray-700,
-.global-analytics-page .text-gray-600,
-.global-analytics-page .text-gray-500 {
-  color: var(--typewriter-text) !important;
+.typewriter-notification.success {
+  border-color: var(--typewriter-red);
+  color: var(--typewriter-red);
 }
 
-/* Force visibility for specific problem areas */
-.admin-page .user-email,
-.admin-page .user-name,
-.admin-page .user-data,
-.analytics-page .metric-value,
-.analytics-page .chart-label,
-.global-analytics-page .metric-value,
-.global-analytics-page .chart-label {
-  color: var(--typewriter-text) !important;
-  opacity: 1 !important;
+.typewriter-notification.error {
+  border-color: var(--typewriter-red);
+  color: var(--typewriter-red);
+  text-decoration: line-through;
 }
 
-/* Ensure all card contents are visible */
-.admin-card *,
-.analytics-card *,
-.metric-card * {
-  color: var(--typewriter-text) !important;
+/* Badge styles */
+.typewriter-badge {
+  background: var(--typewriter-text);
+  color: var(--typewriter-bg);
+  padding: 4px 8px;
+  border: 2px solid var(--typewriter-border);
+  font-size: 12px;
+  font-weight: 400;
 }
 
-/* Fix dropdown and select visibility */
-select,
-select option,
-.dropdown-menu,
-.dropdown-item {
-  color: var(--typewriter-text) !important;
-  background-color: white !important;
+/* Progress bar */
+.typewriter-progress {
+  background: var(--typewriter-gray-light);
+  border: 2px solid var(--typewriter-border);
+  height: 20px;
 }
 
-/* Ensure tooltips and popovers are visible */
-.tooltip,
-.popover {
-  color: var(--typewriter-text) !important;
-  background-color: var(--typewriter-bg) !important;
-  border: 1px solid var(--typewriter-border) !important;
+.typewriter-progress-fill {
+  background: var(--typewriter-text);
+  height: 100%;
+  transition: width 0.3s ease;
 }
 
-/* Fix any remaining visibility issues with important overrides */
-.admin-page *:not(.text-white):not(.text-purple-600):not(.text-purple-500):not(.text-purple-400),
-.analytics-page *:not(.text-white):not(.text-purple-600):not(.text-purple-500):not(.text-purple-400),
-.global-analytics-page *:not(.text-white):not(.text-purple-600):not(.text-purple-500):not(.text-purple-400) {
-  color: var(--typewriter-text) !important;
+/* Sidebar styles */
+.typewriter-sidebar {
+  background: var(--typewriter-bg);
+  border-right: 2px solid var(--typewriter-border);
 }
 
-/* Ensure data cells are visible */
-[data-cell],
-[data-value],
-.data-cell,
-.data-value {
-  color: var(--typewriter-text) !important;
+.typewriter-sidebar-item {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--typewriter-gray-light);
+  cursor: pointer;
 }
 
-/* Fix any nested components that might have visibility issues */
-.admin-page div div div,
-.analytics-page div div div,
-.global-analytics-page div div div {
-  color: var(--typewriter-text) !important;
+.typewriter-sidebar-item:hover {
+  background: var(--typewriter-gray-light);
 }
 
-/* Override any inline styles that might be causing issues */
-[style*="color: black"],
-[style*="color: #000"],
-[style*="color: rgb(0"],
-[style*="color:#000"] {
-  color: var(--typewriter-text) !important;
+.typewriter-sidebar-item.active {
+  background: var(--typewriter-text);
+  color: var(--typewriter-bg);
 }
 
-/* Ensure email addresses are always visible */
-[class*="email"],
-[id*="email"],
-[data-email],
-.email-cell,
-.user-email {
-  color: var(--typewriter-text) !important;
-  font-weight: 500 !important;
+/* List styles with typewriter bullets */
+.typewriter-list {
+  list-style: none;
+  padding: 0;
 }
 
-/* Global text elements fix for typewriter pages */
-.typewriter-bg p,
-.typewriter-bg span,
-.typewriter-bg div,
-.typewriter-bg h1,
-.typewriter-bg h2,
-.typewriter-bg h3,
-.typewriter-bg h4,
-.typewriter-bg h5,
-.typewriter-bg h6,
-.typewriter-bg a,
-.typewriter-bg li,
-.typewriter-bg td,
-.typewriter-bg th,
-.typewriter-bg label,
-.typewriter-bg input,
-.typewriter-bg textarea,
-.typewriter-bg button {
-  color: var(--typewriter-text) !important;
+.typewriter-list li::before {
+  content: '> ';
+  color: var(--typewriter-blue);
+  font-weight: 500;
 }
 
-/* Admin and Analytics specific text elements */
-.admin-page p,
-.admin-page span,
-.admin-page div,
-.admin-page h1,
-.admin-page h2,
-.admin-page h3,
-.admin-page h4,
-.admin-page h5,
-.admin-page h6,
-.admin-page a,
-.admin-page li,
-.admin-page td,
-.admin-page th,
-.admin-page label,
-.analytics-page p,
-.analytics-page span,
-.analytics-page div,
-.analytics-page h1,
-.analytics-page h2,
-.analytics-page h3,
-.analytics-page h4,
-.analytics-page h5,
-.analytics-page h6,
-.analytics-page a,
-.analytics-page li,
-.analytics-page td,
-.analytics-page th,
-.analytics-page label,
-.global-analytics-page p,
-.global-analytics-page span,
-.global-analytics-page div,
-.global-analytics-page h1,
-.global-analytics-page h2,
-.global-analytics-page h3,
-.global-analytics-page h4,
-.global-analytics-page h5,
-.global-analytics-page h6,
-.global-analytics-page a,
-.global-analytics-page li,
-.global-analytics-page td,
-.global-analytics-page th,
-.global-analytics-page label {
-  color: var(--typewriter-text) !important;
+/* Code/monospace emphasis */
+.typewriter-code {
+  background: var(--typewriter-gray-light);
+  border: 1px solid var(--typewriter-border);
+  padding: 2px 4px;
+  font-family: 'JetBrains Mono', monospace;
 }
 
-/* Ensure all text elements are visible with highest specificity */
-body * {
-  color: var(--typewriter-text) !important;
+/* Hover effects */
+.typewriter-hover:hover {
+  background: var(--typewriter-text);
+  color: var(--typewriter-bg);
+  transition: all 0.1s ease;
 }
 
-/* Purple accents should remain purple */
-.text-purple-600,
-.text-purple-500,
-.text-purple-400 {
-  color: var(--tw-text-opacity) !important;
+/* Link styles */
+a {
+  color: var(--typewriter-blue);
+  text-decoration: underline;
+  font-weight: 400;
 }
 
-/* White text on dark backgrounds should remain white */
-.bg-purple-600 *,
-.bg-purple-700 *,
-.bg-purple-800 *,
-.bg-purple-900 * {
-  color: white !important;
+a:hover {
+  background: var(--typewriter-text);
+  color: var(--typewriter-bg);
+  text-decoration: none;
 }
 
-/* Typewriter theme specific overrides to ensure all text is visible */
-.typewriter-bg *,
-.typewriter-card *,
-.typewriter-form *,
-.admin-page *,
-.analytics-page *,
-.global-analytics-page * {
-  color: inherit !important;
+/* Disable all animations except typing effects */
+.animate-spin,
+.animate-pulse,
+.animate-bounce {
+  animation: none !important;
 }
 
-/* Base text color for all elements */
-.typewriter-bg,
-.typewriter-card,
-.typewriter-form,
-.admin-page,
-.analytics-page,
-.global-analytics-page {
-  color: var(--typewriter-text) !important;
+/* Keep only typing-related animations */
+.animate-typing {
+  animation: typing 2s steps(40, end);
 }
 
-/* Ensure nested elements inherit the correct color */
-.typewriter-bg *:not([class*="text-purple"]):not([class*="text-white"]),
-.typewriter-card *:not([class*="text-purple"]):not([class*="text-white"]),
-.typewriter-form *:not([class*="text-purple"]):not([class*="text-white"]),
-.admin-page *:not([class*="text-purple"]):not([class*="text-white"]),
-.analytics-page *:not([class*="text-purple"]):not([class*="text-white"]),
-.global-analytics-page *:not([class*="text-purple"]):not([class*="text-white"]) {
-  color: var(--typewriter-text) !important;
-}
-
-/* Fix for all generic text elements */
-p, div, span, h1, h2, h3, h4, h5, h6, a, li, td, th, label, input, textarea, button {
-  color: var(--typewriter-text) !important;
-}
-
-/* Make sure charts and special components have proper text color */
-.recharts-wrapper *,
-.recharts-surface *,
-.recharts-text,
-[class*="recharts"] {
-  color: var(--typewriter-text) !important;
-}
-
-/* ULTIMATE FIX: Force ALL text to be visible on light backgrounds */
-.typewriter-bg *,
-.admin-page *,
-.analytics-page *,
-.global-analytics-page *,
-[class*="bg-white"] *,
-[class*="bg-gray-50"] *,
-[class*="bg-gray-100"] * {
-  color: #1A1A1A !important;
-}
-
-/* Only keep purple and white text where specifically intended */
-.text-purple-600,
-.text-purple-500,
-.text-purple-400,
-.text-purple-300,
-.text-purple-200 {
-  color: currentColor !important;
-}
-
-.bg-purple-600 *,
-.bg-purple-700 *,
-.bg-purple-800 *,
-.bg-purple-900 *,
-[class*="bg-purple"] * {
-  color: white !important;
-}
-
-/* Fix table cells specifically */
-td, th {
-  color: #1A1A1A !important;
-}
-
-/* Fix email and user data specifically */
-[class*="email"],
-[class*="user"],
-[class*="name"],
-[class*="data"] {
-  color: #1A1A1A !important;
-}
-
-/* Ensure all data displays are visible */
-.metric-value,
-.stat-value,
-.data-value,
-.user-email,
-.user-name {
-  color: #1A1A1A !important;
-  opacity: 1 !important;
-}
-
-/* Fix for dynamically generated content */
-[data-testid],
-[data-id],
-[data-value] {
-  color: #1A1A1A !important;
-}
-
-/* Last resort - force all elements on pages with light backgrounds */
-body:has(.typewriter-bg) *,
-body:has(.admin-page) *,
-body:has(.analytics-page) *,
-body:has(.global-analytics-page) * {
-  color: #1A1A1A !important;
-}
-
-/* Preserve intended white text on dark backgrounds */
-body:has(.typewriter-bg) [class*="bg-purple"] *,
-body:has(.admin-page) [class*="bg-purple"] *,
-body:has(.analytics-page) [class*="bg-purple"] *,
-body:has(.global-analytics-page) [class*="bg-purple"] * {
-  color: white !important;
+/* Paper texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(26,26,26,0.05) 1px, transparent 0);
+  background-size: 20px 20px;
+  pointer-events: none;
+  z-index: -1;
 }

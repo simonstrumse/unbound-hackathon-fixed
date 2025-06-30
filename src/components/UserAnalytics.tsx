@@ -79,7 +79,7 @@ interface ModelUsage {
   percentage: number;
 }
 
-const COLORS = ['#1A1A1A', '#2B6CB0', '#E53E3E', '#D4D4D4'];
+const COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
 
 const UserAnalytics: React.FC = () => {
   const { user, profile, isAdmin } = useAuth();
@@ -368,36 +368,37 @@ const UserAnalytics: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-[#1A1A1A] text-xl mb-4 loading-dots">Loading your analytics</div>
+          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
+          <p className="text-white text-xl">Loading your analytics...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] analytics-page">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
       {/* Header */}
-      <header className="typewriter-header">
+      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
                 to="/dashboard"
-                className="flex items-center gap-2 text-[#1A1A1A] typewriter-hover"
+                className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Dashboard
               </Link>
             </div>
             <div className="flex items-center gap-3">
-              <BarChart3 className="w-8 h-8 text-[#1A1A1A]" />
-              <span className="text-2xl font-medium text-[#1A1A1A] typewriter-cursor">Your Analytics</span>
+              <BarChart3 className="w-8 h-8 text-white" />
+              <span className="text-2xl font-serif font-bold text-white">Your Analytics</span>
               {isAdmin && (
                 <Link
                   to="/analytics/global"
-                  className="flex items-center gap-2 typewriter-btn text-sm"
+                  className="flex items-center gap-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-200 px-3 py-1 rounded-lg transition-colors text-sm"
                 >
                   <Globe className="w-4 h-4" />
                   Global View
@@ -411,14 +412,14 @@ const UserAnalytics: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {error && (
-          <div className="mb-8 p-4 typewriter-card typewriter-error flex items-center justify-between">
+          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-[#E53E3E] flex-shrink-0" />
-              <p className="text-[#E53E3E]">{error}</p>
+              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+              <p className="text-red-100">{error}</p>
             </div>
             <button
               onClick={handleRetry}
-              className="typewriter-btn"
+              className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
             >
               <RefreshCw className="w-4 h-4" />
               Retry
@@ -428,18 +429,18 @@ const UserAnalytics: React.FC = () => {
 
         {/* Admin Notice */}
         {isAdmin && (
-          <div className="mb-8 p-4 typewriter-card">
+          <div className="mb-8 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
             <div className="flex items-center gap-3">
-              <Shield className="w-5 h-5 text-[#2B6CB0] flex-shrink-0" />
+              <Shield className="w-5 h-5 text-blue-400 flex-shrink-0" />
               <div>
-                <p className="text-[#1A1A1A] font-medium">Admin Analytics Access</p>
-                <p className="text-[#1A1A1A] text-sm font-light">
+                <p className="text-blue-100 font-medium">Admin Analytics Access</p>
+                <p className="text-blue-200 text-sm">
                   You're viewing your personal analytics. Switch to{' '}
-                  <Link to="/analytics/global" className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8] underline">
+                  <Link to="/analytics/global" className="text-blue-300 hover:text-blue-100 underline">
                     Global Analytics
                   </Link>
                   {' '}to see platform-wide data, or visit the{' '}
-                  <Link to="/admin/analytics" className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8] underline">
+                  <Link to="/admin/analytics" className="text-blue-300 hover:text-blue-100 underline">
                     Admin Analytics Dashboard
                   </Link>
                   .
@@ -452,8 +453,8 @@ const UserAnalytics: React.FC = () => {
         {/* Controls */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-medium text-[#1A1A1A] mb-2 typewriter-cursor">Your Reading Journey</h1>
-            <p className="text-[#1A1A1A] font-light">Track your literary adventures and detailed usage analytics</p>
+            <h1 className="text-3xl font-serif font-bold text-white mb-2">Your Reading Journey</h1>
+            <p className="text-purple-200">Track your literary adventures and detailed usage analytics</p>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-2">
@@ -462,10 +463,10 @@ const UserAnalytics: React.FC = () => {
                 <button
                   key={range}
                   onClick={() => setTimeRange(range)}
-                  className={`px-4 py-2 typewriter-btn text-sm font-medium ${
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     timeRange === range
-                      ? 'bg-[#1A1A1A] text-[#FAFAF8]'
-                      : ''
+                      ? 'bg-purple-500 text-white'
+                      : 'bg-white/10 text-purple-200 hover:bg-white/20'
                   }`}
                 >
                   {range === '7d' ? 'Last 7 days' : range === '30d' ? 'Last 30 days' : 'Last 90 days'}
@@ -474,7 +475,7 @@ const UserAnalytics: React.FC = () => {
             </div>
             <button
               onClick={exportAnalytics}
-              className="flex items-center gap-2 typewriter-btn text-[#2B6CB0] border-[#2B6CB0]"
+              className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
             >
               <Download className="w-4 h-4" />
               Export CSV
@@ -484,49 +485,49 @@ const UserAnalytics: React.FC = () => {
 
         {/* Enhanced Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <div className="typewriter-card">
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
             <div className="flex items-center gap-3 mb-2">
-              <Activity className="w-6 h-6 text-[#2B6CB0]" />
-              <span className="text-[#1A1A1A] text-sm font-medium">Total Tokens</span>
+              <Activity className="w-6 h-6 text-purple-400" />
+              <span className="text-purple-200 text-sm">Total Tokens</span>
             </div>
-            <p className="text-3xl font-medium text-[#1A1A1A]">{userStats.totalTokens.toLocaleString()}</p>
-            <div className="text-xs text-[#1A1A1A] mt-1 font-light">
-              <span className="text-[#2B6CB0]">In: {userStats.inputTokens.toLocaleString()}</span> | 
-              <span className="text-[#2B6CB0]"> Out: {userStats.outputTokens.toLocaleString()}</span>
+            <p className="text-3xl font-bold text-white">{userStats.totalTokens.toLocaleString()}</p>
+            <div className="text-xs text-purple-200 mt-1">
+              <span className="text-blue-300">In: {userStats.inputTokens.toLocaleString()}</span> | 
+              <span className="text-green-300"> Out: {userStats.outputTokens.toLocaleString()}</span>
             </div>
           </div>
 
-          <div className="typewriter-card">
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
             <div className="flex items-center gap-3 mb-2">
-              <DollarSign className="w-6 h-6 text-[#2B6CB0]" />
-              <span className="text-[#1A1A1A] text-sm font-medium">Total Cost</span>
+              <DollarSign className="w-6 h-6 text-green-400" />
+              <span className="text-purple-200 text-sm">Total Cost</span>
             </div>
-            <p className="text-3xl font-medium text-[#1A1A1A]">${userStats.totalCost.toFixed(4)}</p>
-            <div className="text-xs text-[#1A1A1A] mt-1 font-light">
-              <span className="text-[#2B6CB0]">In: ${userStats.inputCost.toFixed(4)}</span> | 
-              <span className="text-[#2B6CB0]"> Out: ${userStats.outputCost.toFixed(4)}</span>
+            <p className="text-3xl font-bold text-white">${userStats.totalCost.toFixed(4)}</p>
+            <div className="text-xs text-purple-200 mt-1">
+              <span className="text-blue-300">In: ${userStats.inputCost.toFixed(4)}</span> | 
+              <span className="text-green-300"> Out: ${userStats.outputCost.toFixed(4)}</span>
             </div>
           </div>
 
-          <div className="typewriter-card">
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
             <div className="flex items-center gap-3 mb-2">
-              <Timer className="w-6 h-6 text-[#2B6CB0]" />
-              <span className="text-[#1A1A1A] text-sm font-medium">Avg Response</span>
+              <Timer className="w-6 h-6 text-yellow-400" />
+              <span className="text-purple-200 text-sm">Avg Response</span>
             </div>
-            <p className="text-3xl font-medium text-[#1A1A1A]">{userStats.averageResponseTime.toFixed(0)}ms</p>
-            <p className="text-[#1A1A1A] text-xs mt-1 font-light">
+            <p className="text-3xl font-bold text-white">{userStats.averageResponseTime.toFixed(0)}ms</p>
+            <p className="text-purple-200 text-xs mt-1">
               {userStats.averageResponseTime < 2000 ? 'Excellent' : 
                userStats.averageResponseTime < 5000 ? 'Good' : 'Slow'}
             </p>
           </div>
 
-          <div className="typewriter-card">
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
             <div className="flex items-center gap-3 mb-2">
-              <Book className="w-6 h-6 text-[#2B6CB0]" />
-              <span className="text-[#1A1A1A] text-sm font-medium">Stories Played</span>
+              <Book className="w-6 h-6 text-blue-400" />
+              <span className="text-purple-200 text-sm">Stories Played</span>
             </div>
-            <p className="text-3xl font-medium text-[#1A1A1A]">{userStats.storiesPlayed}</p>
-            <p className="text-[#1A1A1A] text-xs mt-1 font-light">
+            <p className="text-3xl font-bold text-white">{userStats.storiesPlayed}</p>
+            <p className="text-purple-200 text-xs mt-1">
               {userStats.activeSessions} active session{userStats.activeSessions !== 1 ? 's' : ''}
             </p>
           </div>
@@ -534,80 +535,80 @@ const UserAnalytics: React.FC = () => {
 
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Enhanced Daily Usage Chart */}
-          <div className="typewriter-card">
-            <h3 className="text-xl font-medium text-[#1A1A1A] mb-6">Daily Token Usage</h3>
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-6">
+            <h3 className="text-xl font-serif font-bold text-white mb-6">Daily Token Usage</h3>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={dailyUsage}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#D4D4D4" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis 
                   dataKey="date" 
-                  stroke="#1A1A1A"
+                  stroke="rgba(255,255,255,0.7)"
                   tick={{ fontSize: 12 }}
                 />
-                <YAxis stroke="#1A1A1A" tick={{ fontSize: 12 }} />
+                <YAxis stroke="rgba(255,255,255,0.7)" tick={{ fontSize: 12 }} />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: '#FAFAF8', 
-                    border: '1px solid #1A1A1A',
-                    borderRadius: '0px'
+                    backgroundColor: 'rgba(0,0,0,0.8)', 
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: '8px'
                   }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="inputTokens" 
                   stackId="1"
-                  stroke="#2B6CB0" 
-                  fill="#2B6CB0" 
+                  stroke="#06b6d4" 
+                  fill="#06b6d4" 
                   fillOpacity={0.6}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="outputTokens" 
                   stackId="1"
-                  stroke="#1A1A1A" 
-                  fill="#1A1A1A" 
+                  stroke="#10b981" 
+                  fill="#10b981" 
                   fillOpacity={0.6}
                 />
               </AreaChart>
             </ResponsiveContainer>
-            <div className="flex justify-center gap-4 mt-3 text-xs text-[#1A1A1A]">
+            <div className="flex justify-center gap-4 mt-3 text-xs">
               <span className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-[#2B6CB0] inline-block"></div>
+                <div className="w-3 h-3 bg-cyan-400 rounded"></div>
                 Input Tokens
               </span>
               <span className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-[#1A1A1A] inline-block"></div>
+                <div className="w-3 h-3 bg-green-400 rounded"></div>
                 Output Tokens
               </span>
             </div>
           </div>
 
           {/* Cost Breakdown */}
-          <div className="typewriter-card">
-            <h3 className="text-xl font-medium text-[#1A1A1A] mb-6">Cost Analysis</h3>
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-6">
+            <h3 className="text-xl font-serif font-bold text-white mb-6">Cost Analysis</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={dailyUsage}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#D4D4D4" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis 
                   dataKey="date" 
-                  stroke="#1A1A1A"
+                  stroke="rgba(255,255,255,0.7)"
                   tick={{ fontSize: 12 }}
                 />
-                <YAxis stroke="#1A1A1A" tick={{ fontSize: 12 }} />
+                <YAxis stroke="rgba(255,255,255,0.7)" tick={{ fontSize: 12 }} />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: '#FAFAF8', 
-                    border: '1px solid #1A1A1A',
-                    borderRadius: '0px'
+                    backgroundColor: 'rgba(0,0,0,0.8)', 
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: '8px'
                   }}
                   formatter={(value: any) => [`$${Number(value).toFixed(6)}`, 'Cost']}
                 />
                 <Line 
                   type="monotone" 
                   dataKey="cost" 
-                  stroke="#1A1A1A" 
+                  stroke="#f59e0b" 
                   strokeWidth={2}
-                  dot={{ fill: '#1A1A1A' }}
+                  dot={{ fill: '#f59e0b' }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -616,8 +617,8 @@ const UserAnalytics: React.FC = () => {
 
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Model Usage Breakdown */}
-          <div className="typewriter-card">
-            <h3 className="text-xl font-medium text-[#1A1A1A] mb-6">Model Usage</h3>
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-6">
+            <h3 className="text-xl font-serif font-bold text-white mb-6">Model Usage</h3>
             {modelUsage.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
@@ -628,7 +629,7 @@ const UserAnalytics: React.FC = () => {
                     labelLine={false}
                     label={({ model, percentage }) => `${model}: ${percentage.toFixed(1)}%`}
                     outerRadius={80}
-                    fill="#1A1A1A"
+                    fill="#8884d8"
                     dataKey="tokens"
                   >
                     {modelUsage.map((entry, index) => (
@@ -645,30 +646,30 @@ const UserAnalytics: React.FC = () => {
               </ResponsiveContainer>
             ) : (
               <div className="text-center py-12">
-                <Zap className="w-12 h-12 text-[#1A1A1A] mx-auto mb-4 opacity-50" />
-                <p className="text-[#1A1A1A] font-light">No model usage data available</p>
+                <Zap className="w-12 h-12 text-white/50 mx-auto mb-4" />
+                <p className="text-purple-200">No model usage data available</p>
               </div>
             )}
           </div>
 
           {/* Performance Metrics */}
-          <div className="typewriter-card">
-            <h3 className="text-xl font-medium text-[#1A1A1A] mb-6">Performance Metrics</h3>
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-6">
+            <h3 className="text-xl font-serif font-bold text-white mb-6">Performance Metrics</h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-[#E5E5E5]">
+              <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <Timer className="w-5 h-5 text-[#2B6CB0]" />
-                  <span className="text-[#1A1A1A]">Average Response Time</span>
+                  <Timer className="w-5 h-5 text-blue-400" />
+                  <span className="text-white">Average Response Time</span>
                 </div>
-                <span className="text-2xl font-medium text-[#1A1A1A]">{userStats.averageResponseTime.toFixed(0)}ms</span>
+                <span className="text-2xl font-bold text-white">{userStats.averageResponseTime.toFixed(0)}ms</span>
               </div>
               
-              <div className="flex items-center justify-between p-4 bg-[#E5E5E5]">
+              <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <Target className="w-5 h-5 text-[#2B6CB0]" />
-                  <span className="text-[#1A1A1A]">Token Efficiency</span>
+                  <Target className="w-5 h-5 text-green-400" />
+                  <span className="text-white">Token Efficiency</span>
                 </div>
-                <span className="text-2xl font-medium text-[#1A1A1A]">
+                <span className="text-2xl font-bold text-white">
                   {userStats.totalTokens > 0 
                     ? ((userStats.outputTokens / userStats.totalTokens) * 100).toFixed(1)
                     : 0
@@ -676,55 +677,55 @@ const UserAnalytics: React.FC = () => {
                 </span>
               </div>
               
-              <div className="flex items-center justify-between p-4 bg-[#E5E5E5]">
+              <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <Clock className="w-5 h-5 text-[#2B6CB0]" />
-                  <span className="text-[#1A1A1A]">Avg Session Length</span>
+                  <Clock className="w-5 h-5 text-purple-400" />
+                  <span className="text-white">Avg Session Length</span>
                 </div>
-                <span className="text-2xl font-medium text-[#1A1A1A]">{userStats.averageSessionLength.toFixed(1)}h</span>
+                <span className="text-2xl font-bold text-white">{userStats.averageSessionLength.toFixed(1)}h</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Enhanced Story Statistics */}
-        <div className="typewriter-card">
-          <div className="p-6 border-b-2 border-[#1A1A1A]">
-            <h3 className="text-xl font-medium text-[#1A1A1A]">Your Most Played Stories</h3>
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
+          <div className="p-6 border-b border-white/10">
+            <h3 className="text-xl font-serif font-bold text-white">Your Most Played Stories</h3>
           </div>
           <div className="p-6">
             {storyStats.length > 0 ? (
               <div className="overflow-x-auto">
-                <table className="typewriter-table">
+                <table className="w-full">
                   <thead>
-                    <tr className="border-b-2 border-[#1A1A1A]">
-                      <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Story</th>
-                      <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Sessions</th>
-                      <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Tokens</th>
-                      <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Cost</th>
-                      <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Completion</th>
+                    <tr className="border-b border-white/10">
+                      <th className="text-left text-purple-200 text-sm font-medium py-3">Story</th>
+                      <th className="text-left text-purple-200 text-sm font-medium py-3">Sessions</th>
+                      <th className="text-left text-purple-200 text-sm font-medium py-3">Tokens</th>
+                      <th className="text-left text-purple-200 text-sm font-medium py-3">Cost</th>
+                      <th className="text-left text-purple-200 text-sm font-medium py-3">Completion</th>
                     </tr>
                   </thead>
                   <tbody>
                     {storyStats.map((story, index) => (
-                      <tr key={index} className="border-b border-[#D4D4D4]">
+                      <tr key={index} className="border-b border-white/5">
                         <td className="py-4">
                           <div>
-                            <p className="text-[#1A1A1A] font-medium">{story.story_title}</p>
-                            <p className="text-[#1A1A1A] text-sm font-light">by {story.story_author}</p>
+                            <p className="text-white font-medium">{story.story_title}</p>
+                            <p className="text-purple-200 text-sm">by {story.story_author}</p>
                           </div>
                         </td>
                         <td className="py-4">
-                          <span className="text-[#1A1A1A]">{story.session_count}</span>
+                          <span className="text-white">{story.session_count}</span>
                         </td>
                         <td className="py-4">
-                          <span className="text-[#1A1A1A] font-mono">{story.total_tokens.toLocaleString()}</span>
+                          <span className="text-white font-mono">{story.total_tokens.toLocaleString()}</span>
                         </td>
                         <td className="py-4">
-                          <span className="text-[#1A1A1A] font-mono">${story.total_cost.toFixed(4)}</span>
+                          <span className="text-white font-mono">${story.total_cost.toFixed(4)}</span>
                         </td>
                         <td className="py-4">
-                          <span className="text-[#1A1A1A]">{story.completion_rate.toFixed(1)}%</span>
+                          <span className="text-white">{story.completion_rate.toFixed(1)}%</span>
                         </td>
                       </tr>
                     ))}
@@ -733,11 +734,11 @@ const UserAnalytics: React.FC = () => {
               </div>
             ) : (
               <div className="text-center py-8">
-                <Book className="w-12 h-12 text-[#1A1A1A] mx-auto mb-4 opacity-50" />
-                <p className="text-[#1A1A1A] font-light">No stories played yet. Start your first adventure!</p>
+                <Book className="w-12 h-12 text-white/50 mx-auto mb-4" />
+                <p className="text-purple-200">No stories played yet. Start your first adventure!</p>
                 <Link
                   to="/stories"
-                  className="inline-block mt-4 typewriter-btn-primary"
+                  className="inline-block mt-4 bg-purple-500 text-white px-6 py-2 rounded-lg hover:bg-purple-600 transition-colors"
                 >
                   Browse Stories
                 </Link>
