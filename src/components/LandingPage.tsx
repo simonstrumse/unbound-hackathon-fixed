@@ -88,29 +88,30 @@ const LandingPage: React.FC = () => {
         {/* Header for logged-in users */}
         {user && !authLoading && (
           <header className="absolute top-0 left-0 right-0 z-20 bg-black/20 backdrop-blur-sm border-b border-white/10">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Book className="w-8 h-8 text-white" />
-                  <span className="text-2xl font-serif font-bold text-white">Unbound</span>
+                  <span className="text-xl sm:text-2xl font-serif font-bold text-white">Unbound</span>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4">
                   {profile && (
-                    <div className="flex items-center gap-3 text-white">
-                      <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                    <div className="flex items-center gap-2 sm:gap-3 text-white">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
                         <span className="text-sm font-bold">
                           {profile.username.charAt(0).toUpperCase()}
                         </span>
                       </div>
-                      <span className="text-sm">Welcome back, {profile.username}!</span>
+                      <span className="text-xs sm:text-sm hidden sm:inline">Welcome back, {profile.username}!</span>
+                      <span className="text-xs sm:hidden">Welcome back!</span>
                     </div>
                   )}
                   <button
                     onClick={handleSignOut}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
+                    className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm sm:text-base"
                   >
                     <LogOut className="w-4 h-4" />
-                    Sign Out
+                    <span className="hidden sm:inline">Sign Out</span>
                   </button>
                 </div>
               </div>

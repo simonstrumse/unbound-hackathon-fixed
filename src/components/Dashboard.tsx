@@ -264,15 +264,16 @@ const Dashboard: React.FC = () => {
   const getAdminBadge = () => {
     if (isSuperAdmin) {
       return (
-        <div className="flex items-center gap-2 px-3 py-1 bg-yellow-500/20 text-yellow-200 rounded-full text-sm">
+        <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 bg-yellow-500/20 text-yellow-200 rounded-full text-xs sm:text-sm">
           <Crown className="w-4 h-4" />
-          Super Admin
+          <span className="hidden sm:inline">Super Admin</span>
+          <span className="sm:hidden">Super</span>
         </div>
       );
     }
     if (isAdmin) {
       return (
-        <div className="flex items-center gap-2 px-3 py-1 bg-blue-500/20 text-blue-200 rounded-full text-sm">
+        <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 bg-blue-500/20 text-blue-200 rounded-full text-xs sm:text-sm">
           <Shield className="w-4 h-4" />
           Admin
         </div>
@@ -323,7 +324,7 @@ const Dashboard: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-4 mb-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-4">
             <h1 className="text-4xl sm:text-5xl font-serif font-bold text-white">
               Welcome back, {displayProfile.username}!
             </h1>
