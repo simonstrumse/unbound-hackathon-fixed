@@ -148,12 +148,12 @@ const AdminDashboard: React.FC = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
-          <p className="text-purple-100 mb-4">You don't have admin permissions.</p>
-          <Link to="/dashboard" className="text-purple-300 hover:text-white transition-colors">
+          <AlertCircle className="w-16 h-16 text-[#E53E3E] mx-auto mb-4" />
+          <h2 className="text-2xl font-medium text-[#1A1A1A] mb-2">Access Denied</h2>
+          <p className="text-[#1A1A1A] mb-4 font-light">You don't have admin permissions.</p>
+          <Link to="/dashboard" className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8]">
             ← Back to Dashboard
           </Link>
         </div>
@@ -163,33 +163,32 @@ const AdminDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-          <p className="text-white text-xl">Loading admin dashboard...</p>
+          <div className="text-[#1A1A1A] text-xl mb-4 loading-dots">Loading admin dashboard</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
+    <div className="min-h-screen bg-[#FAFAF8] admin-page">
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
+      <header className="typewriter-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
                 to="/dashboard"
-                className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors"
+                className="flex items-center gap-2 text-[#1A1A1A] typewriter-hover"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Dashboard
               </Link>
             </div>
             <div className="flex items-center gap-3">
-              <Book className="w-8 h-8 text-white" />
-              <span className="text-2xl font-serif font-bold text-white">Admin Dashboard</span>
+              <Book className="w-8 h-8 text-[#1A1A1A]" />
+              <span className="text-2xl font-medium text-[#1A1A1A] typewriter-cursor">Admin Dashboard</span>
             </div>
           </div>
         </div>
@@ -198,64 +197,64 @@ const AdminDashboard: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {error && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-            <p className="text-red-100">{error}</p>
+          <div className="mb-8 p-4 typewriter-card typewriter-error flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-[#E53E3E] flex-shrink-0" />
+            <p className="text-[#E53E3E]">{error}</p>
           </div>
         )}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Users className="w-6 h-6 text-blue-400" />
-              <span className="text-purple-200 text-sm">Total Users</span>
+              <Users className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Total Users</span>
             </div>
-            <p className="text-3xl font-bold text-white">{userStats.totalUsers}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{userStats.totalUsers}</p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <CheckCircle className="w-6 h-6 text-green-400" />
-              <span className="text-purple-200 text-sm">Beta Approved</span>
+              <CheckCircle className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Beta Approved</span>
             </div>
-            <p className="text-3xl font-bold text-white">{userStats.betaApproved}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{userStats.betaApproved}</p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Activity className="w-6 h-6 text-yellow-400" />
-              <span className="text-purple-200 text-sm">Active Sessions</span>
+              <Activity className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Active Sessions</span>
             </div>
-            <p className="text-3xl font-bold text-white">{userStats.activeSessions}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{userStats.activeSessions}</p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <TrendingUp className="w-6 h-6 text-purple-400" />
-              <span className="text-purple-200 text-sm">Total Tokens</span>
+              <TrendingUp className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Total Tokens</span>
             </div>
-            <p className="text-3xl font-bold text-white">{userStats.totalTokens.toLocaleString()}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{userStats.totalTokens.toLocaleString()}</p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <FileText className="w-6 h-6 text-green-400" />
-              <span className="text-purple-200 text-sm">Total Cost</span>
+              <FileText className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Total Cost</span>
             </div>
-            <p className="text-3xl font-bold text-white">${userStats.totalCost.toFixed(2)}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">${userStats.totalCost.toFixed(2)}</p>
           </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Recent Users */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-            <div className="p-6 border-b border-white/10">
+          <div className="typewriter-card">
+            <div className="p-4 border-b-2 border-[#1A1A1A]">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-serif font-bold text-white">Recent Users</h3>
+                <h3 className="text-xl font-medium text-[#1A1A1A]">Recent Users</h3>
                 <Link
                   to="/admin/analytics"
-                  className="text-purple-300 hover:text-white transition-colors text-sm"
+                  className="text-[#2B6CB0] hover:text-[#FAFAF8] hover:bg-[#1A1A1A] text-sm"
                 >
                   View Analytics →
                 </Link>
@@ -264,30 +263,30 @@ const AdminDashboard: React.FC = () => {
             <div className="p-6">
               <div className="space-y-4">
                 {recentUsers.map((user) => (
-                  <div key={user.id} className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
+                  <div key={user.id} className="flex items-center justify-between p-4 bg-[#E5E5E5] border border-[#1A1A1A]">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">
+                      <div className="w-10 h-10 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
+                        <span className="text-white font-medium text-sm">
                           {user.username.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div>
-                        <p className="text-white font-medium">{user.username}</p>
-                        <p className="text-purple-200 text-sm">{user.email}</p>
+                        <p className="text-[#1A1A1A] font-medium">{user.username}</p>
+                        <p className="text-[#1A1A1A] text-sm font-light">{user.email}</p>
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="flex items-center gap-2 mb-1">
                         {user.beta_approved ? (
-                          <CheckCircle className="w-4 h-4 text-green-400" />
+                          <CheckCircle className="w-4 h-4 text-[#2B6CB0]" />
                         ) : (
-                          <XCircle className="w-4 h-4 text-red-400" />
+                          <XCircle className="w-4 h-4 text-[#E53E3E]" />
                         )}
-                        <span className="text-purple-200 text-sm">
+                        <span className="text-[#1A1A1A] text-sm font-light">
                           {user.beta_approved ? 'Approved' : 'Pending'}
                         </span>
                       </div>
-                      <p className="text-purple-200 text-xs">
+                      <p className="text-[#1A1A1A] text-xs font-light">
                         {user.session_count} sessions • {user.total_tokens} tokens
                       </p>
                     </div>
@@ -298,27 +297,27 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           {/* Pending Approvals */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-            <div className="p-6 border-b border-white/10">
-              <h3 className="text-xl font-serif font-bold text-white">Pending Beta Approvals</h3>
+          <div className="typewriter-card">
+            <div className="p-4 border-b-2 border-[#1A1A1A]">
+              <h3 className="text-xl font-medium text-[#1A1A1A]">Pending Beta Approvals</h3>
             </div>
             <div className="p-6">
               {pendingApprovals.length === 0 ? (
-                <p className="text-purple-200 text-center py-8">No pending approvals</p>
+                <p className="text-[#1A1A1A] text-center py-8 font-light">No pending approvals</p>
               ) : (
                 <div className="space-y-4">
                   {pendingApprovals.map((user) => (
-                    <div key={user.id} className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
+                    <div key={user.id} className="flex items-center justify-between p-4 bg-[#E5E5E5] border border-[#1A1A1A]">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
-                          <span className="text-white font-bold text-sm">
+                        <div className="w-10 h-10 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
+                          <span className="text-white font-medium text-sm">
                             {user.username.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <div>
-                          <p className="text-white font-medium">{user.username}</p>
-                          <p className="text-purple-200 text-sm">{user.email}</p>
-                          <p className="text-purple-200 text-xs">
+                          <p className="text-[#1A1A1A] font-medium">{user.username}</p>
+                          <p className="text-[#1A1A1A] text-sm font-light">{user.email}</p>
+                          <p className="text-[#1A1A1A] text-xs font-light">
                             Joined {new Date(user.created_at).toLocaleDateString()}
                           </p>
                         </div>
@@ -327,19 +326,21 @@ const AdminDashboard: React.FC = () => {
                         <button
                           onClick={() => updateBetaStatus(user.id, true)}
                           disabled={actionLoading === user.id}
-                          className="flex items-center gap-1 bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors disabled:opacity-50"
+                          className="typewriter-btn bg-[#2B6CB0] border-[#2B6CB0] text-[#FAFAF8] flex items-center gap-1 text-sm disabled:opacity-50"
                         >
                           {actionLoading === user.id ? (
-                            <Loader2 className="w-3 h-3 animate-spin" />
+                            <span className="loading-dots">Working</span>
                           ) : (
-                            <CheckCircle className="w-3 h-3" />
+                            <>
+                              <CheckCircle className="w-3 h-3" />
+                              Approve
+                            </>
                           )}
-                          Approve
                         </button>
                         <button
                           onClick={() => updateBetaStatus(user.id, false)}
                           disabled={actionLoading === user.id}
-                          className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors disabled:opacity-50"
+                          className="typewriter-btn bg-[#E53E3E] border-[#E53E3E] text-[#FAFAF8] flex items-center gap-1 text-sm disabled:opacity-50"
                         >
                           <XCircle className="w-3 h-3" />
                           Reject
@@ -357,30 +358,30 @@ const AdminDashboard: React.FC = () => {
         <div className="mt-12 grid md:grid-cols-2 gap-6">
           <Link
             to="/admin/analytics"
-            className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 transform hover:-translate-y-2 group"
+            className="typewriter-card border-4 border-[#1A1A1A]"
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <TrendingUp className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center mb-6">
+              <TrendingUp className="w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-serif font-bold text-white mb-4">Usage Analytics</h3>
-            <p className="text-purple-100 leading-relaxed">
+            <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">Usage Analytics</h3>
+            <p className="text-[#1A1A1A] leading-relaxed font-light">
               View detailed analytics on token usage, user engagement, and platform performance over time.
             </p>
           </Link>
 
-          <div className="bg-gradient-to-br from-green-600/20 to-teal-600/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mb-6">
-              <Users className="w-8 h-8 text-white" />
+          <div className="typewriter-card border-4 border-[#1A1A1A]">
+            <div className="w-16 h-16 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center mb-6">
+              <Users className="w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-serif font-bold text-white mb-4">User Management</h3>
-            <p className="text-purple-100 mb-6 leading-relaxed">
+            <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">User Management</h3>
+            <p className="text-[#1A1A1A] mb-6 leading-relaxed font-light">
               Manage user accounts, beta approvals, and access permissions across the platform.
             </p>
             <div className="flex gap-3">
-              <span className="px-3 py-1 bg-green-500/20 text-green-200 text-sm rounded-full">
+              <span className="px-3 py-1 bg-[#2B6CB0] text-[#FAFAF8] text-sm inline-block">
                 {userStats.betaApproved} Approved
               </span>
-              <span className="px-3 py-1 bg-orange-500/20 text-orange-200 text-sm rounded-full">
+              <span className="px-3 py-1 bg-[#E53E3E] text-[#FAFAF8] text-sm inline-block">
                 {pendingApprovals.length} Pending
               </span>
             </div>

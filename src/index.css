@@ -32,7 +32,7 @@ body {
   background-size: 20px 20px;
 }
 
-/* Typewriter cursor animation */
+/* Typewriter cursor animation - limited to one per page */
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
@@ -55,7 +55,7 @@ body {
   overflow: hidden;
   white-space: nowrap;
   border-right: 2px solid var(--typewriter-text);
-  animation: typing 2s steps(40, end), blink 1s infinite step-end;
+  animation: typing 2s steps(40, end);
 }
 
 /* Button styles - typewriter keys */
@@ -95,6 +95,17 @@ body {
   background: var(--typewriter-bg);
   border: 2px solid var(--typewriter-border);
   padding: 20px;
+}
+
+/* Card hover styles - fixed to not turn entirely black */
+.typewriter-hover:hover {
+  border-color: var(--typewriter-text);
+  background: var(--typewriter-bg);
+}
+
+.typewriter-hover:hover h3,
+.typewriter-hover:hover p {
+  color: var(--typewriter-text);
 }
 
 /* Input styles */
@@ -258,6 +269,67 @@ body {
   background: var(--typewriter-bg) !important;
 }
 
+/* Enhanced admin and analytics styles for better contrast */
+.admin-page h1,
+.admin-page h2,
+.admin-page h3,
+.admin-page p,
+.admin-page div,
+.admin-page span,
+.admin-page a,
+.admin-page table th,
+.admin-page table td,
+.analytics-page h1,
+.analytics-page h2,
+.analytics-page h3,
+.analytics-page p, 
+.analytics-page div,
+.analytics-page span,
+.analytics-page a,
+.analytics-page table th,
+.analytics-page table td,
+.game-chat h1,
+.game-chat h2,
+.game-chat h3,
+.game-chat p,
+.game-chat div,
+.game-chat span {
+  color: var(--typewriter-text) !important;
+}
+
+/* Admin table styles for better visibility */
+.admin-page table,
+.analytics-page table {
+  border: 2px solid var(--typewriter-border);
+}
+
+.admin-page table th,
+.admin-page table td,
+.analytics-page table th,
+.analytics-page table td {
+  border: 1px solid var(--typewriter-border);
+  background-color: var(--typewriter-bg);
+  padding: 8px;
+}
+
+.admin-page table th,
+.analytics-page table th {
+  background-color: var(--typewriter-gray-light);
+}
+
+/* Admin and analytics chart styles */
+.admin-page .recharts-wrapper text,
+.analytics-page .recharts-wrapper text {
+  fill: var(--typewriter-text) !important;
+}
+
+.admin-page .recharts-cartesian-grid-horizontal line,
+.admin-page .recharts-cartesian-grid-vertical line,
+.analytics-page .recharts-cartesian-grid-horizontal line,
+.analytics-page .recharts-cartesian-grid-vertical line {
+  stroke: var(--typewriter-border) !important;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 12px;
@@ -316,6 +388,7 @@ body {
   border: 1px solid var(--typewriter-border);
   padding: 8px 12px;
   text-align: left;
+  color: var(--typewriter-text);
 }
 
 .typewriter-table th {
@@ -374,6 +447,9 @@ body {
   border: 2px solid var(--typewriter-border);
   font-size: 12px;
   font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* Progress bar */
@@ -430,13 +506,6 @@ body {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Hover effects */
-.typewriter-hover:hover {
-  background: var(--typewriter-text);
-  color: var(--typewriter-bg);
-  transition: all 0.1s ease;
-}
-
 /* Link styles */
 a {
   color: var(--typewriter-blue);
@@ -450,16 +519,14 @@ a:hover {
   text-decoration: none;
 }
 
-/* Disable all animations except typing effects */
-.animate-spin,
-.animate-pulse,
-.animate-bounce {
-  animation: none !important;
+/* Fixed: Game selection issue */
+.typewriter-card.typewriter-hover {
+  transition: all 0.2s ease;
 }
 
-/* Keep only typing-related animations */
-.animate-typing {
-  animation: typing 2s steps(40, end);
+.typewriter-card.typewriter-hover:hover {
+  border-color: var(--typewriter-text);
+  background: var(--typewriter-bg) !important;
 }
 
 /* Paper texture overlay */
@@ -475,4 +542,34 @@ body::before {
   background-size: 20px 20px;
   pointer-events: none;
   z-index: -1;
+}
+
+/* Fix for analytics and admin pages */
+.recharts-text {
+  fill: var(--typewriter-text) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.recharts-cartesian-axis-line,
+.recharts-cartesian-axis-tick-line {
+  stroke: var(--typewriter-text) !important;
+}
+
+.recharts-tooltip-wrapper {
+  background: var(--typewriter-bg) !important;
+  border: 2px solid var(--typewriter-border) !important;
+  color: var(--typewriter-text) !important;
+}
+
+/* Game chat fixes */
+.game-chat-input {
+  background: var(--typewriter-bg);
+  color: var(--typewriter-text);
+  border: 2px solid var(--typewriter-border);
+}
+
+.game-chat-message {
+  background: var(--typewriter-bg);
+  color: var(--typewriter-text);
+  border: 2px solid var(--typewriter-border);
 }

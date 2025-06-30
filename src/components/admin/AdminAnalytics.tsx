@@ -398,12 +398,12 @@ const AdminAnalytics: React.FC = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
-          <p className="text-purple-100 mb-4">You don't have admin permissions.</p>
-          <Link to="/dashboard" className="text-purple-300 hover:text-white transition-colors">
+          <AlertCircle className="w-16 h-16 text-[#E53E3E] mx-auto mb-4" />
+          <h2 className="text-2xl font-medium text-[#1A1A1A] mb-2">Access Denied</h2>
+          <p className="text-[#1A1A1A] mb-4 font-light">You don't have admin permissions.</p>
+          <Link to="/dashboard" className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8]">
             ← Back to Dashboard
           </Link>
         </div>
@@ -413,34 +413,33 @@ const AdminAnalytics: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-          <p className="text-white text-xl">Loading platform analytics...</p>
+          <div className="text-[#1A1A1A] text-xl mb-4 loading-dots">Loading platform analytics</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
+    <div className="min-h-screen bg-[#FAFAF8] admin-page">
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
+      <header className="typewriter-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
                 to="/admin"
-                className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors"
+                className="flex items-center gap-2 text-[#1A1A1A] typewriter-hover"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Admin
               </Link>
             </div>
             <div className="flex items-center gap-3">
-              <TrendingUp className="w-8 h-8 text-white" />
-              <span className="text-2xl font-serif font-bold text-white">Platform Analytics</span>
-              <div className="text-sm text-purple-200 bg-purple-500/20 px-3 py-1 rounded-full">
+              <TrendingUp className="w-8 h-8 text-[#1A1A1A]" />
+              <span className="text-2xl font-medium text-[#1A1A1A] typewriter-cursor">Platform Analytics</span>
+              <div className="text-sm text-[#1A1A1A] bg-[#E5E5E5] px-3 py-1">
                 All Users • All Activity
               </div>
             </div>
@@ -451,17 +450,17 @@ const AdminAnalytics: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {error && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-            <p className="text-red-100">{error}</p>
+          <div className="mb-8 p-4 typewriter-card typewriter-error flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-[#E53E3E] flex-shrink-0" />
+            <p className="text-[#E53E3E]">{error}</p>
           </div>
         )}
 
         {/* Controls */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-serif font-bold text-white mb-2">Platform Performance</h1>
-            <p className="text-purple-200">Complete platform analytics • All users • All activity • {timeRange} view</p>
+            <h1 className="text-3xl font-medium text-[#1A1A1A] mb-2 typewriter-cursor">Platform Performance</h1>
+            <p className="text-[#1A1A1A] font-light">Complete platform analytics • All users • All activity • {timeRange} view</p>
           </div>
           
           <div className="flex gap-2">
@@ -469,10 +468,10 @@ const AdminAnalytics: React.FC = () => {
               <button
                 key={range}
                 onClick={() => setTimeRange(range)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 typewriter-btn text-sm font-medium ${
                   timeRange === range
-                    ? 'bg-purple-500 text-white'
-                    : 'bg-white/10 text-purple-200 hover:bg-white/20'
+                    ? 'bg-[#1A1A1A] text-[#FAFAF8]'
+                    : ''
                 }`}
               >
                 {range === '7d' ? 'Last 7 days' : range === '30d' ? 'Last 30 days' : 'Last 90 days'}
@@ -480,7 +479,7 @@ const AdminAnalytics: React.FC = () => {
             ))}
             <button
               onClick={exportAnalytics}
-              className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+              className="flex items-center gap-2 typewriter-btn text-[#2B6CB0] border-[#2B6CB0]"
             >
               <Download className="w-4 h-4" />
               Export CSV
@@ -490,93 +489,93 @@ const AdminAnalytics: React.FC = () => {
 
         {/* Enhanced Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Activity className="w-6 h-6 text-purple-400" />
-              <span className="text-purple-200 text-sm">Total Tokens</span>
+              <Activity className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Total Tokens</span>
             </div>
-            <p className="text-3xl font-bold text-white">{platformStats.totalTokens.toLocaleString()}</p>
-            <div className="text-xs text-purple-200 mt-1">
-              <span className="text-blue-300">In: {platformStats.inputTokens.toLocaleString()}</span> | 
-              <span className="text-green-300"> Out: {platformStats.outputTokens.toLocaleString()}</span>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{platformStats.totalTokens.toLocaleString()}</p>
+            <div className="text-xs text-[#1A1A1A] mt-1 font-light">
+              <span className="text-[#2B6CB0]">In: {platformStats.inputTokens.toLocaleString()}</span> | 
+              <span className="text-[#2B6CB0]"> Out: {platformStats.outputTokens.toLocaleString()}</span>
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <DollarSign className="w-6 h-6 text-green-400" />
-              <span className="text-purple-200 text-sm">Total Cost</span>
+              <DollarSign className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Total Cost</span>
             </div>
-            <p className="text-3xl font-bold text-white">${platformStats.totalCost.toFixed(2)}</p>
-            <div className="text-xs text-purple-200 mt-1">
-              <span className="text-blue-300">In: ${platformStats.inputCost.toFixed(2)}</span> | 
-              <span className="text-green-300"> Out: ${platformStats.outputCost.toFixed(2)}</span>
+            <p className="text-3xl font-medium text-[#1A1A1A]">${platformStats.totalCost.toFixed(2)}</p>
+            <div className="text-xs text-[#1A1A1A] mt-1 font-light">
+              <span className="text-[#2B6CB0]">In: ${platformStats.inputCost.toFixed(2)}</span> | 
+              <span className="text-[#2B6CB0]"> Out: ${platformStats.outputCost.toFixed(2)}</span>
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Timer className="w-6 h-6 text-yellow-400" />
-              <span className="text-purple-200 text-sm">Avg Response</span>
+              <Timer className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Avg Response</span>
             </div>
-            <p className="text-3xl font-bold text-white">{platformStats.averageResponseTime.toFixed(0)}ms</p>
-            <p className="text-purple-200 text-xs mt-1">
+            <p className="text-3xl font-medium text-[#1A1A1A]">{platformStats.averageResponseTime.toFixed(0)}ms</p>
+            <p className="text-[#1A1A1A] text-xs mt-1 font-light">
               {platformStats.averageResponseTime < 2000 ? 'Excellent' : 
                platformStats.averageResponseTime < 5000 ? 'Good' : 'Needs attention'}
             </p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Users className="w-6 h-6 text-blue-400" />
-              <span className="text-purple-200 text-sm">Total Users</span>
+              <Users className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Total Users</span>
             </div>
-            <p className="text-3xl font-bold text-white">{platformStats.totalUsers}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{platformStats.totalUsers}</p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Calendar className="w-6 h-6 text-orange-400" />
-              <span className="text-purple-200 text-sm">Active Sessions</span>
+              <Calendar className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Active Sessions</span>
             </div>
-            <p className="text-3xl font-bold text-white">{platformStats.activeSessions}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{platformStats.activeSessions}</p>
           </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Enhanced Daily Usage Chart */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-            <h3 className="text-xl font-serif font-bold text-white mb-6">Daily Token Usage (Platform-wide)</h3>
+          <div className="typewriter-card">
+            <h3 className="text-xl font-medium text-[#1A1A1A] mb-6">Daily Token Usage (Platform-wide)</h3>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={dailyUsage}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#D4D4D4" />
                 <XAxis 
                   dataKey="date" 
-                  stroke="rgba(255,255,255,0.7)"
+                  stroke="#1A1A1A"
                   tick={{ fontSize: 12 }}
                 />
-                <YAxis stroke="rgba(255,255,255,0.7)" tick={{ fontSize: 12 }} />
+                <YAxis stroke="#1A1A1A" tick={{ fontSize: 12 }} />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: 'rgba(0,0,0,0.8)', 
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    borderRadius: '8px'
+                    backgroundColor: '#FAFAF8', 
+                    border: '1px solid #1A1A1A',
+                    borderRadius: '0px'
                   }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="inputTokens" 
                   stackId="1"
-                  stroke="#06b6d4" 
-                  fill="#06b6d4" 
+                  stroke="#2B6CB0" 
+                  fill="#2B6CB0" 
                   fillOpacity={0.6}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="outputTokens" 
                   stackId="1"
-                  stroke="#10b981" 
-                  fill="#10b981" 
+                  stroke="#1A1A1A" 
+                  fill="#1A1A1A" 
                   fillOpacity={0.6}
                 />
               </AreaChart>
@@ -584,8 +583,8 @@ const AdminAnalytics: React.FC = () => {
           </div>
 
           {/* Model Usage Pie Chart */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-            <h3 className="text-xl font-serif font-bold text-white mb-6">Usage by Model (Platform-wide)</h3>
+          <div className="typewriter-card">
+            <h3 className="text-xl font-medium text-[#1A1A1A] mb-6">Usage by Model (Platform-wide)</h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -599,7 +598,7 @@ const AdminAnalytics: React.FC = () => {
                   dataKey="tokens"
                 >
                   {modelUsage.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell key={`cell-${index}`} fill={index % 2 === 0 ? "#1A1A1A" : "#2B6CB0"} />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -610,22 +609,22 @@ const AdminAnalytics: React.FC = () => {
 
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Cost Analysis */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-            <h3 className="text-xl font-serif font-bold text-white mb-6">Daily Cost Breakdown (Platform-wide)</h3>
+          <div className="typewriter-card">
+            <h3 className="text-xl font-medium text-[#1A1A1A] mb-6">Daily Cost Breakdown (Platform-wide)</h3>
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={dailyUsage}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#D4D4D4" />
                 <XAxis 
                   dataKey="date" 
-                  stroke="rgba(255,255,255,0.7)"
+                  stroke="#1A1A1A"
                   tick={{ fontSize: 12 }}
                 />
-                <YAxis stroke="rgba(255,255,255,0.7)" tick={{ fontSize: 12 }} />
+                <YAxis stroke="#1A1A1A" tick={{ fontSize: 12 }} />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: 'rgba(0,0,0,0.8)', 
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    borderRadius: '8px'
+                    backgroundColor: '#FAFAF8', 
+                    border: '1px solid #1A1A1A',
+                    borderRadius: '0px'
                   }}
                   formatter={(value: any) => [`$${Number(value).toFixed(6)}`, 'Cost']}
                 />
@@ -633,16 +632,16 @@ const AdminAnalytics: React.FC = () => {
                   type="monotone" 
                   dataKey="inputCost" 
                   stackId="1"
-                  stroke="#06b6d4" 
-                  fill="#06b6d4" 
+                  stroke="#2B6CB0" 
+                  fill="#2B6CB0" 
                   fillOpacity={0.6}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="outputCost" 
                   stackId="1"
-                  stroke="#10b981" 
-                  fill="#10b981" 
+                  stroke="#1A1A1A" 
+                  fill="#1A1A1A" 
                   fillOpacity={0.6}
                 />
               </AreaChart>
@@ -650,31 +649,31 @@ const AdminAnalytics: React.FC = () => {
           </div>
 
           {/* Response Time Trends */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-            <h3 className="text-xl font-serif font-bold text-white mb-6">Response Time Trends (Platform-wide)</h3>
+          <div className="typewriter-card">
+            <h3 className="text-xl font-medium text-[#1A1A1A] mb-6">Response Time Trends (Platform-wide)</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={dailyUsage}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#D4D4D4" />
                 <XAxis 
                   dataKey="date" 
-                  stroke="rgba(255,255,255,0.7)"
+                  stroke="#1A1A1A"
                   tick={{ fontSize: 12 }}
                 />
-                <YAxis stroke="rgba(255,255,255,0.7)" tick={{ fontSize: 12 }} />
+                <YAxis stroke="#1A1A1A" tick={{ fontSize: 12 }} />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: 'rgba(0,0,0,0.8)', 
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    borderRadius: '8px'
+                    backgroundColor: '#FAFAF8', 
+                    border: '1px solid #1A1A1A',
+                    borderRadius: '0px'
                   }}
                   formatter={(value: any) => [`${Number(value).toFixed(0)}ms`, 'Response Time']}
                 />
                 <Line 
                   type="monotone" 
                   dataKey="responseTime" 
-                  stroke="#f59e0b" 
+                  stroke="#1A1A1A" 
                   strokeWidth={2}
-                  dot={{ fill: '#f59e0b' }}
+                  dot={{ fill: '#1A1A1A' }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -682,49 +681,49 @@ const AdminAnalytics: React.FC = () => {
         </div>
 
         {/* Enhanced Top Users Table */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-          <div className="p-6 border-b border-white/10">
-            <h3 className="text-xl font-serif font-bold text-white">Top Users by Token Usage (Platform-wide)</h3>
+        <div className="typewriter-card">
+          <div className="p-6 border-b-2 border-[#1A1A1A]">
+            <h3 className="text-xl font-medium text-[#1A1A1A]">Top Users by Token Usage (Platform-wide)</h3>
           </div>
           <div className="p-6">
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="typewriter-table">
                 <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">User</th>
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">Tokens</th>
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">Input/Output</th>
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">Cost</th>
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">Sessions</th>
-                    <th className="text-left text-purple-200 text-sm font-medium py-3">Avg Response</th>
+                  <tr className="border-b-2 border-[#1A1A1A]">
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">User</th>
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Tokens</th>
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Input/Output</th>
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Cost</th>
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Sessions</th>
+                    <th className="text-left text-[#1A1A1A] text-sm font-medium py-3">Avg Response</th>
                   </tr>
                 </thead>
                 <tbody>
                   {userUsage.map((user, index) => (
-                    <tr key={user.email} className="border-b border-white/5">
+                    <tr key={user.email} className="border-b border-[#D4D4D4]">
                       <td className="py-4">
                         <div>
-                          <p className="text-white font-medium">{user.username}</p>
-                          <p className="text-purple-200 text-sm">{user.email}</p>
+                          <p className="text-[#1A1A1A] font-medium">{user.username}</p>
+                          <p className="text-[#1A1A1A] text-sm font-light">{user.email}</p>
                         </div>
                       </td>
                       <td className="py-4">
-                        <span className="text-white font-mono">{user.tokens.toLocaleString()}</span>
+                        <span className="text-[#1A1A1A] font-mono">{user.tokens.toLocaleString()}</span>
                       </td>
                       <td className="py-4">
                         <div className="text-xs">
-                          <div className="text-blue-300">In: {user.inputTokens.toLocaleString()}</div>
-                          <div className="text-green-300">Out: {user.outputTokens.toLocaleString()}</div>
+                          <div className="text-[#2B6CB0]">In: {user.inputTokens.toLocaleString()}</div>
+                          <div className="text-[#1A1A1A]">Out: {user.outputTokens.toLocaleString()}</div>
                         </div>
                       </td>
                       <td className="py-4">
-                        <span className="text-white font-mono">${user.cost.toFixed(4)}</span>
+                        <span className="text-[#1A1A1A] font-mono">${user.cost.toFixed(4)}</span>
                       </td>
                       <td className="py-4">
-                        <span className="text-white">{user.sessions}</span>
+                        <span className="text-[#1A1A1A]">{user.sessions}</span>
                       </td>
                       <td className="py-4">
-                        <span className="text-white">{user.avgResponseTime.toFixed(0)}ms</span>
+                        <span className="text-[#1A1A1A]">{user.avgResponseTime.toFixed(0)}ms</span>
                       </td>
                     </tr>
                   ))}

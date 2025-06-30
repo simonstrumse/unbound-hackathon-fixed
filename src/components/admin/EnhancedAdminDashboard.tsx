@@ -64,7 +64,7 @@ interface UserWithStats extends Profile {
   last_active: string;
 }
 
-const COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+const COLORS = ['#1A1A1A', '#2B6CB0', '#E53E3E', '#D4D4D4'];
 
 const EnhancedAdminDashboard: React.FC = () => {
   const { isAdmin, isSuperAdmin } = useAuth();
@@ -330,12 +330,12 @@ const EnhancedAdminDashboard: React.FC = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
-          <p className="text-purple-100 mb-4">You don't have admin permissions.</p>
-          <Link to="/dashboard" className="text-purple-300 hover:text-white transition-colors">
+          <AlertCircle className="w-16 h-16 text-[#E53E3E] mx-auto mb-4" />
+          <h2 className="text-2xl font-medium text-[#1A1A1A] mb-2">Access Denied</h2>
+          <p className="text-[#1A1A1A] mb-4 font-light">You don't have admin permissions.</p>
+          <Link to="/dashboard" className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8]">
             ← Back to Dashboard
           </Link>
         </div>
@@ -345,10 +345,9 @@ const EnhancedAdminDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 text-white animate-spin mx-auto mb-4" />
-          <p className="text-white text-xl">Loading admin dashboard...</p>
+          <div className="text-[#1A1A1A] text-xl mb-4 loading-dots">Loading admin dashboard</div>
         </div>
       </div>
     );
@@ -357,7 +356,7 @@ const EnhancedAdminDashboard: React.FC = () => {
   const getUserStatusBadge = (user: UserWithStats) => {
     if (user.admin_level === 'superadmin') {
       return (
-        <span className="flex items-center gap-1 px-2 py-1 bg-yellow-500/20 text-yellow-200 text-xs rounded-full">
+        <span className="flex items-center gap-1 px-2 py-1 bg-[#1A1A1A] text-[#FAFAF8] text-xs">
           <Crown className="w-3 h-3" />
           Super Admin
         </span>
@@ -365,7 +364,7 @@ const EnhancedAdminDashboard: React.FC = () => {
     }
     if (user.admin_level === 'admin' || user.is_admin) {
       return (
-        <span className="flex items-center gap-1 px-2 py-1 bg-blue-500/20 text-blue-200 text-xs rounded-full">
+        <span className="flex items-center gap-1 px-2 py-1 bg-[#1A1A1A] text-[#FAFAF8] text-xs">
           <Shield className="w-3 h-3" />
           Admin
         </span>
@@ -373,14 +372,14 @@ const EnhancedAdminDashboard: React.FC = () => {
     }
     if (user.beta_approved) {
       return (
-        <span className="flex items-center gap-1 px-2 py-1 bg-green-500/20 text-green-200 text-xs rounded-full">
+        <span className="flex items-center gap-1 px-2 py-1 bg-[#1A1A1A] text-[#FAFAF8] text-xs">
           <CheckCircle className="w-3 h-3" />
           User
         </span>
       );
     }
     return (
-      <span className="flex items-center gap-1 px-2 py-1 bg-orange-500/20 text-orange-200 text-xs rounded-full">
+      <span className="flex items-center gap-1 px-2 py-1 bg-[#E53E3E] text-[#FAFAF8] text-xs">
         <XCircle className="w-3 h-3" />
         Pending
       </span>
@@ -408,26 +407,26 @@ const EnhancedAdminDashboard: React.FC = () => {
     .slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
+    <div className="min-h-screen bg-[#FAFAF8] admin-page">
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
+      <header className="typewriter-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link
                 to="/dashboard"
-                className="flex items-center gap-2 text-white hover:text-purple-200 transition-colors"
+                className="flex items-center gap-2 text-[#1A1A1A] typewriter-hover"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Dashboard
               </Link>
             </div>
             <div className="flex items-center gap-3">
-              <Book className="w-8 h-8 text-white" />
-              <span className="text-2xl font-serif font-bold text-white">
+              <Book className="w-8 h-8 text-[#1A1A1A]" />
+              <span className="text-2xl font-medium text-[#1A1A1A] typewriter-cursor">
                 {isSuperAdmin ? 'Super Admin' : 'Admin'} Dashboard
               </span>
-              <div className="text-sm text-purple-200 bg-purple-500/20 px-3 py-1 rounded-full">
+              <div className="text-sm text-[#1A1A1A] bg-[#E5E5E5] px-3 py-1">
                 Platform Overview
               </div>
             </div>
@@ -438,14 +437,14 @@ const EnhancedAdminDashboard: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {error && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center justify-between">
+          <div className="mb-8 p-4 typewriter-card typewriter-error flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-              <p className="text-red-100">{error}</p>
+              <AlertCircle className="w-5 h-5 text-[#E53E3E] flex-shrink-0" />
+              <p className="text-[#E53E3E]">{error}</p>
             </div>
             <button
               onClick={handleRetry}
-              className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+              className="typewriter-btn"
             >
               <RefreshCw className="w-4 h-4" />
               Retry
@@ -455,62 +454,62 @@ const EnhancedAdminDashboard: React.FC = () => {
 
         {/* Enhanced Platform Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Users className="w-6 h-6 text-blue-400" />
-              <span className="text-purple-200 text-sm">Total Users</span>
+              <Users className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Total Users</span>
             </div>
-            <p className="text-3xl font-bold text-white">{platformStats.totalUsers}</p>
-            <p className="text-purple-200 text-xs mt-1">
+            <p className="text-3xl font-medium text-[#1A1A1A]">{platformStats.totalUsers}</p>
+            <p className="text-[#1A1A1A] text-xs mt-1 font-light">
               +{platformStats.newUsersToday} today
             </p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Shield className="w-6 h-6 text-yellow-400" />
-              <span className="text-purple-200 text-sm">Total Admins</span>
+              <Shield className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Total Admins</span>
             </div>
-            <p className="text-3xl font-bold text-white">{platformStats.admins + platformStats.superAdmins}</p>
-            <p className="text-purple-200 text-xs mt-1">
+            <p className="text-3xl font-medium text-[#1A1A1A]">{platformStats.admins + platformStats.superAdmins}</p>
+            <p className="text-[#1A1A1A] text-xs mt-1 font-light">
               {platformStats.superAdmins} super + {platformStats.admins} regular
             </p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <CheckCircle className="w-6 h-6 text-green-400" />
-              <span className="text-purple-200 text-sm">Beta Approved</span>
+              <CheckCircle className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Beta Approved</span>
             </div>
-            <p className="text-3xl font-bold text-white">{platformStats.betaApproved}</p>
-            <p className="text-purple-200 text-xs mt-1">
+            <p className="text-3xl font-medium text-[#1A1A1A]">{platformStats.betaApproved}</p>
+            <p className="text-[#1A1A1A] text-xs mt-1 font-light">
               {platformStats.totalUsers > 0 ? ((platformStats.betaApproved / platformStats.totalUsers) * 100).toFixed(1) : 0}% approval rate
             </p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+          <div className="typewriter-card">
             <div className="flex items-center gap-3 mb-2">
-              <Activity className="w-6 h-6 text-purple-400" />
-              <span className="text-purple-200 text-sm">Active Sessions</span>
+              <Activity className="w-6 h-6 text-[#2B6CB0]" />
+              <span className="text-[#1A1A1A] text-sm font-medium">Active Sessions</span>
             </div>
-            <p className="text-3xl font-bold text-white">{platformStats.activeSessions}</p>
+            <p className="text-3xl font-medium text-[#1A1A1A]">{platformStats.activeSessions}</p>
           </div>
         </div>
 
         {/* Quick User Search */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 mb-8">
-          <div className="p-6 border-b border-white/10">
-            <h3 className="text-xl font-serif font-bold text-white">Quick User Search</h3>
+        <div className="typewriter-card mb-8">
+          <div className="p-6 border-b-2 border-[#1A1A1A]">
+            <h3 className="text-xl font-medium text-[#1A1A1A]">Quick User Search</h3>
           </div>
           <div className="p-6">
             <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-purple-300" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#1A1A1A]" />
               <input
                 type="text"
                 placeholder="Search for users by email or username..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 typewriter-input text-[#1A1A1A]"
               />
             </div>
             
@@ -519,17 +518,17 @@ const EnhancedAdminDashboard: React.FC = () => {
                 {filteredUsers.length > 0 ? (
                   <div className="grid gap-3">
                     {filteredUsers.slice(0, 5).map((user) => (
-                      <div key={user.id} className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
+                      <div key={user.id} className="flex items-center justify-between p-4 bg-[#E5E5E5]">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">
+                          <div className="w-10 h-10 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
+                            <span className="text-white font-medium text-sm">
                               {user.username.charAt(0).toUpperCase()}
                             </span>
                           </div>
                           <div>
-                            <p className="text-white font-medium">{user.username}</p>
-                            <p className="text-purple-200 text-sm">{user.email}</p>
-                            <p className="text-purple-300 text-xs">
+                            <p className="text-[#1A1A1A] font-medium">{user.username}</p>
+                            <p className="text-[#1A1A1A] text-sm font-light">{user.email}</p>
+                            <p className="text-[#1A1A1A] text-xs font-light">
                               Joined {new Date(user.created_at).toLocaleDateString()}
                             </p>
                           </div>
@@ -542,14 +541,16 @@ const EnhancedAdminDashboard: React.FC = () => {
                                 <button
                                   onClick={() => updateUserStatus(user.id, { beta_approved: true })}
                                   disabled={actionLoading === user.id}
-                                  className="flex items-center gap-1 bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors disabled:opacity-50"
+                                  className="flex items-center gap-1 typewriter-btn-primary text-sm disabled:opacity-50"
                                 >
                                   {actionLoading === user.id ? (
-                                    <Loader2 className="w-3 h-3 animate-spin" />
+                                    <span className="loading-dots">Working</span>
                                   ) : (
-                                    <UserCheck className="w-3 h-3" />
+                                    <>
+                                      <UserCheck className="w-3 h-3" />
+                                      Approve
+                                    </>
                                   )}
-                                  Approve
                                 </button>
                               ) : !user.admin_level && !user.is_admin ? (
                                 <button
@@ -559,14 +560,16 @@ const EnhancedAdminDashboard: React.FC = () => {
                                     beta_approved: true 
                                   })}
                                   disabled={actionLoading === user.id}
-                                  className="flex items-center gap-1 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors disabled:opacity-50"
+                                  className="flex items-center gap-1 typewriter-btn text-sm disabled:opacity-50"
                                 >
                                   {actionLoading === user.id ? (
-                                    <Loader2 className="w-3 h-3 animate-spin" />
+                                    <span className="loading-dots">Working</span>
                                   ) : (
-                                    <Shield className="w-3 h-3" />
+                                    <>
+                                      <Shield className="w-3 h-3" />
+                                      Make Admin
+                                    </>
                                   )}
-                                  Make Admin
                                 </button>
                               ) : (user.admin_level === 'admin' || user.is_admin) && (
                                 <button
@@ -575,14 +578,16 @@ const EnhancedAdminDashboard: React.FC = () => {
                                     is_admin: false 
                                   })}
                                   disabled={actionLoading === user.id}
-                                  className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors disabled:opacity-50"
+                                  className="flex items-center gap-1 bg-[#E53E3E] border-[#E53E3E] text-[#FAFAF8] px-3 py-1 text-sm disabled:opacity-50"
                                 >
                                   {actionLoading === user.id ? (
-                                    <Loader2 className="w-3 h-3 animate-spin" />
+                                    <span className="loading-dots">Working</span>
                                   ) : (
-                                    <UserX className="w-3 h-3" />
+                                    <>
+                                      <UserX className="w-3 h-3" />
+                                      Remove Admin
+                                    </>
                                   )}
-                                  Remove Admin
                                 </button>
                               )}
                             </div>
@@ -591,16 +596,16 @@ const EnhancedAdminDashboard: React.FC = () => {
                       </div>
                     ))}
                     {filteredUsers.length > 5 && (
-                      <p className="text-purple-200 text-center text-sm">
+                      <p className="text-[#1A1A1A] text-center text-sm font-light">
                         Showing first 5 of {filteredUsers.length} results.{' '}
-                        <Link to="/admin/users" className="text-purple-300 hover:text-white">
+                        <Link to="/admin/users" className="text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8]">
                           View all users →
                         </Link>
                       </p>
                     )}
                   </div>
                 ) : (
-                  <p className="text-purple-200 text-center py-4">
+                  <p className="text-[#1A1A1A] text-center py-4 font-light">
                     No users found matching "{searchTerm}".
                   </p>
                 )}
@@ -611,45 +616,45 @@ const EnhancedAdminDashboard: React.FC = () => {
 
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Story Popularity Chart */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-            <h3 className="text-xl font-serif font-bold text-white mb-6">Most Popular Stories</h3>
+          <div className="typewriter-card">
+            <h3 className="text-xl font-medium text-[#1A1A1A] mb-6">Most Popular Stories</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={storyPopularity.slice(0, 5)}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#D4D4D4" />
                 <XAxis 
                   dataKey="title" 
-                  stroke="rgba(255,255,255,0.7)"
+                  stroke="#1A1A1A"
                   tick={{ fontSize: 12 }}
                   angle={-45}
                   textAnchor="end"
                   height={60}
                 />
-                <YAxis stroke="rgba(255,255,255,0.7)" tick={{ fontSize: 12 }} />
+                <YAxis stroke="#1A1A1A" tick={{ fontSize: 12 }} />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: 'rgba(0,0,0,0.8)', 
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    borderRadius: '8px'
+                    backgroundColor: '#FAFAF8', 
+                    border: '1px solid #1A1A1A',
+                    borderRadius: '0px'
                   }}
                 />
-                <Bar dataKey="sessions" fill="#8b5cf6" />
+                <Bar dataKey="sessions" fill="#1A1A1A" />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
           {/* Completion Rates */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-6">
-            <h3 className="text-xl font-serif font-bold text-white mb-6">Story Completion Rates</h3>
+          <div className="typewriter-card">
+            <h3 className="text-xl font-medium text-[#1A1A1A] mb-6">Story Completion Rates</h3>
             <div className="space-y-4">
               {storyPopularity.slice(0, 5).map((story, index) => (
                 <div key={index} className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-white text-sm font-medium">{story.title}</span>
-                    <span className="text-purple-200 text-sm">{story.completionRate.toFixed(1)}%</span>
+                    <span className="text-[#1A1A1A] text-sm font-medium">{story.title}</span>
+                    <span className="text-[#1A1A1A] text-sm">{story.completionRate.toFixed(1)}%</span>
                   </div>
-                  <div className="w-full bg-white/10 rounded-full h-2">
+                  <div className="w-full bg-[#E5E5E5] h-2 border border-[#D4D4D4]">
                     <div 
-                      className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-300"
+                      className="bg-[#1A1A1A] h-full"
                       style={{ width: `${story.completionRate}%` }}
                     ></div>
                   </div>
@@ -663,58 +668,58 @@ const EnhancedAdminDashboard: React.FC = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           <Link
             to="/admin/analytics"
-            className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 transform hover:-translate-y-2 group"
+            className="typewriter-card border-4 border-[#1A1A1A]"
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <TrendingUp className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center mb-6">
+              <TrendingUp className="w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-serif font-bold text-white mb-4">Platform Analytics</h3>
-            <p className="text-purple-100 leading-relaxed">
+            <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">Platform Analytics</h3>
+            <p className="text-[#1A1A1A] leading-relaxed font-light">
               View detailed platform-wide analytics on token usage, user engagement, and system performance.
             </p>
-            <div className="mt-4 text-sm text-purple-300">
+            <div className="mt-4 text-sm text-[#1A1A1A] font-light">
               Platform-wide data • All users • All activity
             </div>
           </Link>
 
           <Link
             to="/admin/users"
-            className="bg-gradient-to-br from-green-600/20 to-teal-600/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 transform hover:-translate-y-2 group"
+            className="typewriter-card border-4 border-[#1A1A1A]"
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <Users className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center mb-6">
+              <Users className="w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-serif font-bold text-white mb-4">User Management</h3>
-            <p className="text-purple-100 mb-6 leading-relaxed">
+            <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">User Management</h3>
+            <p className="text-[#1A1A1A] mb-6 leading-relaxed font-light">
               {isSuperAdmin 
                 ? 'Manage all user accounts, beta approvals, and promote users to admin roles.'
                 : 'Manage user accounts and beta approvals across the platform.'
               }
             </p>
             <div className="flex gap-3">
-              <span className="px-3 py-1 bg-green-500/20 text-green-200 text-sm rounded-full">
+              <span className="px-3 py-1 bg-[#1A1A1A] text-[#FAFAF8] text-sm">
                 {platformStats.betaApproved} Approved
               </span>
-              <span className="px-3 py-1 bg-orange-500/20 text-orange-200 text-sm rounded-full">
+              <span className="px-3 py-1 bg-[#E53E3E] text-[#FAFAF8] text-sm">
                 {platformStats.totalUsers - platformStats.betaApproved} Pending
               </span>
             </div>
           </Link>
 
           {isSuperAdmin && (
-            <div className="bg-gradient-to-br from-yellow-600/20 to-orange-600/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-              <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center mb-6">
-                <Crown className="w-8 h-8 text-white" />
+            <div className="typewriter-card border-4 border-[#1A1A1A]">
+              <div className="w-16 h-16 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center mb-6">
+                <Crown className="w-8 h-8" />
               </div>
-              <h3 className="text-2xl font-serif font-bold text-white mb-4">Super Admin Powers</h3>
-              <p className="text-purple-100 mb-6 leading-relaxed">
+              <h3 className="text-2xl font-medium text-[#1A1A1A] mb-4">Super Admin Powers</h3>
+              <p className="text-[#1A1A1A] mb-6 leading-relaxed font-light">
                 Promote users to admin roles, manage all platform settings, and maintain system integrity.
               </p>
               <div className="flex gap-3">
-                <span className="px-3 py-1 bg-yellow-500/20 text-yellow-200 text-sm rounded-full">
+                <span className="px-3 py-1 bg-[#1A1A1A] text-[#FAFAF8] text-sm">
                   {platformStats.superAdmins} Super Admins
                 </span>
-                <span className="px-3 py-1 bg-blue-500/20 text-blue-200 text-sm rounded-full">
+                <span className="px-3 py-1 bg-[#2B6CB0] text-[#FAFAF8] text-sm">
                   {platformStats.admins} Admins
                 </span>
               </div>
@@ -725,13 +730,13 @@ const EnhancedAdminDashboard: React.FC = () => {
         {/* Recent Users & Pending Approvals */}
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Recent Users */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-            <div className="p-6 border-b border-white/10">
+          <div className="typewriter-card">
+            <div className="p-6 border-b-2 border-[#1A1A1A]">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-serif font-bold text-white">Recent Users</h3>
+                <h3 className="text-xl font-medium text-[#1A1A1A]">Recent Users</h3>
                 <Link
                   to="/admin/users"
-                  className="flex items-center gap-2 text-purple-300 hover:text-white transition-colors text-sm"
+                  className="flex items-center gap-2 text-[#2B6CB0] hover:bg-[#1A1A1A] hover:text-[#FAFAF8] text-sm"
                 >
                   <Eye className="w-4 h-4" />
                   View All
@@ -741,54 +746,54 @@ const EnhancedAdminDashboard: React.FC = () => {
             <div className="p-6">
               <div className="space-y-4">
                 {recentUsers.length > 0 ? recentUsers.map((user) => (
-                  <div key={user.id} className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
+                  <div key={user.id} className="flex items-center justify-between p-4 bg-[#E5E5E5]">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-sm">
+                      <div className="w-10 h-10 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
+                        <span className="text-white font-medium text-sm">
                           {user.username.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div>
-                        <p className="text-white font-medium">{user.username}</p>
-                        <p className="text-purple-200 text-sm">{user.email}</p>
+                        <p className="text-[#1A1A1A] font-medium">{user.username}</p>
+                        <p className="text-[#1A1A1A] text-sm font-light">{user.email}</p>
                       </div>
                     </div>
                     <div className="text-right">
                       {getUserStatusBadge(user)}
-                      <p className="text-purple-200 text-xs mt-1">
+                      <p className="text-[#1A1A1A] text-xs mt-1 font-light">
                         {user.session_count} sessions • {user.total_tokens} tokens
                       </p>
                     </div>
                   </div>
                 )) : (
-                  <p className="text-purple-200 text-center py-8">No approved users yet</p>
+                  <p className="text-[#1A1A1A] text-center py-8 font-light">No approved users yet</p>
                 )}
               </div>
             </div>
           </div>
 
           {/* Pending Approvals */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
-            <div className="p-6 border-b border-white/10">
-              <h3 className="text-xl font-serif font-bold text-white">Pending Beta Approvals</h3>
+          <div className="typewriter-card">
+            <div className="p-6 border-b-2 border-[#1A1A1A]">
+              <h3 className="text-xl font-medium text-[#1A1A1A]">Pending Beta Approvals</h3>
             </div>
             <div className="p-6">
               {pendingUsers.length === 0 ? (
-                <p className="text-purple-200 text-center py-8">No pending approvals</p>
+                <p className="text-[#1A1A1A] text-center py-8 font-light">No pending approvals</p>
               ) : (
                 <div className="space-y-4">
                   {pendingUsers.map((user) => (
-                    <div key={user.id} className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
+                    <div key={user.id} className="flex items-center justify-between p-4 bg-[#E5E5E5]">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
-                          <span className="text-white font-bold text-sm">
+                        <div className="w-10 h-10 bg-[#1A1A1A] text-[#FAFAF8] flex items-center justify-center">
+                          <span className="text-white font-medium text-sm">
                             {user.username.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <div>
-                          <p className="text-white font-medium">{user.username}</p>
-                          <p className="text-purple-200 text-sm">{user.email}</p>
-                          <p className="text-purple-200 text-xs">
+                          <p className="text-[#1A1A1A] font-medium">{user.username}</p>
+                          <p className="text-[#1A1A1A] text-sm font-light">{user.email}</p>
+                          <p className="text-[#1A1A1A] text-xs font-light">
                             Joined {new Date(user.created_at).toLocaleDateString()}
                           </p>
                         </div>
@@ -797,19 +802,21 @@ const EnhancedAdminDashboard: React.FC = () => {
                         <button
                           onClick={() => updateUserStatus(user.id, { beta_approved: true })}
                           disabled={actionLoading === user.id}
-                          className="flex items-center gap-1 bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors disabled:opacity-50"
+                          className="flex items-center gap-1 typewriter-btn-primary text-sm disabled:opacity-50"
                         >
                           {actionLoading === user.id ? (
-                            <Loader2 className="w-3 h-3 animate-spin" />
+                            <span className="loading-dots">Working</span>
                           ) : (
-                            <CheckCircle className="w-3 h-3" />
+                            <>
+                              <CheckCircle className="w-3 h-3" />
+                              Approve
+                            </>
                           )}
-                          Approve
                         </button>
                         <button
                           onClick={() => updateUserStatus(user.id, { beta_approved: false })}
                           disabled={actionLoading === user.id}
-                          className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition-colors disabled:opacity-50"
+                          className="flex items-center gap-1 bg-[#E53E3E] border-[#E53E3E] text-[#FAFAF8] px-3 py-1 text-sm disabled:opacity-50"
                         >
                           <XCircle className="w-3 h-3" />
                           Reject
