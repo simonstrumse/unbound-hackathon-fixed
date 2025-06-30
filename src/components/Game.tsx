@@ -512,7 +512,7 @@ const Game: React.FC = () => {
   return (
     <div className="h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900 flex flex-col overflow-hidden game-chat">
       {/* Header */}
-      <header className="bg-white/20 backdrop-blur-sm border-b border-white/20 flex-shrink-0">
+      <header className="bg-white/30 backdrop-blur-sm border-b border-white/30 flex-shrink-0">
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -583,12 +583,12 @@ const Game: React.FC = () => {
       {/* Main Game Area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - Character Info */}
-        <div className={`bg-white/30 backdrop-blur-sm border-r border-white/20 flex-shrink-0 transition-all duration-300 ${
+        <div className={`bg-white/30 backdrop-blur-sm border-r border-white/30 flex-shrink-0 transition-all duration-300 ${
           leftSidebarCollapsed ? (isMobile ? 'w-0' : 'w-0') : 'w-80'
         } ${leftSidebarCollapsed ? 'overflow-hidden' : 'overflow-y-auto'}`}>
           <div className="p-6 space-y-6">
             {/* Character Header */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-medium text-white">{character.name}</h3>
                 {!isMobile && (
@@ -604,7 +604,7 @@ const Game: React.FC = () => {
             </div>
 
             {/* Character Traits */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="flex items-center gap-2 mb-4">
                 <Heart className="w-5 h-5 text-purple-300" />
                 <h4 className="text-white font-medium">Traits</h4>
@@ -626,7 +626,7 @@ const Game: React.FC = () => {
             </div>
 
             {/* Conversation Count */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <MessageCircle className="w-5 h-5 text-purple-300" />
@@ -639,7 +639,7 @@ const Game: React.FC = () => {
             </div>
 
             {/* Key Memories */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-purple-300" />
@@ -663,7 +663,7 @@ const Game: React.FC = () => {
             </div>
 
             {/* Relationships */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-purple-300" />
@@ -805,7 +805,7 @@ const Game: React.FC = () => {
         } ${rightSidebarCollapsed ? 'overflow-hidden' : 'overflow-y-auto'}`}>
           <div className="p-6 space-y-6">
             {/* Game Status Header */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-medium text-white">Game Status</h3>
                 {!isMobile && (
@@ -820,7 +820,7 @@ const Game: React.FC = () => {
             </div>
 
             {/* Context Usage */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="flex items-center gap-2 mb-4">
                 <Activity className="w-5 h-5 text-purple-300" />
                 <h4 className="text-white font-medium">Context Usage</h4>
@@ -835,7 +835,7 @@ const Game: React.FC = () => {
             </div>
 
             {/* Current Scene */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="flex items-center gap-2 mb-4">
                 <MapPin className="w-5 h-5 text-purple-300" />
                 <h4 className="text-white font-medium">Current Scene</h4>
@@ -863,7 +863,7 @@ const Game: React.FC = () => {
             </div>
 
             {/* Characters Present */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-purple-300" />
@@ -890,7 +890,7 @@ const Game: React.FC = () => {
             </div>
 
             {/* Story Freedom */}
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+            <div className="bg-white/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="flex items-center gap-2 mb-4">
                 <Sparkles className="w-5 h-5 text-purple-300" />
                 <h4 className="text-white font-medium">Story Freedom</h4>
@@ -898,7 +898,7 @@ const Game: React.FC = () => {
               <div className="relative">
                 <button
                   onClick={() => setStoryFreedomOpen(!storyFreedomOpen)}
-                  className="w-full p-3 bg-white/10 border border-white/20 rounded text-left text-white hover:bg-white/20 transition-colors flex items-center justify-between"
+                  className="w-full p-3 bg-white/30 border border-white/30 rounded text-left text-white hover:bg-white/40 transition-colors flex items-center justify-between cursor-pointer"
                 >
                   <div>
                     <div className="font-medium">{creativityDisplay.name}</div>
@@ -911,7 +911,7 @@ const Game: React.FC = () => {
                 </button>
                 
                 {storyFreedomOpen && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white/20 backdrop-blur-sm border border-white/20 rounded-lg z-10">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white/30 backdrop-blur-sm border border-white/30 rounded-lg z-10 shadow-xl">
                     {[
                       { key: 'faithful', name: 'Story-Focused', description: 'Staying true to the original narrative' },
                       { key: 'balanced', name: 'Flexible Exploration', description: 'Balanced adventure with creative possibilities' },
@@ -920,7 +920,7 @@ const Game: React.FC = () => {
                       <button
                         key={option.key}
                         onClick={() => handleCreativityLevelChange(option.key as any)}
-                        className="w-full p-3 text-left text-white hover:bg-white/10 transition-colors first:rounded-t-lg last:rounded-b-lg border-b border-white/10 last:border-b-0"
+                        className="w-full p-3 text-left text-white hover:bg-white/20 transition-colors first:rounded-t-lg last:rounded-b-lg border-b border-white/20 last:border-b-0 cursor-pointer"
                       >
                         <div className="font-medium">{option.name}</div>
                         <div className="text-sm text-purple-200 font-light">{option.description}</div>
